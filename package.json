@@ -19,7 +19,6 @@
     "discord",
     "musicbot"
   ],
-  "license ": "MIT",
   "bugs": "https://github.com/brblacky/WaveMusic/issues",
   "homepage": "https://github.com/brblacky/WaveMusic#readme",
   "dependencies": {
