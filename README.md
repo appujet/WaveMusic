@@ -32,12 +32,12 @@
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=brblacky&repo=WaveMusic&theme=tokyonight)](https://github.com/brblacky/lavamusic)
 
 ###
-WaveMusic is a lavalink music bot base in [Kazagumo](https://github.com/Takiyo0/Kazagumo)
+WaveMusic is a discord music bot base in [Kazagumo](https://github.com/Takiyo0/Kazagumo) (Shoukaku)
 If you liked this repository, feel free to leave a star ⭐ to help promote !
 
 ## 💌 Support Server
 [![DiscordBanner](https://invidget.switchblade.xyz/dBGt8HcEYA)](https://discord.gg/dBGt8HcEYA)
-[Support Server](https://discord.gg/dBGt8HcEYA) - lavamusic's Support Server Invite
+[Support Server](https://discord.gg/dBGt8HcEYA) - WaveMusic's Support Server Invite
 
 # Donate
 
