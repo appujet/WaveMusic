@@ -18,7 +18,7 @@ module.exports = {
 
         const emojiLeave = message.client.emoji.leave;
 
-        player.player.destroy(message.guild.id);
+        player.destroy(message.guild.id);
         
         let thing = new MessageEmbed()
             .setColor(message.client.embedColor)

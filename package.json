@@ -1,9 +1,9 @@
 {
-  "name": "vipee",
+  "name": "wavemusic",
   "version": "1.0.0",
-  "description": "Vipee is a discord music bot base in Kazagumo (Shoukaku)",
+  "description": "WaveMusic is a discord music bot base in Kazagumo (Shoukaku)",
   "main": "src/index.js",
-  "repository": "https://github.com/brblacky/Vipee.git",
+  "repository": "https://github.com/brblacky/WaveMusic.git",
   "author": "Blacky",
   "license": "MIT",
   "scripts": {
@@ -20,8 +20,8 @@
     "musicbot"
   ],
   "license ": "MIT",
-  "bugs": "https://github.com/brblacky/Vipee/issues",
-  "homepage": "https://github.com/brblacky/Vipee#readme",
+  "bugs": "https://github.com/brblacky/WaveMusic/issues",
+  "homepage": "https://github.com/brblacky/WaveMusic#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "delay": "^5.0.0",
@@ -31,6 +31,9 @@
     "kazagumo": "^1.0.14",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mongoose": "^6.0.12"
+    "moment-duration-format": "^2.3.2",
+    "mongoose": "^6.0.12",
+    "node-superfetch": "^0.2.3",
+    "systeminformation": "^5.11.9"
   }
 }
