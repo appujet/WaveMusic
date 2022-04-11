@@ -1,0 +1,36 @@
+{
+  "name": "vipee",
+  "version": "1.0.0",
+  "description": "Vipee is a discord music bot base in Kazagumo (Shoukaku)",
+  "main": "src/index.js",
+  "repository": "https://github.com/brblacky/Vipee.git",
+  "author": "Blacky",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "lavalink",
+    "shoukaku",
+    "music",
+    "bot",
+    "discord-music",
+    "discord",
+    "musicbot"
+  ],
+  "license ": "MIT",
+  "bugs": "https://github.com/brblacky/Vipee/issues",
+  "homepage": "https://github.com/brblacky/Vipee#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "delay": "^5.0.0",
+    "discord.js": "^13.6.0",
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security",
+    "kazagumo": "^1.0.14",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "mongoose": "^6.0.12"
+  }
+}
