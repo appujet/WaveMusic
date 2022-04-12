@@ -15,7 +15,6 @@ module.exports = {
     execute: async (message, args, client, prefix) => {
 
         const player = client.manager.players.get(message.guild.id);
-
         if (!player.current) {
             let thing = new MessageEmbed()
                 .setColor("RED")

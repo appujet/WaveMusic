@@ -28,7 +28,7 @@ module.exports = {
 		if (!args.length) {
 			let thing = new MessageEmbed()
 				.setColor(client.embedColor)
-				.setDescription(`Player Current Volume: \`[ ${player.volume}% ]\``)
+				.setDescription(`Player Current Volume: \`[ ${player.player.filters.volume * 100}% ]\``)
 			return message.reply({ embeds: [thing] });
 		}
 
