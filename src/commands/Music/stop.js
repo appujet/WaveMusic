@@ -1,7 +1,8 @@
 const { MessageEmbed } = require("discord.js");
+const Wait = require('util').promisify(setTimeout);
 
 module.exports = {
-  	name: "stop",
+    name: "stop",
     category: "Music",
     description: "Stops the music",
     args: false,
@@ -11,32 +12,26 @@ module.exports = {
     player: true,
     inVoiceChannel: true,
     sameVoiceChannel: true,
-	execute: async (message, args, client, prefix) => {
-  
-        const player = client.manager.get(message.guild.id);
+    execute: async (message, args, client, prefix) => {
+
+        const player = client.manager.players.get(message.guild.id);
 
         if (!player.current) {
             let thing = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("There is no music playing.");
-            return message.reply({embeds: [thing]});
+            return message.reply({ embeds: [thing] });
         }
-
-        const autoplay = player.get("autoplay")
-        if (autoplay === true) {
-            player.set("autoplay", false);
-        }
-
-        player.stop();
-        player.queue.clear();
-
+        player.queue.length = 0;
+        player.repeat = 'off';
+        player.stopped = true;
+        player.player.stopTrack();
+        Wait(500);
         const emojistop = client.emoji.stop;
-
-		    let thing = new MessageEmbed()
+        let thing = new MessageEmbed()
             .setColor(client.embedColor)
-            .set()
             .setDescription(`${emojistop} Stopped the music`)
-        message.reply({embeds: [thing]});
-	
-  	}
+        message.reply({ embeds: [thing] });
+
+    }
 };

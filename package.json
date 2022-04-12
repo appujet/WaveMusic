@@ -33,6 +33,7 @@
     "moment-duration-format": "^2.3.2",
     "mongoose": "^6.0.12",
     "node-superfetch": "^0.2.3",
-    "systeminformation": "^5.11.9"
+    "systeminformation": "^5.11.9",
+    "util": "^0.12.4"
   }
 }

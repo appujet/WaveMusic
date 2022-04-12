@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-
+const Wait = require('util').promisify(setTimeout);
 module.exports = {
 	name: "volume",
 	aliases: ["v", "vol"],
@@ -33,7 +33,7 @@ module.exports = {
 		}
 
 		const volume = Number(args[0]);
-
+        
 		if (!volume || volume < 0 || volume > 100) {
 			let thing = new MessageEmbed()
 				.setColor("RED")
@@ -42,7 +42,7 @@ module.exports = {
 		}
 
 	   await player.player.setVolume(volume / 100);
-
+       Wait(500);
 		if (volume > player.volume) {
 			var emojivolume = client.emoji.volumehigh;
 			let thing = new MessageEmbed()
