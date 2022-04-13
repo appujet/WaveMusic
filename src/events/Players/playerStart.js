@@ -1,20 +1,22 @@
-const { MessageEmbed, Client } = require("discord.js");
+const { MessageEmbed, Client, MessageActionRow, MessageButton } = require("discord.js");
+const { noop } = require("lodash");
 const { convertTime } = require('../../utils/convert.js');
 
 module.exports = {
-    name: "playerStart",
+	name: "playerStart",
 	/**
 	 * 
 	 * @param {Client} client 
 	 * @param {*} player 
 	 * @param {*} track 
 	 */
-    run: async (client, player, track) => {
-		client.channels.cache.get(player.text)?.send({embeds: [new MessageEmbed()
-			.setAuthor({name: `Now Playing`})
+	run: async (client, player, track) => {
+
+		const main = new MessageEmbed()
+			.setAuthor({ name: `Now Playing` })
 			.setDescription(`[${track.title}](${track.uri})`)
 			.setColor(client.embedColor)
-			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg` }`)
+			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}`)
 			.addFields([
 				{
 					name: "Requested By",
@@ -27,7 +29,7 @@ module.exports = {
 					inline: true
 				}
 			])
-		]})
-			.then(x => player.data.set("message", x));
+           client.channels.cache.get(player.text).send({ embeds: [main] }).then(x => player.data.set("message", x));
+	
 	}
 };

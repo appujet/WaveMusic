@@ -7,13 +7,14 @@ module.exports = {
     args: false,
     usage: "",
     aliases: ["prefix"],
-    permission: [],
+    userPrams: ['MANAGE_GUILD'],
+    
     owner: false,
   execute: async (message, args, client, prefix) => {
     
     const data = await db.findOne({ Guild: message.guildId});
     const pre = await args.join(" ")
-    if (!message.member.permissions.has('MANAGE_GUILD')) return message.reply('You must have `Manage Guild` permission to use this command.');
+
     if (!pre[0]) {
     const embed = new MessageEmbed()
         .setDescription("Please give the prefix that you want to set!")

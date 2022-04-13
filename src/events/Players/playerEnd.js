@@ -5,4 +5,4 @@ module.exports = {
 		if (player.data.get("message") && !player.data.get("message").deleted) player.data.get("message").delete().catch(() => null);
 
 	}
-}
+};

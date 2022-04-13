@@ -16,7 +16,7 @@ module.exports = {
     const { channel } = message.member.voice
     const player = client.manager.players.get(message.guild.id);
     if (player) {
-      return await message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`I'm already connected to <#${message.guild.me.voice.channelId}> voice channel!`)] })
+      return await message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`I'm already connected to <#${player.voice}> voice channel!`)] })
     } else {
       if (!message.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])) return message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`I don't have enough permissions to execute this command! please give me permission \`CONNECT\` or \`SPEAK\`.`)] });
 
