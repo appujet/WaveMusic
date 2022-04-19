@@ -71,7 +71,7 @@ module.exports = {
             return channel.send({ content: `Error: I need \`EMBED_LINKS\` permission to work.` });
         }
         if (command.owner && message.author.id !== `${client.owner}`) {
-            embed.setDescription("Only <@836958855866089512> can use this command!");
+            embed.setDescription("Only <@959276033683628122> can use this command!");
             return message.channel.send({ embeds: [embed] });
         }
         const player = client.manager.players.get(message.guild.id);

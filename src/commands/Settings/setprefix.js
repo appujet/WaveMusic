@@ -8,7 +8,7 @@ module.exports = {
     usage: "",
     aliases: ["prefix"],
     userPrams: ['MANAGE_GUILD'],
-    
+    botPrams: ["EMBED_LINKS"],
     owner: false,
   execute: async (message, args, client, prefix) => {
     

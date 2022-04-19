@@ -1,6 +1,6 @@
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
 const { convertTime } = require("../../utils/convert.js");
-const { progressbar } = require('../../utils/progressbar.js')
+
 module.exports = {
   name: "forward",
   aliases: ["f"],
