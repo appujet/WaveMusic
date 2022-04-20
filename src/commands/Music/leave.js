@@ -1,29 +1,28 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-	name: "leave",
+    name: "leave",
     aliases: ["dc"],
     category: "Music",
     description: "Leave voice channel",
     args: false,
     usage: "",
-    permission: [],
+    userPrams: [],
+    botPrams: ["EMBED_LINKS"],
     owner: false,
     player: false,
     inVoiceChannel: true,
     sameVoiceChannel: true,
- execute: async (message, args, client, prefix) => {
-       
+    execute: async (message, args, client, prefix) => {
         const player = client.manager.players.get(message.guild.id);
 
         const emojiLeave = message.client.emoji.leave;
 
-        player.destroy(message.guild.id);
-        
+        await player.destroy(message.guild.id);
+
         let thing = new MessageEmbed()
             .setColor(message.client.embedColor)
-            .setDescription(`${emojiLeave} **Leaved the voice channel**`)
-          return message.reply({embeds: [thing]});
-	
-    }
+            .setDescription(`${emojiLeave} **Leaved the voice channel**`);
+        return message.reply({ embeds: [thing] });
+    },
 };
