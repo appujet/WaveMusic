@@ -30,7 +30,33 @@
 
 ## 🌀 About
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=brblacky&repo=WaveMusic&theme=tokyonight)](https://github.com/brblacky/lavamusic)
-
+## 🎵 Support Source
+- [x] Youtube
+- [x] SoundCloud
+- [x] Spotify
+- [x] Bandcamp
+- [x] Vimeo
+- [x] Https (Radio)
+## 🌟 Feature
+- [x] Music System
+- [x] Playlists System
+- [x] Custom Prefix
+- [x] Slash commands
+- [x] Custom Filters
+- [x] Easy to use
+## 🎛️ Requirement
+- [x] Node js v 16+
+- [x] Java v 13
+- [x] yarn  ``` npm i -g yarn ```
+## ⚙️ Installation 
+Install all dependencies
+```
+yarn
+```
+To start bot 
+```
+yarn start
+```
 ###
 WaveMusic is a discord music bot base in [Kazagumo](https://github.com/Takiyo0/Kazagumo) (Shoukaku)
 If you liked this repository, feel free to leave a star ⭐ to help promote !
