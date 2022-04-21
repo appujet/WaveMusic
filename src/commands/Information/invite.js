@@ -1,28 +1,23 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = {
-  name: "invite",
-  category: "Information",
-  aliases: ["addme"],
-  description: "invite LavaMusic",
+  name: 'invite',
+  category: 'Information',
+  aliases: ['addme'],
+  description: 'invite WaveMusic',
   args: false,
-  usage: "",
-  permission: [],
+  usage: '',
+  userPrams: [],
+  botPrams: ['EMBED_LINKS'],
   owner: false,
   execute: async (message, args, client, prefix) => {
     var invite = client.config.links.invite;
-    var color = client.embedColor
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setLabel("Invite")
-          .setStyle("LINK")
-          .setURL(invite)
-      );
-
+    const row = new MessageActionRow().addComponents(
+      new MessageButton().setLabel('Invite').setStyle('LINK').setURL(invite),
+    );
     const mainPage = new MessageEmbed()
       .setDescription(`Click [Here](${invite}) To Invite Me Or Click Below `)
-      .setColor(color)
-    message.reply({ embeds: [mainPage], components: [row] })
-  }
-}
+      .setColor(client.embedColor);
+    message.reply({ embeds: [mainPage], components: [row] });
+  },
+};

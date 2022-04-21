@@ -6,7 +6,8 @@ module.exports = {
   description: "Check Ping Bot",
   args: false,
   usage: "",
-  permission: [],
+  userPrams: [],
+  botPrams: ['EMBED_LINKS'],
   owner: false,
   execute: async (message, args, client, prefix) => {
 
@@ -17,7 +18,7 @@ module.exports = {
       const PingEmbed = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`\`\`\`ini\n[ Bot Latency ] :: ${ping}ms \n[ API Latency ] :: ${api_ping}ms \`\`\``)
-      await msg.edit({content: "** **",embeds: [PingEmbed]})
+      await msg.edit({ content: "** **", embeds: [PingEmbed] })
     })
   }
 }

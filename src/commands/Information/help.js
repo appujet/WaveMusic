@@ -1,111 +1,144 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = {
-    name: "help",
-    category: "Information",
-    aliases: ["h"],
-    description: "Return all commands, or one specific command",
-    args: false,
-    usage: "",
-    permission: [],
-    owner: false,
-    execute: async (message, args, client, prefix) => {
+  name: 'help',
+  category: 'Information',
+  aliases: ['h'],
+  description: 'Return all commands, or one specific command',
+  args: false,
+  usage: '',
+  userPrams: [],
+  botPrams: ['EMBED_LINKS'],
+  owner: false,
+  execute: async (message, args, client, prefix) => {
+    const embed = new MessageEmbed()
+      .setTitle(`${client.user.username} Help`)
+      .setDescription(
+        ` Hello **<@${message.author.id}>**, I am <@${client.user.id}>.  \n\nA Discord Music Bot With Many Awesome Features, \nSupport Many Sources \n\n\`🎵\`•Music\n\`💽\`\n•Playlist\`ℹ️\`•information\n\`⚙️\`•Config\n\n *Choose an category below button to see commands* \n\n`,
+      )
+      .setThumbnail(client.user.displayAvatarURL())
+      .setColor(client.embedColor)
+      .setTimestamp()
+      .setFooter({
+        text: `Requested by ${message.author.tag}`,
+        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      });
 
-        if (client.config.ownerID === message.author.id) {
-            const color = client.embedColor
-            var row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setLabel('Invite')
-                        .setURL(client.config.links.invite)
-                        .setStyle('LINK'),
+    let but1 = new MessageButton().setCustomId('home').setLabel('Home').setStyle('SUCCESS');
 
-                    new MessageButton()
-                        .setLabel('Privacy Policy')
-                        .setURL('https://github.com/AkAbhijit/Apera-Documentation/blob/main/Privacy%20Policy.md')
-                        .setStyle('LINK'),
+    let but2 = new MessageButton().setCustomId('music').setLabel('Music').setStyle('PRIMARY');
 
-                    new MessageButton()
-                        .setLabel('Support Server')
-                        .setURL(client.config.links.support)
-                        .setStyle('LINK'),
+    let but3 = new MessageButton().setCustomId('pl').setLabel('Playlist').setStyle('PRIMARY');
 
-                    new MessageButton()
-                        .setLabel('Vote')
-                        .setURL('https://discordbotlist.com/bots/apera-5143/upvote')
-                        .setStyle('LINK'),
-                )
+    let but4 = new MessageButton().setCustomId('info').setLabel('Info').setStyle('PRIMARY');
 
-            info_commands = client.commands.filter((x) => x.category && x.category === "Information").map((x) => `\`${x.name}\``);
-            music_commands = client.commands.filter((x) => x.category && x.category === "Music").map((x) => `\`${x.name}\``);
-            filter_commands = client.commands.filter((x) => x.category && x.category === "Filters").map((x) => `\`${x.name}\``);
-            playlist_commands = client.commands.filter((x) => x.category && x.category === "Playlist").map((x) => `\`${x.name}\``);
-            settings_commands = client.commands.filter((x) => x.category && x.category === "Settings").map((x) => `\`${x.name}\``);
-            owner_commands = client.commands.filter((x) => x.category && x.category === "Owner").map((x) => `\`${x.name}\``);
+    let but5 = new MessageButton().setCustomId('config').setLabel('Config').setStyle('PRIMARY');
 
-            const embed = new MessageEmbed()
-                .setAuthor({ name: `Command Panel`, iconURL: client.user.displayAvatarURL() })
-                .setColor(color)
-                .addFields(
-                    { name: `  Information`, value: `${info_commands.join(", ")}`, inline: false },
-                    { name: `  Music`, value: `${music_commands.join(", ")}`, inline: false },
-                    { name: `  Filters`, value: `${filter_commands.join(", ")}`, inline: false },
-                    { name: `  Playlist`, value: `${playlist_commands.join(", ")}`, inline: false },
-                    { name: `  Settings`, value: `${settings_commands.join(", ")}`, inline: false },
-                    { name: `  Owner`, value: `${owner_commands.join(", ")}`, inline: false }
+    let _commands;
+    let editEmbed = new MessageEmbed();
 
-                )
-                .setFooter({ text: `Type ?help <command> to view information of a specific command!` })
+    const m = await message.reply({
+      embeds: [embed],
+      components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+    });
 
-            message.channel.send({ embeds: [embed], components: [row] })
-
-        } else {
-            const color = client.embedColor
-
-            var row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setLabel('Invite')
-                        .setURL(client.config.links.invite)
-                        .setStyle('LINK'),
-
-                    new MessageButton()
-                        .setLabel('Privacy Policy')
-                        .setURL('https://github.com/AkAbhijit/Apera-Documentation/blob/main/Privacy%20Policy.md')
-                        .setStyle('LINK'),
-
-                    new MessageButton()
-                        .setLabel('Support Server')
-                        .setURL(client.config.links.support)
-                        .setStyle('LINK'),
-
-                    new MessageButton()
-                        .setLabel('Vote')
-                        .setURL('https://github.com/AkAbhijit/Apera-Documentation/blob/main/Privacy%20Policy.md')
-                        .setStyle('LINK'),
-                )
-
-            info_commands = client.commands.filter((x) => x.category && x.category === "Information").map((x) => `\`${x.name}\``);
-            music_commands = client.commands.filter((x) => x.category && x.category === "Music").map((x) => `\`${x.name}\``);
-            filter_commands = client.commands.filter((x) => x.category && x.category === "Filters").map((x) => `\`${x.name}\``);
-            playlist_commands = client.commands.filter((x) => x.category && x.category === "Playlist").map((x) => `\`${x.name}\``);
-            settings_commands = client.commands.filter((x) => x.category && x.category === "Settings").map((x) => `\`${x.name}\``);
-
-            const embed = new MessageEmbed()
-                .setAuthor({ name: `Command Panel`, iconURL: client.user.displayAvatarURL() })
-                .setColor(color)
-                .addFields(
-                    { name: `  Information`, value: `${info_commands.join(", ")}`, inline: false },
-                    { name: `  Music`, value: `${music_commands.join(", ")}`, inline: false },
-                    { name: `  Filters`, value: `${filter_commands.join(", ")}`, inline: false },
-                    { name: `  Playlist`, value: `${playlist_commands.join(", ")}`, inline: false },
-                    { name: `  Settings`, value: `${settings_commands.join(", ")}`, inline: false }
-
-                )
-                .setFooter({ text: `Type ?help <command> to view information of a specific command!` })
-
-            message.channel.send({ embeds: [embed], components: [row] })
+    const collector = m.createMessageComponentCollector({
+      filter: (b) => {
+        if (b.user.id === message.author.id) return true;
+        else {
+          b.reply({
+            ephemeral: true,
+            content: `Only **${message.author.tag}** can use this button, if you want then you've to run the command again.`,
+          });
+          return false;
         }
-
-    }
-}
+      },
+      time: 60000,
+      idle: 60000 / 2,
+    });
+    collector.on('end', async () => {
+      if (!m) return;
+      await m
+        .edit({
+          components: [
+            new MessageActionRow().addComponents(
+              but1.setDisabled(true),
+              but2.setDisabled(true),
+              but3.setDisabled(true),
+              but4.setDisabled(true),
+              but5.setDisabled(true),
+            ),
+          ],
+        })
+        .catch(() => {});
+    });
+    collector.on('collect', async (b) => {
+      if (!b.deferred) await b.deferUpdate();
+      if (b.customId === 'home') {
+        if (!m) return;
+        return await m.edit({
+          embeds: [embed],
+          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+        });
+      }
+      if (b.customId === 'music') {
+        _commands = client.commands
+          .filter((x) => x.category && x.category === 'Music')
+          .map((x) => `\`${x.name}\``);
+        editEmbed
+          .setColor(client.embedColor)
+          .setDescription(_commands.join(', '))
+          .setTitle('Music Commands')
+          .setFooter({ text: `Total ${_commands.length} music commands.` });
+        if (!m) return;
+        return await m.edit({
+          embeds: [editEmbed],
+          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+        });
+      }
+      if (b.customId === 'pl') {
+        _commands = client.commands
+          .filter((x) => x.category && x.category === 'Playlist')
+          .map((x) => `\`${x.name}\``);
+        editEmbed
+          .setColor(client.embedColor)
+          .setDescription(_commands.join(', '))
+          .setTitle('Playlist Commands')
+          .setFooter({ text: `Total ${_commands.length} playlist commands.` });
+        if (!m) return;
+        return await m.edit({
+          embeds: [editEmbed],
+          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+        });
+      }
+      if (b.customId == 'info') {
+        _commands = client.commands
+          .filter((x) => x.category && x.category === 'Information')
+          .map((x) => `\`${x.name}\``);
+        editEmbed
+          .setColor(client.embedColor)
+          .setDescription(_commands.join(', '))
+          .setTitle('Information Commands')
+          .setFooter({ text: `Total ${_commands.length} Information commands.` });
+        return await m.edit({
+          embeds: [editEmbed],
+          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+        });
+      }
+      if (b.customId == 'config') {
+        _commands = client.commands
+          .filter((x) => x.category && x.category === 'Config')
+          .map((x) => `\`${x.name}\``);
+        editEmbed
+          .setColor(client.embedColor)
+          .setDescription(_commands.join(', '))
+          .setTitle('Config Commands')
+          .setFooter({ text: `Total ${_commands.length} Config commands.` });
+        return await m.edit({
+          embeds: [editEmbed],
+          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+        });
+      }
+    });
+  },
+};
