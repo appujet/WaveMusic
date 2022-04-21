@@ -22,7 +22,6 @@ module.exports = {
     }
     const emojiequalizer = message.client.emoji.filter;
 
-<<<<<<< HEAD
     await player.player.setFilters({
       op: 'filters',
       guildId: message.guild.id,
@@ -43,16 +42,9 @@ module.exports = {
         { band: 13, gain: 0.1 },
       ],
     });
-=======
-    await player.player.setFilters({});
->>>>>>> 605861bc95edd98cc606a5edc12ec49253982074
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`${emojiequalizer} BassBoost Mode Is Enabled.`);
     return message.reply({ embeds: [thing] });
   },
 };
-<<<<<<< HEAD
-=======
-    
->>>>>>> 605861bc95edd98cc606a5edc12ec49253982074

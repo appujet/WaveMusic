@@ -20,7 +20,6 @@ module.exports = {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
-<<<<<<< HEAD
     const emojiequalizer = client.emoji.filter;
 
     await player.player.setFilters({
@@ -44,22 +43,9 @@ module.exports = {
         { band: 14, gain: 0.4 },
       ],
     });
-=======
-    const emojiequalizer = message.client.emoji.filter;
->>>>>>> 605861bc95edd98cc606a5edc12ec49253982074
-
-    await player.player.setFilters({});
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
-<<<<<<< HEAD
-      .setDescription(`${emojiequalizer} Electronic Mode Is Enabled`);
-
-    return message.reply({ embeds: [thing] });
-  },
-};
-=======
       .setDescription(`${emojiequalizer} Electronic Mode Is Enabled.`);
     return message.reply({ embeds: [thing] });
   },
 };
->>>>>>> 605861bc95edd98cc606a5edc12ec49253982074
