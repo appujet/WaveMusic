@@ -47,13 +47,15 @@
 ## 🎛️ Requirement
 - [x] Node js v 16+
 - [x] Java v 13
-- [x] yarn  ``` npm i -g yarn ```
+- [x] yarn  `npm i -g yarn `
 ## ⚙️ Installation 
-Install all dependencies
+Fill all requirement in `src/config.js` or `.env`
+
+For install all dependencies use
 ```
 yarn
 ```
-To start bot 
+To start your bot 
 ```
 yarn start
 ```
