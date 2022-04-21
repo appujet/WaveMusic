@@ -14,12 +14,18 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
+<<<<<<< HEAD
     const player = message.client.manager.get(message.guild.id);
+=======
+
+    const player = message.client.manager.players.get(message.guild.id);
+>>>>>>> 605861bc95edd98cc606a5edc12ec49253982074
 
     if (!player.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
+<<<<<<< HEAD
     const emojiequalizer = client.emoji.filter;
     await player.player.setFilters({
       op: 'filters',
@@ -48,3 +54,14 @@ module.exports = {
     return message.reply({ embeds: [thing] });
   },
 };
+=======
+    const emojiequalizer = message.client.emoji.filter;
+
+    await player.player.setFilters({});
+    let thing = new MessageEmbed()
+      .setColor(client.embedColor)
+      .setDescription(`${emojiequalizer} EarRape Mode Is Enabled.`);
+    return message.reply({ embeds: [thing] });
+  },
+};
+>>>>>>> 605861bc95edd98cc606a5edc12ec49253982074
