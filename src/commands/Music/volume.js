@@ -20,7 +20,6 @@ module.exports = {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
-
     const volumeEmoji = client.emoji.volumehigh;
 
     if (!args.length) {

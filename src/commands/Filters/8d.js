@@ -29,7 +29,7 @@ module.exports = {
     });
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
-      .setDescription(`${emojiequalizer} 8D Mode Is Enabled`);
+      .setDescription(`${emojiequalizer} 8D Mode Is Enabled.`);
     
     return message.reply({ embeds: [thing] });
   },

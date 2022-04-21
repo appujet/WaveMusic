@@ -24,7 +24,7 @@ module.exports = {
     const emojiequalizer = client.emoji.filter;
     await player.player.setFilters({
       op: 'filters',
-      guildId: message.guild.id || message.guild,
+      guildId: message.guild.id,
       equalizer: [
         { band: 1, gain: 0.3 },
         { band: 0, gain: 0.3 },

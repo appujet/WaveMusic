@@ -1,10 +1,10 @@
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-  name: 'earrape',
+  name: 'pop',
   category: 'Filters',
-  aliases: ['er'],
-  description: 'Set EarRape Filter',
+  aliases: ['pop'],
+  description: 'Set Pop Filter',
   args: false,
   usage: '',
   userPrams: [],
@@ -14,36 +14,39 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
-    const player = message.client.manager.get(message.guild.id);
+    const player = client.manager.players.get(message.guild.id);
 
     if (!player.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
+
     const emojiequalizer = client.emoji.filter;
     await player.player.setFilters({
       op: 'filters',
       guildId: message.guild.id,
       equalizer: [
-        { band: 0, gain: 0.25 },
-        { band: 1, gain: 0.5 },
-        { band: 2, gain: -0.5 },
-        { band: 3, gain: -0.25 },
-        { band: 4, gain: 0 },
-        { band: 6, gain: -0.025 },
-        { band: 7, gain: -0.0175 },
-        { band: 8, gain: 0 },
-        { band: 9, gain: 0 },
-        { band: 10, gain: 0.0125 },
-        { band: 11, gain: 0.025 },
-        { band: 12, gain: 0.375 },
-        { band: 13, gain: 0.125 },
-        { band: 14, gain: 0.125 },
+        { band: 0, gain: -0.25 },
+        { band: 1, gain: 0.48 },
+        { band: 2, gain: 0.59 },
+        { band: 3, gain: 0.72 },
+        { band: 4, gain: 0.56 },
+        { band: 5, gain: 0.15 },
+        { band: 6, gain: -0.24 },
+        { band: 7, gain: -0.24 },
+        { band: 8, gain: -0.16 },
+        { band: 9, gain: -0.16 },
+        { band: 10, gain: 0 },
+        { band: 11, gain: 0 },
+        { band: 12, gain: 0 },
+        { band: 13, gain: 0 },
+        { band: 14, gain: 0 },
       ],
     });
+
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
-      .setDescription(`${emojiequalizer} EarRape Mode Is Enabled`);
+      .setDescription(`${emojiequalizer} Pop Mode Is Enabled`);
 
     return message.reply({ embeds: [thing] });
   },
