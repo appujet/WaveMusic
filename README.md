@@ -49,7 +49,7 @@
 - [x] Java v 13
 - [x] yarn  `npm i -g yarn `
 ## ⚙️ Installation 
-Fill all requirement in `src/config.js` or `.env`
+Fill all requirement in `src/config.js` or `.env` **(rename `.env.example` to `.env`)**
 
 For install all dependencies use
 ```
