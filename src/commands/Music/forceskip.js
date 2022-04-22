@@ -21,7 +21,7 @@ module.exports = {
     }
     const song = player.current;
 
-    await player.stopTrack();
+    await player.player.stopTrack();
 
     const emojiskip = message.client.emoji.skip;
 

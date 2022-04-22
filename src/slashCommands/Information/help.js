@@ -1,23 +1,22 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu, CommandInteraction, Client } = require('discord.js');
 module.exports = {
-  name: "help",
-  description: "Get The Bot Invite Link",
+  name: 'help',
+  description: 'Return all commands',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
 
   /**
-   * 
-   * @param {Client} client 
-   * @param {CommandInteraction} interaction 
+   *
+   * @param {Client} client
+   * @param {CommandInteraction} interaction
    */
 
   run: async (client, interaction) => {
-    const prefix = client.prefix
+    const prefix = client.prefix;
 
     await interaction.deferReply({
-      ephemeral: false
+      ephemeral: false,
     });
-
 
     const embed = new MessageEmbed()
       .setTitle(`${client.user.username} Help`)
@@ -31,89 +30,86 @@ module.exports = {
         text: `Requested by ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       });
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageSelectMenu()
-          .setCustomId('helpop')
-          .setMinValues(1)
-          .setMaxValues(1)
-          .setPlaceholder('Wave Music Help')
-          .addOptions([
-            {
-              label: 'Music',
-              value: 'music',
-              emoji: '🎼',
-            },
-            {
-              label: ' Filter',
-              value: 'filter',
-              emoji: '🎙️',
-            },
-            {
-              label: ' Info',
-              value: 'info',
-              emoji: 'ℹ️',
-            },
-            {
-              label: 'Settings',
-              value: 'settings',
-              emoji: '⚙️',
-            },
-            {
-              label: 'Playlist',
-              value: 'playlist',
-              emoji: '🗒️',
-            },
-            {
-              label: 'Home',
-              value: 'home',
-              emoji: '🏠',
-            }
-          ])
-      )
+    const row = new MessageActionRow().addComponents(
+      new MessageSelectMenu()
+        .setCustomId('helpop')
+        .setMinValues(1)
+        .setMaxValues(1)
+        .setPlaceholder('Wave Music Help')
+        .addOptions([
+          {
+            label: 'Music',
+            value: 'music',
+            emoji: '🎼',
+          },
+          {
+            label: ' Filter',
+            value: 'filter',
+            emoji: '🎙️',
+          },
+          {
+            label: ' Info',
+            value: 'info',
+            emoji: 'ℹ️',
+          },
+          {
+            label: 'Settings',
+            value: 'settings',
+            emoji: '⚙️',
+          },
+          {
+            label: 'Playlist',
+            value: 'playlist',
+            emoji: '🗒️',
+          },
+          {
+            label: 'Home',
+            value: 'home',
+            emoji: '🏠',
+          },
+        ]),
+    );
 
-    const m = await interaction.editReply({ embeds: [embed], components: [row] })
+    const m = await interaction.editReply({ embeds: [embed], components: [row] });
 
-    const row2 = new MessageActionRow()
-      .addComponents(
-        new MessageSelectMenu()
-          .setCustomId('disable_h')
-          .setDisabled(true)
-          .setPlaceholder(`Timeout do ${prefix}help`)
-          .addOptions([
-            {
-              label: 'Music',
-              value: 'music',
-              emoji: '🎼',
-            },
-            {
-              label: ' Filter',
-              value: 'filter',
-              emoji: '🎙️',
-            },
-            {
-              label: ' Info',
-              value: 'info',
-              emoji: 'ℹ️',
-            },
-            {
-              label: 'Settings',
-              value: 'settings',
-              emoji: '⚙️',
-            },
-            {
-              label: 'Playlist',
-              value: 'playlist',
-              emoji: '🗒️',
-            },
-            {
-              label: 'Home',
-              value: 'home',
-              emoji: '🏠',
-            }
-          ])
-      )
-
+    const row2 = new MessageActionRow().addComponents(
+      new MessageSelectMenu()
+        .setCustomId('disable_h')
+        .setDisabled(true)
+        .setPlaceholder(`Timeout do ${prefix}help`)
+        .addOptions([
+          {
+            label: 'Music',
+            value: 'music',
+            emoji: '🎼',
+          },
+          {
+            label: ' Filter',
+            value: 'filter',
+            emoji: '🎙️',
+          },
+          {
+            label: ' Info',
+            value: 'info',
+            emoji: 'ℹ️',
+          },
+          {
+            label: 'Settings',
+            value: 'settings',
+            emoji: '⚙️',
+          },
+          {
+            label: 'Playlist',
+            value: 'playlist',
+            emoji: '🗒️',
+          },
+          {
+            label: 'Home',
+            value: 'home',
+            emoji: '🏠',
+          },
+        ]),
+    );
 
     const collector = m.createMessageComponentCollector({
       filter: (b) => {
@@ -126,16 +122,16 @@ module.exports = {
           return false;
         }
       },
-      componentType: "SELECT_MENU",
+      componentType: 'SELECT_MENU',
       time: 60000,
       idle: 60000 / 2,
     });
     collector.on('end', async () => {
       if (!m) return;
-      return m.edit({ components: [row2] }).catch(() => { });
+      return m.edit({ components: [row2] }).catch(() => {});
     });
 
-    collector.on("collect", (interaction) => {
+    collector.on('collect', (interaction) => {
       if (!interaction.deferred) interaction.deferUpdate();
       const options = interaction.values[0];
       let _commands;
@@ -223,8 +219,6 @@ module.exports = {
           components: [row],
         });
       }
-    }
-    )
-
+    });
   },
 };
