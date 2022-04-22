@@ -98,23 +98,5 @@ module.exports = {
       }
     });
 
-    const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
-    }
-    const emojiequalizer = message.client.emoji.filter;
-
-    await player.player.setFilters({
-      op: 'filters',
-      guildId: message.guild.id,
-      rotation: { rotationHz: 0.2 },
-    });
-    let thing = new MessageEmbed()
-      .setColor(client.embedColor)
-      .setDescription(`${emojiequalizer} 8D Mode Is Enabled.`);
-
-    return message.reply({ embeds: [thing] });
-
   },
 };
