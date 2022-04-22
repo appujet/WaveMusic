@@ -42,7 +42,7 @@ module.exports = {
         iconURI: interaction.user.displayAvatarURL(),
       })
       .setDescription(pages[page])
-      .setFooter({ text: `Playlist (${List} / 10)` })
+      .setFooter({ text: `Playlist (${list} / 10)` })
       .setColor(client.embedColor);
     return await interaction.editReply({ embeds: [embeds] });
   },
