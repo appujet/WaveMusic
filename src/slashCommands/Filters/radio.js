@@ -67,7 +67,7 @@ module.exports = {
     collector.on('collect', async (b) => {
       if (!b.replied) await b.deferUpdate({ ephemeral: true });
       if (b.customId === 'clear_but') {
-        await player.player.clearEffects();
+        await player.player.clearFilters();
         return await b.editReply({
           embeds: [embed1.setDescription(`${emojiequalizer} Radio Mode Is \`OFF\``)],
           components: [row2],
