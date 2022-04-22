@@ -23,7 +23,6 @@ module.exports = {
     }
     const emojiequalizer = message.client.emoji.filter;
     const embed = new MessageEmbed()
-=======
     const player = client.manager.players.get(message.guild.id);
 
     if (!player.current) {
@@ -53,7 +52,6 @@ module.exports = {
       ],
     });
     let thing = new MessageEmbed()
->>>>>>> bc776540c797566aec495d8f05e3fee1a04de7a0
       .setColor(client.embedColor)
       .setDescription(`Chose The Buttons`);
 
