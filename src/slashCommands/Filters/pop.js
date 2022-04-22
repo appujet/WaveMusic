@@ -1,8 +1,8 @@
 const { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, Client } = require("discord.js");
 
 module.exports = {
-  name: 'nightcore',
-  description: 'Sets NightCore Filter.',
+  name: 'pop',
+  description: 'Sets Pop Filter.',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
   player: true,
@@ -30,10 +30,7 @@ module.exports = {
       .setDescription(`Chose The Buttons`);
 
     const but = new MessageButton().setCustomId('clear_but').setLabel('OFF').setStyle('DANGER');
-    const but2 = new MessageButton()
-      .setCustomId('NightCore_but')
-      .setLabel('ON')
-      .setStyle('PRIMARY');
+    const but2 = new MessageButton().setCustomId('Pop_but').setLabel('ON').setStyle('PRIMARY');
 
     const but_ = new MessageButton()
       .setCustomId('clear_but_')
@@ -41,7 +38,7 @@ module.exports = {
       .setStyle('DANGER')
       .setDisabled(true);
     const but_2 = new MessageButton()
-      .setCustomId('NightCore_but_')
+      .setCustomId('Pop_but_')
       .setLabel('ON')
       .setStyle('PRIMARY')
       .setDisabled(true);
@@ -62,7 +59,7 @@ module.exports = {
     collector.on('end', async () => {
       if (!m) return;
       await m.edit({
-        embeds: [embed1.setDescription(`Time is Out type again ${prefix}nightcore`)],
+        embeds: [embed1.setDescription(`Time is Out type again ${prefix}Pop`)],
         components: [
           new MessageActionRow().addComponents(but2.setDisabled(true), but.setDisabled(true)),
         ],
@@ -73,22 +70,33 @@ module.exports = {
       if (b.customId === 'clear_but') {
         await player.player.clearEffects();
         return await b.editReply({
-          embeds: [embed1.setDescription(`${emojiequalizer} NightCore Mode Is \`OFF\``)],
+          embeds: [embed1.setDescription(`${emojiequalizer} Pop Mode Is \`OFF\``)],
           components: [row2],
         });
-      } else if (b.customId === 'NightCore_but') {
+      } else if (b.customId === 'Pop_but') {
         await player.player.setFilters({
           op: 'filters',
           guildId: interaction.guild.id,
           equalizer: [
-            { band: 1, gain: 0.3 },
-            { band: 0, gain: 0.3 },
+            { band: 0, gain: -0.25 },
+            { band: 1, gain: 0.48 },
+            { band: 2, gain: 0.59 },
+            { band: 3, gain: 0.72 },
+            { band: 4, gain: 0.56 },
+            { band: 5, gain: 0.15 },
+            { band: 6, gain: -0.24 },
+            { band: 7, gain: -0.24 },
+            { band: 8, gain: -0.16 },
+            { band: 9, gain: -0.16 },
+            { band: 10, gain: 0 },
+            { band: 11, gain: 0 },
+            { band: 12, gain: 0 },
+            { band: 13, gain: 0 },
+            { band: 14, gain: 0 },
           ],
-          timescale: { pitch: 1.2 },
-          tremolo: { depth: 0.3, frequency: 14 },
         });
         return await b.editReply({
-          embeds: [embed1.setDescription(`${emojiequalizer} NightCore Mode Is \`ON\``)],
+          embeds: [embed1.setDescription(`${emojiequalizer} Pop Mode Is \`ON\``)],
           components: [row1],
         });
       }

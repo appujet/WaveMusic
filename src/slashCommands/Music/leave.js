@@ -1,32 +1,33 @@
-const { MessageEmbed, CommandInteraction, Client } = require("discord.js")
+const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
 
 module.exports = {
-  name: "leave",
-  description: "Leave voice channel",
+  name: 'leave',
+  description: 'Leave voice channel',
+  userPrams: [],
+  botPrams: ['EMBED_LINKS'],
+  player: false,
+  inVoiceChannel: true,
+  sameVoiceChannel: true,
 
   /**
-   * 
-   * @param {Client} client 
-   * @param {CommandInteraction} interaction 
+   *
+   * @param {Client} client
+   * @param {CommandInteraction} interaction
    */
 
   run: async (client, interaction) => {
     await interaction.deferReply({
-      ephemeral: false
+      ephemeral: false,
     });
-      if(!interaction.member.voice.channel) return interaction.editReply({embeds: [new MessageEmbed ().setColor(client.embedColor).setDescription("You are not connect in vc")]});
-      if(interaction.guild.me.voice.channel && interaction.guild.me.voice.channelId !== interaction.member.voice.channelId) return interaction.editReply({embeds: [new MessageEmbed ().setColor(client.embedColor).setDescription(`You are not connected to <#${interaction.guild.me.voice.channelId}> to use this command.`)]});
+    const player = client.manager.players.get(interaction.guild.id);
 
-    const player = client.manager.get(interaction.guildId);
-   
-    const emojiLeave = client.emoji.leave;
-        
-        player.destroy();
-        
-        let thing = new MessageEmbed()
-          .setColor(client.embedColor)
-          .setDescription(`${emojiLeave} **Leave the voice channel**\nThank you for using ${interaction.client.user.username}!`)
-        return interaction.editReply({ embeds: [thing] });
-        
-        }
-     };
+    const emojiLeave = interaction.client.emoji.leave;
+
+    await player.destroy(interaction.guild.id);
+
+    let thing = new MessageEmbed()
+      .setColor(interaction.client.embedColor)
+      .setDescription(`${emojiLeave} **Leaved the voice channel**`);
+    return interaction.editReply({ embeds: [thing] });
+  },
+};

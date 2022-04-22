@@ -3,6 +3,8 @@ const { MessageEmbed, CommandInteraction, Client, MessageButton, MessageActionRo
 module.exports = {
   name: "invite",
   description: "Get The Bot Invite Link",
+  userPrams: [],
+  botPrams: ['EMBED_LINKS'],
 
   /**
    * 

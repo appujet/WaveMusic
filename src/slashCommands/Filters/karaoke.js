@@ -1,8 +1,8 @@
 const { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, Client } = require("discord.js");
 
 module.exports = {
-  name: 'nightcore',
-  description: 'Sets NightCore Filter.',
+  name: 'karaoke',
+  description: 'Sets karaoke Filter.',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
   player: true,
@@ -30,10 +30,7 @@ module.exports = {
       .setDescription(`Chose The Buttons`);
 
     const but = new MessageButton().setCustomId('clear_but').setLabel('OFF').setStyle('DANGER');
-    const but2 = new MessageButton()
-      .setCustomId('NightCore_but')
-      .setLabel('ON')
-      .setStyle('PRIMARY');
+    const but2 = new MessageButton().setCustomId('Karaoke_but').setLabel('ON').setStyle('PRIMARY');
 
     const but_ = new MessageButton()
       .setCustomId('clear_but_')
@@ -41,7 +38,7 @@ module.exports = {
       .setStyle('DANGER')
       .setDisabled(true);
     const but_2 = new MessageButton()
-      .setCustomId('NightCore_but_')
+      .setCustomId('Karaoke_but_')
       .setLabel('ON')
       .setStyle('PRIMARY')
       .setDisabled(true);
@@ -62,7 +59,7 @@ module.exports = {
     collector.on('end', async () => {
       if (!m) return;
       await m.edit({
-        embeds: [embed1.setDescription(`Time is Out type again ${prefix}nightcore`)],
+        embeds: [embed1.setDescription(`Time is Out type again ${prefix}karaoke`)],
         components: [
           new MessageActionRow().addComponents(but2.setDisabled(true), but.setDisabled(true)),
         ],
@@ -71,24 +68,24 @@ module.exports = {
     collector.on('collect', async (b) => {
       if (!b.replied) await b.deferUpdate({ ephemeral: true });
       if (b.customId === 'clear_but') {
-        await player.player.clearEffects();
+        await player.player.clearFilters();
         return await b.editReply({
-          embeds: [embed1.setDescription(`${emojiequalizer} NightCore Mode Is \`OFF\``)],
+          embeds: [embed1.setDescription(`${emojiequalizer}Karaoke Mode Is \`OFF\``)],
           components: [row2],
         });
-      } else if (b.customId === 'NightCore_but') {
+      } else if (b.customId === 'Karaoke_but') {
         await player.player.setFilters({
           op: 'filters',
           guildId: interaction.guild.id,
-          equalizer: [
-            { band: 1, gain: 0.3 },
-            { band: 0, gain: 0.3 },
-          ],
-          timescale: { pitch: 1.2 },
-          tremolo: { depth: 0.3, frequency: 14 },
+          karaoke: {
+            level: 1.0,
+            monoLevel: 1.0,
+            filterBand: 220.0,
+            filterWidth: 100.0,
+          },
         });
         return await b.editReply({
-          embeds: [embed1.setDescription(`${emojiequalizer} NightCore Mode Is \`ON\``)],
+          embeds: [embed1.setDescription(`${emojiequalizer} Karaoke Mode Is \`ON\``)],
           components: [row1],
         });
       }

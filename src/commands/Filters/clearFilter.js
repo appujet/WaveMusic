@@ -1,10 +1,10 @@
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-  name: 'party',
+  name: 'clearFilter',
   category: 'Filters',
-  aliases: ['paty'],
-  description: 'Set Party Filter',
+  aliases: ['clearf', 'cf'],
+  description: 'Clears The Filter',
   args: false,
   usage: '',
   userPrams: [],
@@ -19,26 +19,13 @@ module.exports = {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
+    const emojiequalizer = message.client.emoji.filter;
 
-    const emojiequalizer = client.emoji.filter;
-    await player.player.setFilters({
-      op: 'filters',
-      guildId: message.guild.id,
-      equalizer: [
-        { band: 0, gain: -1.16 },
-        { band: 1, gain: 0.28 },
-        { band: 2, gain: 0.42 },
-        { band: 3, gain: 0.5 },
-        { band: 4, gain: 0.36 },
-        { band: 5, gain: 0 },
-        { band: 6, gain: -0.3 },
-        { band: 7, gain: -0.21 },
-        { band: 8, gain: -0.21 },
-      ],
-    });
+    await player.player.clearFilters();
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
-      .setDescription(`${emojiequalizer} Party Mode Is Enabled`);
+      .setDescription(`${emojiequalizer} Filter is cleared`);
+
     return message.reply({ embeds: [thing] });
   },
 };

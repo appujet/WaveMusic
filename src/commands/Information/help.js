@@ -14,7 +14,7 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle(`${client.user.username} Help`)
       .setDescription(
-        ` Hello **<@${message.author.id}>**, I am <@${client.user.id}>.  \n\nA Discord Music Bot With Many Awesome Features, \nSupport Many Sources \n\n\`🎵\`•Music\n\`💽\`\n•Playlist\`ℹ️\`•information\n\`⚙️\`•Config\n\n *Choose an category below button to see commands* \n\n`,
+        ` Hello **<@${message.author.id}>**, I am <@${client.user.id}>.  \n\nA Discord Music Bot With Many Awesome Features, \nSupport Many Sources \n\n\`🎵\`•Music\n\`🗒️\`•Playlist\n\`ℹ️\`•information\n\`⚙️\`•Config\n\`🎙️\`•Filters\n\n *Choose an category below button to see commands* \n\n`,
       )
       .setThumbnail(client.user.displayAvatarURL())
       .setColor(client.embedColor)
@@ -34,12 +34,17 @@ module.exports = {
 
     let but5 = new MessageButton().setCustomId('config').setLabel('Config').setStyle('PRIMARY');
 
+    let but6 = new MessageButton().setCustomId('filters').setLabel('Filters').setStyle('PRIMARY');
+
+    const row = new MessageActionRow().addComponents(but1, but2, but3);
+    const row1 = new MessageActionRow().addComponents(but4, but5, but6);
+
     let _commands;
     let editEmbed = new MessageEmbed();
 
     const m = await message.reply({
       embeds: [embed],
-      components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+      components: [row, row1],
     });
 
     const collector = m.createMessageComponentCollector({
@@ -67,6 +72,7 @@ module.exports = {
               but3.setDisabled(true),
               but4.setDisabled(true),
               but5.setDisabled(true),
+              but6.setDisabled(true),
             ),
           ],
         })
@@ -78,7 +84,7 @@ module.exports = {
         if (!m) return;
         return await m.edit({
           embeds: [embed],
-          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+          components: [row, row1],
         });
       }
       if (b.customId === 'music') {
@@ -93,7 +99,7 @@ module.exports = {
         if (!m) return;
         return await m.edit({
           embeds: [editEmbed],
-          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+          components: [row, row1],
         });
       }
       if (b.customId === 'pl') {
@@ -108,7 +114,7 @@ module.exports = {
         if (!m) return;
         return await m.edit({
           embeds: [editEmbed],
-          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+          components: [row, row1],
         });
       }
       if (b.customId == 'info') {
@@ -122,21 +128,35 @@ module.exports = {
           .setFooter({ text: `Total ${_commands.length} Information commands.` });
         return await m.edit({
           embeds: [editEmbed],
-          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+          components: [row, row1],
         });
       }
       if (b.customId == 'config') {
         _commands = client.commands
-          .filter((x) => x.category && x.category === 'Config')
+          .filter((x) => x.category && x.category === 'Settings')
           .map((x) => `\`${x.name}\``);
         editEmbed
           .setColor(client.embedColor)
           .setDescription(_commands.join(', '))
           .setTitle('Config Commands')
-          .setFooter({ text: `Total ${_commands.length} Config commands.` });
+          .setFooter({ text: `Total ${_commands.length} Settings commands.` });
         return await m.edit({
           embeds: [editEmbed],
-          components: [new MessageActionRow().addComponents(but1, but2, but3, but4, but5)],
+          components: [row, row1],
+        });
+      }
+      if (b.customId == 'filters') {
+        _commands = client.commands
+          .filter((x) => x.category && x.category === 'Filters')
+          .map((x) => `\`${x.name}\``);
+        editEmbed
+          .setColor(client.embedColor)
+          .setDescription(_commands.join(', '))
+          .setTitle('Config Commands')
+          .setFooter({ text: `Total ${_commands.length} Filters commands.` });
+        return await m.edit({
+          embeds: [editEmbed],
+          components: [row, row1],
         });
       }
     });

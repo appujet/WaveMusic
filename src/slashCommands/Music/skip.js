@@ -1,54 +1,42 @@
-const { CommandInteraction, Client, MessageEmbed } = require("discord.js");
+const { CommandInteraction, Client, MessageEmbed } = require('discord.js');
 
 module.exports = {
-        name: "skip",
-        description: "To skip a song/track from the queue.",
-    
-    /**
-     * 
-     * @param {Client} client 
-     * @param {CommandInteraction} interaction 
-     * @param {String} color 
-     */
+  name: 'skip',
+  description: 'To skip a song/track from the queue.',
+  player: true,
+  inVoiceChannel: true,
+  sameVoiceChannel: true,
+
+  /**
+   *
+   * @param {Client} client
+   * @param {CommandInteraction} interaction
+   * @param {String} color
+   */
 
   run: async (client, interaction) => {
     await interaction.deferReply({
-            ephemeral: false
-        });
-      if(!interaction.member.voice.channel) return interaction.editReply({embeds: [new MessageEmbed ().setColor(client.embedColor).setDescription("You are not connect in vc")]});
-      if(interaction.guild.me.voice.channel && interaction.guild.me.voice.channelId !== interaction.member.voice.channelId) return interaction.editReply({embeds: [new MessageEmbed ().setColor(client.embedColor).setDescription(`You are not connected to <#${interaction.guild.me.voice.channelId}> to use this command.`)]});
+      ephemeral: false,
+    });
+    const player = client.manager.players.get(interaction.guild.id);
+    if (!player.current) {
+      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
+      return interaction.editReply({ embeds: [thing] });
+    }
+    if (player.queue.length == 0) {
+      let noskip = new MessageEmbed()
+        .setColor(client.embedColor)
+        .setDescription(`No more songs left in the queue to skip.`);
+      return interaction.editReply({ embeds: [noskip] });
+    }
 
-   	const emojiskip = client.emoji.skip;
-  if(!interaction.member.voice?.channel) return await interaction.editReply({embeds: [new MessageEmbed().setColor(client.embedColor).setDescription("You are not connected to a voice channel to use this command.")]
-    }).catch(() => {});
-    
-  if(interaction.guild.me.voice.channel && interaction.member.voice?.channelId !== interaction.guild.me.voice.channelId) return await interaction.editReply({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`are not connected to ${interaction.guild.me.voice.channel} to use this command.`)]
-    }).catch(() => {});
-      const player = client.manager.get(interaction.guildId);
-    if(!player) return await interaction.editReply({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`Nothing is playing right now.`)]
-    }).catch(() => {});
-    if(player && player.state !== "CONNECTED") {
-       player.destroy(); 
-      return await interaction.editReply({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`Nothing is playing right now.`)]
-      }).catch(() => {});
-    };
-   if(!player.queue) return await interaction.editReply({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription("Nothing is playing right now.")]
-   }).catch(() => {});
-        if(!player.queue.current) return await interaction.editReply({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription("Nothing is playing right now.")]
-      }).catch(() => {});
+    await player.player.stopTrack();
 
-       
+    const emojiskip = client.emoji.skip;
 
-      if (player.queue.size == 0) {
-        let noskip = new MessageEmbed()
-          .setColor(client.embedColor)
-          .setDescription(`No more songs left in the queue to skip.`);
-        return interaction.editReply({ embeds: [noskip] });
-      }
-
-        player.stop();
-        return await interaction.editReply({
-            embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`${emojiskip} **Skipped** \n[${player.queue.current.title}](${player.queue.current.uri})`)]
-        }).catch(() => {});
-  }
-					}
+    let thing = new MessageEmbed()
+      .setDescription(`${emojiskip} **Skipped**\n[${player.current.title}](${player.current.uri})`)
+      .setColor(client.embedColor);
+    return interaction.editReply({ embeds: [thing] });
+  },
+};
