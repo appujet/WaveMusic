@@ -50,6 +50,7 @@
 - [x] yarn  `npm i -g yarn `
 ## ⚙️ Installation 
 Fill all requirement in `src/config.js` or `.env` **(rename `.env.example` to `.env`)**
+
 • [yarn](https://yarnpkg.com/)
 
 For install all dependencies use
@@ -60,8 +61,10 @@ To start your bot
 ```
 yarn start
 ```
-Or 
+**Or**
+
 • [Npm](https://www.npmjs.com/)
+
 For install all dependencies use
 ```
 npm install
