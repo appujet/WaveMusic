@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 
 module.exports = {
   name: 'speed',
@@ -15,11 +15,9 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
 
-    const player = message.client.manager.get(message.guild.id);
-    if (!player.queue.current) {
-      let thing = new MessageEmbed()
-        .setColor("RED")
-        .setDescription("There is no music playing.");
+     const player = client.manager.players.get(message.guild.id);
+    if (!player.current) {
+      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
     const emojiequalizer = message.client.emoji.filter;

@@ -1,3 +1,5 @@
+const { Permissions } = require('discord.js');
+
 module.exports = {
   name: 'interactionCreate',
   run: async (client, interaction) => {
@@ -5,14 +7,22 @@ module.exports = {
       const SlashCommands = client.slashCommands.get(interaction.commandName);
       if (!SlashCommands) return;
 
-      if (SlashCommands.owner && interaction.author.id !== `${client.owner}`) {
-        await interaction
+      if (!interaction.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES))
+        return await interaction.user.dmChannel
+          .send({
+            content: `I don't have **\`SEND_interactionS\`** permission in <#${interaction.channelId}> to execute this **\`${SlashCommands.name}\`** command.`,
+          })
+          .catch(() => {});
+
+      if (!interaction.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
+
+      if (!interaction.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS))
+        return await interaction
           .reply({
-            content: `Only <@836958855866089512> can use this command!`,
+            content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${SlashCommands.name}\`** command.`,
             ephemeral: true,
           })
           .catch(() => {});
-      }
       const player = interaction.client.manager.players.get(interaction.guildId);
       if (SlashCommands.player && !player) {
         return await interaction
@@ -44,16 +54,18 @@ module.exports = {
           })
           .catch(() => {});
       }
-      if (
-        SlashCommands.sameVoiceChannel &&
-        interaction.member.voice.channel !== interaction.guild.me.voice.channel
-      ) {
-        return await interaction
-          .reply({
-            content: `You must be in the same channel as ${interaction.client.user}`,
-            ephemeral: true,
-          })
-          .catch(() => {});
+
+      if (SlashCommands.sameVoiceChannel) {
+        if (interaction.guild.me.voice.channel) {
+          if (interaction.guild.me.voice.channelId !== interaction.member.voice.channelId) {
+            return await interaction
+              .reply({
+                content: `You must be in the same channel as ${interaction.client.user}`,
+                ephemeral: true,
+              })
+              .catch(() => {});
+          }
+        }
       }
       try {
         await SlashCommands.run(client, interaction);

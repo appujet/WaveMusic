@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 
 module.exports = {
   name: 'electronic',
@@ -22,7 +22,7 @@ module.exports = {
     }
     const emojiequalizer = client.emoji.filter;
 
-    let thing = new MessageEmbed()
+    let embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Chose The Buttons`);
 

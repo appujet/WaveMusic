@@ -48,8 +48,7 @@ module.exports = {
 
     if (!command) return;
     if (!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-      return await message.author.dmChannel
-        .send({
+      return await message.author.dmChannel.send({
           content: `I don't have **\`SEND_MESSAGES\`** permission in <#${message.channelId}> to execute this **\`${command.name}\`** command.`,
         })
         .catch(() => {});
@@ -57,8 +56,7 @@ module.exports = {
     if (!message.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
 
     if (!message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS))
-      return await message.channel
-        .send({
+      return await message.channel.send({
           content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${command.name}\`** command.`,
         })
         .catch(() => {});
@@ -98,7 +96,7 @@ module.exports = {
       return message.channel.send({ embeds: [embed] });
     }
     const player = client.manager.players.get(message.guild.id);
-    if (command.player && !player) {
+    if ((command.player && !player)) {
       embed.setDescription('There is no player for this guild.');
       return message.channel.send({ embeds: [embed] });
     }
