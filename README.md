@@ -78,7 +78,7 @@ If you liked this repository, feel free to leave a star ⭐ to help promote !
 
 ## 🔐 License
 
-Distributed under the MIT License. See [`LICENSE`](https://github.com/brblacky/WaveMusic/blob/master/LICENSE) for more information.
+Distributed under the  GPL License. See [`LICENSE`](https://github.com/brblacky/WaveMusic/blob/master/LICENSE) for more information.
 
 [version-shield]: https://img.shields.io/github/package-json/v/brblacky/WaveMusic?style=for-the-badge
 [version-url]: https://github.com/brblacky/WaveMusic
