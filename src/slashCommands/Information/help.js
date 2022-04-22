@@ -1,27 +1,35 @@
-const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
-
+const { MessageEmbed, MessageActionRow, MessageSelectMenu, CommandInteraction, Client } = require('discord.js');
 module.exports = {
-  name: 'help',
-  category: 'Information',
-  aliases: ['h'],
-  description: 'Return all commands, or one specific command',
-  args: false,
-  usage: '',
+  name: "help",
+  description: "Get The Bot Invite Link",
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
-  owner: false,
-  execute: async (message, args, client, prefix) => {
+
+  /**
+   * 
+   * @param {Client} client 
+   * @param {CommandInteraction} interaction 
+   */
+
+  run: async (client, interaction) => {
+    const prefix = client.prefix
+
+    await interaction.deferReply({
+      ephemeral: false
+    });
+
+
     const embed = new MessageEmbed()
       .setTitle(`${client.user.username} Help`)
       .setDescription(
-        ` Hello **<@${message.author.id}>**, I am <@${client.user.id}>.  \n\nA Discord Music Bot With Many Awesome Features, \nSupport Many Sources \n\n\`🎵\`•Music\n\`🗒️\`•Playlist\n\`ℹ️\`•information\n\`⚙️\`•Config\n\`🎙️\`•Filters\n\n *Choose an category below to see commands* \n\n`,
+        ` Hello **<@${interaction.user.id}>**, I am <@${client.user.id}>.  \n\nA Discord Music Bot With Many Awesome Features, \nSupport Many Sources \n\n\`🎵\`•Music\n\`🗒️\`•Playlist\n\`ℹ️\`•information\n\`⚙️\`•Config\n\`🎙️\`•Filters\n\n *Choose an category below to see commands* \n\n`,
       )
       .setThumbnail(client.user.displayAvatarURL())
       .setColor(client.embedColor)
       .setTimestamp()
       .setFooter({
-        text: `Requested by ${message.author.tag}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+        text: `Requested by ${interaction.user.tag}`,
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       });
     const row = new MessageActionRow()
       .addComponents(
@@ -64,7 +72,7 @@ module.exports = {
           ])
       )
 
-    const m = await message.reply({ embeds: [embed], components: [row] })
+    const m = await interaction.editReply({ embeds: [embed], components: [row] })
 
     const row2 = new MessageActionRow()
       .addComponents(
@@ -109,11 +117,11 @@ module.exports = {
 
     const collector = m.createMessageComponentCollector({
       filter: (b) => {
-        if (b.user.id === message.author.id) return true;
+        if (b.user.id === interaction.user.id) return true;
         else {
           b.reply({
             ephemeral: true,
-            content: `Only **${message.author.tag}** can use this button, if you want then you've to run the command again.`,
+            content: `Only **${interaction.user.tag}** can use this button, if you want then you've to run the command again.`,
           });
           return false;
         }
