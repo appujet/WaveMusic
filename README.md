@@ -78,8 +78,8 @@ WaveMusic is a discord music bot base in [Kazagumo](https://github.com/Takiyo0/K
 If you liked this repository, feel free to leave a star ⭐ to help promote !
 
 ## 💌 Support Server
-[![DiscordBanner](https://invidget.switchblade.xyz/dBGt8HcEYA)](https://discord.gg/dBGt8HcEYA)
-[Support Server](https://discord.gg/dBGt8HcEYA) - WaveMusic's Support Server Invite
+[![DiscordBanner](https://invidget.switchblade.xyz/ns8CTk9J3e)](https://discord.gg/ns8CTk9J3e)
+[Support Server](https://discord.gg/ns8CTk9J3e) - WaveMusic's Support Server Invite
 
 # Donate
 
