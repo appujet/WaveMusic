@@ -1,6 +1,6 @@
 {
   "name": "wavemusic",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "WaveMusic is a discord music bot base in Kazagumo (Shoukaku)",
   "main": "src/index.js",
   "repository": "https://github.com/brblacky/WaveMusic.git",
