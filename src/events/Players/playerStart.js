@@ -28,6 +28,5 @@ module.exports = {
 			.setTimestamp()
 			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}`)
            client.channels.cache.get(player.text).send({ embeds: [main] , components: [row] }).then(x => player.data.set("message", x));
-		   const m =  player.data.get("message")
 	}
 };
