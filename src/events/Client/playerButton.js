@@ -2,21 +2,25 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
   name: 'interactionCreate',
   run: async (client, interaction) => {
-    const player = client.manager.players.get(interaction.guild.id);
     const emojipause = client.emoji.pause;
     const emojiresume = client.emoji.resume;
     const emojiskip = client.emoji.skip;
     const volumeEmoji = client.emoji.volumehigh;
     const previousEmoji = client.emoji.previous;
-
-    if (interaction.isButton()) {
-      await interaction.deferReply({
-        ephemeral: false,
-      });
+    if (interaction.isButton())  {
+      
+    if(!interaction.member.voice.channel)  return;
+    
+    if(interaction.guild.me.voice.channel && interaction.guild.me.voice.channelId !== interaction.member.voice.channelId)  return;
+    
+    const player = client.manager.players.get(interaction.guild.id);
+    if(!player) return;
+    await interaction.deferReply({
+      ephemeral: false,
+    });
       if (interaction.customId === `${player.guild}pause`) {
         if (player.player.paused) {
           await player.setPaused(false);
-
           await interaction.editReply({
             embeds: [
               new MessageEmbed()
@@ -28,7 +32,6 @@ module.exports = {
           }).then(msg => { setTimeout(() => { msg.delete() }, 3000) });
         } else {
           await player.setPaused(true);
-
           await interaction.editReply({
             embeds: [
               new MessageEmbed()
