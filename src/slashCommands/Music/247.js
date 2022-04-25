@@ -1,8 +1,8 @@
 const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
 
 module.exports = {
-    name: 'clear',
-    description: 'Clear Queue',
+    name: '247',
+    description: 'To force skip the current playing song.',
     userPrams: [],
     botPrams: ['EMBED_LINKS'],
     player: true,
