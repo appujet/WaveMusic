@@ -22,7 +22,7 @@ module.exports = {
         const player = client.manager.players.get(interaction.guild.id);
 
         const data = await player.data.get('247');
-        const TwoFourSeven = `247`;
+        const TwoFourSeven = player.voice;
         if (data) {
             await player.data.delete('247')
             let thing = new MessageEmbed()
