@@ -16,6 +16,9 @@ module.exports = {
    */
 
   run: async (client, interaction) => {
+   await interaction.deferReply({
+      ephemeral: false,
+    });
     const player = client.manager.players.get(interaction.guild.id);
     if (!player.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('No Music Is Playing');
