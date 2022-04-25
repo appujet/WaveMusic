@@ -16,7 +16,9 @@ module.exports = {
      */
 
     run: async (client, interaction) => {
-
+       await interaction.deferReply({
+        ephemeral: false,
+       });
         const player = client.manager.players.get(interaction.guild.id);
 
         const data = await player.data.get('247');
