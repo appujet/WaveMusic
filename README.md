@@ -1,4 +1,3 @@
-
 [![Version][version-shield]](version-url)
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -30,6 +29,7 @@
 
 ## 🌀 About
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=brblacky&repo=WaveMusic&theme=tokyonight)](https://github.com/brblacky/lavamusic)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbrblacky%2FWaveMusic.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbrblacky%2FWaveMusic?ref=badge_shield)
 ## 🎵 Support Source
 - [x] Youtube
 - [x] SoundCloud
@@ -106,3 +106,6 @@ Distributed under the  GPL License. See [`LICENSE`](https://github.com/brblacky/
 [issues-url]: https://github.com/brblacky/WaveMusic/issues
 [license-shield]: https://img.shields.io/github/license/brblacky/WaveMusic.svg?style=for-the-badge
 [license-url]: https://github.com/brblacky/WaveMusic/blob/master/LICENSE
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbrblacky%2FWaveMusic.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbrblacky%2FWaveMusic?ref=badge_large)
