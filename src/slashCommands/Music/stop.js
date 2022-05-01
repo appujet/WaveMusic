@@ -6,6 +6,7 @@ module.exports = {
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
   player: true,
+  dj: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,
   /**

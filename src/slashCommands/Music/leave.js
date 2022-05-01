@@ -5,6 +5,7 @@ module.exports = {
   description: 'Leave voice channel',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   player: false,
   inVoiceChannel: true,
   sameVoiceChannel: true,

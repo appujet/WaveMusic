@@ -1,4 +1,5 @@
 const { Client, CommandInteraction, MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const { convertTime } = require('../../utils/convert.js');
 const load = require('lodash');
 
 module.exports = {

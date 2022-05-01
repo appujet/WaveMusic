@@ -11,6 +11,7 @@ module.exports = {
   botPrams: ['EMBED_LINKS'],
   owner: false,
   player: true,
+  dj: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
@@ -19,7 +20,7 @@ module.exports = {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
-
+    const emojiequalizer = client.emoji.filter;
     let embed = new MessageEmbed().setColor(client.embedColor).setDescription(`Chose The Buttons`);
 
     const but = new MessageButton().setCustomId('clear_but').setLabel('OFF').setStyle('DANGER');

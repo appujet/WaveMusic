@@ -5,6 +5,7 @@ module.exports = {
   description: 'To force skip the current playing song.',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   player: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,

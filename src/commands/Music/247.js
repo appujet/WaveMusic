@@ -10,6 +10,7 @@ module.exports = {
     botPrams: ['EMBED_LINKS'],
     owner: false,
     player: true,
+    dj: true,
     inVoiceChannel: true,
     sameVoiceChannel: true,
     execute: async (message, args, client, prefix) => {

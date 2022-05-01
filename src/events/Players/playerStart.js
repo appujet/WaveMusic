@@ -1,5 +1,7 @@
 const { MessageEmbed, Client, MessageButton, MessageActionRow } = require("discord.js");
 const { convertTime } = require('../../utils/convert.js');
+const { trackStartEventHandler } = require("../../utils/functions");
+const db = require("../../schema/setup");
 
 module.exports = {
 	name: "playerStart",
@@ -10,16 +12,21 @@ module.exports = {
 	 * @param {*} track 
 	 */
 	run: async (client, player, track) => {
-
+		let guild = client.guilds.cache.get(player.guild);
+		if (!guild) return;
+		let channel = guild.channels.cache.get(player.text);
+		if (!channel) return;
+		let data = await db.findOne({ Guild: guild.id });
+		if (data && data.Channel) {
+			let textChannel = guild.channels.cache.get(data.Channel);
+			const id = data.Message;
+			if (channel.id === textChannel.id) {
+				return await trackStartEventHandler(id, textChannel, player, track, client);
+			} else {
+				await trackStartEventHandler(id, textChannel, player, track, client);
+			};
+		}
 		const emojiplay = client.emoji.play;
-
-		const but1 = new MessageButton().setCustomId(`${player.guild}pause`).setEmoji(`⏸️`).setStyle('PRIMARY')
-		const but2 = new MessageButton().setCustomId(`${player.guild}previous`).setEmoji(`⏮️`).setStyle('PRIMARY')
-		const but3 = new MessageButton().setCustomId(`${player.guild}skip`).setEmoji(`⏭️`).setStyle('PRIMARY')
-		const but4 = new MessageButton().setCustomId(`${player.guild}voldown`).setEmoji(`🔉`).setStyle('PRIMARY')
-		const but5 = new MessageButton().setCustomId(`${player.guild}volup`).setEmoji(`🔊`).setStyle('PRIMARY')
-
-		const row = new MessageActionRow().addComponents(but4, but2, but1, but3, but5 )
 
 		const main = new MessageEmbed()
 			.setAuthor({ name: track.requester.tag, iconURL: track.requester.displayAvatarURL() })
@@ -27,6 +34,7 @@ module.exports = {
 			.setColor(client.embedColor)
 			.setTimestamp()
 			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}`)
-           client.channels.cache.get(player.text).send({ embeds: [main] , components: [row] }).then(x => player.data.set("message", x));
+			
+		client.channels.cache.get(player.text)?.send({embeds: [main]}).then(x => player.data.set("message", x));
 	}
 };

@@ -1,12 +1,15 @@
 const { MessageEmbed, Permissions, MessageActionRow, MessageButton } = require('discord.js');
 const db = require('../../schema/prefix.js');
 const db2 = require('../../schema/setup');
+const db3 = require("../../schema/dj");
 
 module.exports = {
   name: 'messageCreate',
   run: async (client, message) => {
     if (message.author.bot) return;
     if (!message.guild) return;
+    let data = await db2.findOne({ Guild: message.guildId });
+    if (data && data.Channel && message.channelId === data.Channel) return client.emit("setupSystem", message);
     let prefix = client.prefix;
     const channel = message?.channel;
     const ress = await db.findOne({ Guild: message.guildId });
@@ -37,8 +40,8 @@ module.exports = {
       datab.includes(message.author.id) == false
         ? message.content.slice(prefix1.length).trim().split(/ +/)
         : message.content.startsWith(prefix1) == true
-        ? message.content.slice(prefix1.length).trim().split(/ +/)
-        : message.content.trim().split(/ +/);
+          ? message.content.slice(prefix1.length).trim().split(/ +/)
+          : message.content.trim().split(/ +/);
 
     const commandName = args.shift().toLowerCase();
 
@@ -52,7 +55,7 @@ module.exports = {
         .send({
           content: `I don't have **\`SEND_MESSAGES\`** permission in <#${message.channelId}> to execute this **\`${command.name}\`** command.`,
         })
-        .catch(() => {});
+        .catch(() => { });
 
     if (!message.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
 
@@ -61,7 +64,7 @@ module.exports = {
         .send({
           content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${command.name}\`** command.`,
         })
-        .catch(() => {});
+        .catch(() => { });
 
     const embed = new MessageEmbed().setColor('RED');
 
@@ -122,7 +125,24 @@ module.exports = {
         }
       }
     }
-
+    if (command.dj) {
+      let data = await db3.findOne({ Guild: message.guild.id })
+      let perm = Permissions.FLAGS.MANAGE_GUILD;
+      if (!data) {
+        if (!message.member.permission.has(perm)) return message.channel.send({ embeds: [embed.setDescription(`You don't have permission or dj role to use this command`)] })
+      } else {
+        if (data.Mode) {
+          let pass = false;
+          if (data.Roles.length > 0) {
+            message.member.roles.cache.forEach((x) => {
+              let role = data.Roles.find((r) => r === x.id);
+              if (role) pass = true;
+            });
+          };
+          if (!pass && !message.member.permissions.has(perm)) return message.channel.send({ embeds: [embed.setDescription(`You don't have permission or dj role to use this command`)] })
+        };
+      };
+    }
     try {
       command.execute(message, args, client, prefix);
     } catch (error) {

@@ -11,6 +11,7 @@ module.exports = {
   usage: '<10s || 10m || 10h>',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   owner: false,
   player: true,
   inVoiceChannel: true,

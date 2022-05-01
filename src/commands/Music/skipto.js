@@ -9,6 +9,7 @@ module.exports = {
   usage: '<Number of song in queue>',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   owner: false,
   player: true,
   inVoiceChannel: true,

@@ -1,10 +1,4 @@
-const {
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
-  CommandInteraction,
-  Client,
-} = require('discord.js');
+const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   name: 'electronic',
@@ -12,6 +6,7 @@ module.exports = {
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
   player: true,
+  dj: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,
   options: [

@@ -1,16 +1,11 @@
-const {
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
-  CommandInteraction,
-  Client,
-} = require('discord.js');
+const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   name: 'treblebass',
   description: 'Sets TrebleBass Filter.',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   player: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,

@@ -16,15 +16,9 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
     const Name = args[0];
-    const player = await client.manager.createPlayer({
-      guildId: message.guild.id,
-      voiceId: message.member.voice.channel.id,
-      textId: message.channel.id,
-      deaf: true,
-    });
+    
     const data = await db.findOne({ UserId: message.author.id, PlaylistName: Name });
 
-    let length = data.PlaylistName;
     let name = Name;
 
     if (!data) {
@@ -38,14 +32,19 @@ module.exports = {
         ],
       });
     }
-
+    const player = await client.manager.createPlayer({
+      guildId: message.guild.id,
+      voiceId: message.member.voice.channel.id,
+      textId: message.channel.id,
+      deaf: true,
+    });
     if (!player) return;
     let count = 0;
     const m = await message.reply({
       embeds: [
         new MessageEmbed()
           .setColor(client.embedColor)
-          .setDescription(`Adding ${length} track(s) from your playlist **${name}** to the queue.`),
+          .setDescription(`Adding ${data.PlaylistName} track(s) from your playlist **${name}** to the queue.`),
       ],
     });
     for (const track of data.Playlist) {

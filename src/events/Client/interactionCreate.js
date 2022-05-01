@@ -1,4 +1,6 @@
 const { Permissions } = require('discord.js');
+const db = require('../../schema/setup');
+const db2 = require("../../schema/dj");
 
 module.exports = {
   name: 'interactionCreate',
@@ -12,7 +14,7 @@ module.exports = {
           .send({
             content: `I don't have **\`SEND_interactionS\`** permission in <#${interaction.channelId}> to execute this **\`${SlashCommands.name}\`** command.`,
           })
-          .catch(() => {});
+          .catch(() => { });
 
       if (!interaction.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
 
@@ -22,7 +24,7 @@ module.exports = {
             content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${SlashCommands.name}\`** command.`,
             ephemeral: true,
           })
-          .catch(() => {});
+          .catch(() => { });
       const player = interaction.client.manager.players.get(interaction.guildId);
       if (SlashCommands.player && !player) {
         return await interaction
@@ -30,7 +32,7 @@ module.exports = {
             content: `There is no player for this guild.`,
             ephemeral: true,
           })
-          .catch(() => {});
+          .catch(() => { });
       }
       if (!interaction.member.permissions.has(SlashCommands.userPrams || [])) {
         return await interaction.reply({
@@ -52,9 +54,8 @@ module.exports = {
             content: `You must be in a voice channel!`,
             ephemeral: true,
           })
-          .catch(() => {});
+          .catch(() => { });
       }
-
       if (SlashCommands.sameVoiceChannel) {
         if (interaction.guild.me.voice.channel) {
           if (interaction.guild.me.voice.channelId !== interaction.member.voice.channelId) {
@@ -63,10 +64,30 @@ module.exports = {
                 content: `You must be in the same channel as ${interaction.client.user}`,
                 ephemeral: true,
               })
-              .catch(() => {});
+              .catch(() => { });
           }
         }
       }
+      if (SlashCommands.dj) {
+        let data = await db2.findOne({ Guild: interaction.guildId })
+        let perm = Permissions.FLAGS.MANAGE_GUILD;
+
+        console.log(data)
+        if (!data) {
+          if (!interaction.member.permission.has(perm)) return await interaction.reply({ content: `You don't have permission or dj role to use this command`, ephemeral: true })
+        } else {
+          if (data.Mode) {
+            let pass = false;
+            if (data.Roles.length > 0) {
+              interaction.member.roles.cache.forEach((x) => {
+                let role = data.Roles.find((r) => r === x.id);
+                if (role) pass = true;
+              });
+            };
+            if (!pass && !interaction.member.permissions.has(perm)) return await interaction.reply({ content: `You don't have permission or dj role to use this command`, ephemeral: true })
+          };
+        };
+      };
       try {
         await SlashCommands.run(client, interaction);
       } catch (error) {
@@ -75,17 +96,23 @@ module.exports = {
             .editReply({
               content: `An unexcepted error occured.`,
             })
-            .catch(() => {});
+            .catch(() => { });
         } else {
           await interaction
             .followUp({
               ephemeral: true,
               content: `An unexcepted error occured.`,
             })
-            .catch(() => {});
+            .catch(() => { });
         }
         console.error(error);
       }
     }
-  },
+    if (interaction.isButton()) {
+      let data = await db.findOne({ Guild: interaction.guildId });
+      if (data && interaction.channelId === data.Channel && interaction.message.id === data.Message) return client.emit("playerButtons", interaction, data);
+    };
+  }
 };
+
+

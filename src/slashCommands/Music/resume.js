@@ -5,6 +5,7 @@ module.exports = {
   description: 'Resume currently playing music',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   player: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,

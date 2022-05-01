@@ -6,14 +6,14 @@ module.exports = {
   ownerID: process.env.OWNERID || ['959276033683628122', '952560202635427841'], //your discord id
   SpotifyID: process.env.SPOTIFYID || '', // spotify client id
   SpotifySecret: process.env.SPOTIFYSECRET || '', // spotify client secret
-  mongourl:
-    process.env.MONGO_URI || 'mongodb+srv://', // MongoDb URL
+  mongourl: process.env.MONGO_URI || 'mongodb+srv://', // MongoDb URL
   embedColor: process.env.COlOR || '#3366ff', // embed colour
   logs: process.env.LOGS || '', // Discord channel id 
   links: {
-    support: 'https://discord.gg/ns8CTk9J3e',
-    invite: '',
-    vote: '',
+    support: process.env.SUPPORT || 'https://discord.gg/ns8CTk9J3e',
+    invite: process.env.INVITE || 'https://discord.gg/ns8CTk9J3e',
+    vote: process.env.VOTE || 'https://discord.gg/ns8CTk9J3e',
+    bg: process.env.BG || 'https://media.discordapp.net/attachments/966675680907657256/967789748699668480/flat-landscape-lake-sunset-deer-wallpaper-preview.jpg'
   },
 
   nodes: [

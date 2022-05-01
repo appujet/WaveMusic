@@ -8,6 +8,7 @@ module.exports = {
     usage: "",
     userPrams: [],
     botPrams: ["EMBED_LINKS"],
+    dj: true,
     owner: false,
     player: true,
     inVoiceChannel: true,

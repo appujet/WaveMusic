@@ -5,6 +5,7 @@ module.exports = {
   description: 'Toggle music loop',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
+  dj: true,
   player: true,
   inVoiceChannel: true,
   sameVoiceChannel: true,
