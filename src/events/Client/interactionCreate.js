@@ -27,22 +27,21 @@ module.exports = {
           .catch(() => { });
       const player = interaction.client.manager.players.get(interaction.guildId);
       if (SlashCommands.player && !player) {
-        return await interaction
-          .reply({
+        return await interaction.reply({
             content: `There is no player for this guild.`,
             ephemeral: true,
           })
           .catch(() => { });
       }
-      if (!interaction.member.permissions.has(SlashCommands.userPrams || [])) {
+      if (!interaction.member.permissions.has(SlashCommands.botPrams || [])) {
         return await interaction.reply({
-          content: `I Need Permission to Work this \`${SlashCommands.userPrams.join(', ')}\``,
+          content: `I Need Permission to Work this \`${SlashCommands.botPrams.join(', ')}\``,
           ephemeral: true,
         });
       }
-      if (!interaction.guild.me.permissions.has(SlashCommands.botPrams || [])) {
+      if (!interaction.guild.me.permissions.has(SlashCommands.userPrams || [])) {
         return await interaction.reply({
-          content: `You Need this \`${SlashCommands.botPrams.join(
+          content: `You Need this \`${SlashCommands.userPrams.join(
             ', ',
           )}\` Permission to Work this command!`,
           ephemeral: true,
