@@ -3,7 +3,7 @@ const db = require("../../schema/dj");
 
 module.exports = {
     name: "removedj",
-    category: "Config",
+    category: 'Settings',
     description: "Remove Dj Role",
     args: false,
     usage: "",

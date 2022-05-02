@@ -3,7 +3,7 @@ const db = require("../../schema/dj");
 
 module.exports = {
     name: "toggledj",
-    category: "Config",
+    category: 'Settings',
     description: " Toggle Dj mode",
     args: false,
     usage: "",

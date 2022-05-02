@@ -14,42 +14,29 @@ module.exports = {
     const channel = message?.channel;
     const ress = await db.findOne({ Guild: message.guildId });
     if (ress && ress.Prefix) prefix = ress.Prefix;
-
-    let datab = client.owner;
-
-    const mentionRegexPrefix = RegExp(`^<@!?${client.user.id}>`);
-    if (message.content.match(mentionRegexPrefix)) {
+   
+    const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+    if (message.content.match(mention)) {
       const row = new MessageActionRow().addComponents(
         new MessageButton().setLabel('Invite').setStyle('LINK').setURL(client.config.links.invite),
       );
-      const embed = new MessageEmbed().setColor(client.embedColor)
-        .setDescription(`Hey **${message.author.username}**, my prefix for this server is \`${prefix}\` Want more info? then do \`${prefix}\`**help**
-            Stay Safe, Stay Awesome!`);
-      message.channel.send({ embeds: [embed], components: [row] });
-    }
-
-    const prefix1 = message.content.match(mentionRegexPrefix)
-      ? message.content.match(mentionRegexPrefix)[0]
-      : prefix;
-
-    if (!datab.includes(message.author.id)) {
-      if (!message.content.startsWith(prefix1)) return;
-    }
-
-    const args =
-      datab.includes(message.author.id) == false
-        ? message.content.slice(prefix1.length).trim().split(/ +/)
-        : message.content.startsWith(prefix1) == true
-          ? message.content.slice(prefix1.length).trim().split(/ +/)
-          : message.content.trim().split(/ +/);
-
+        const embed = new MessageEmbed()
+            .setColor(client.embedColor)
+            .setDescription(`Hey **${message.author.username}**, my prefix for this server is \`${prefix}\` Want more info? then do \`${prefix}\`**help**\nStay Safe, Stay Awesome!`);
+        message.channel.send({ embeds: [embed], components: [row] })
+    };
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+    if (!prefixRegex.test(message.content)) return;
+    const [matchedPrefix] = message.content.match(prefixRegex);
+    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    const command =
-      client.commands.get(commandName) ||
-      client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = client.commands.get(commandName) ||
+        client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
     if (!command) return;
+    
     if (!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES))
       return await message.author.dmChannel
         .send({
