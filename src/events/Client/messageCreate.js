@@ -128,9 +128,7 @@ module.exports = {
     if (command.dj) {
       let data = await db3.findOne({ Guild: message.guild.id })
       let perm = Permissions.FLAGS.MANAGE_GUILD;
-      if (!data) {
-        if (!message.member.permissions.has(perm)) return message.channel.send({ embeds: [embed.setDescription(`You don't have permission or dj role to use this command`)] })
-      } else {
+      if (data) {
         if (data.Mode) {
           let pass = false;
           if (data.Roles.length > 0) {

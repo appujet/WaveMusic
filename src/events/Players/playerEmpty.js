@@ -32,7 +32,7 @@ module.exports = {
             .setDescription('Queue ended. 24/7 is enable i am not Leaving the voice channel.')
             .setTimestamp(),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 10000) });
     } else if (!TwoFourSeven)
       client.channels.cache.get(player.text)?.send({
         embeds: [
@@ -41,7 +41,7 @@ module.exports = {
             .setDescription('Queue ended. 24/7 is disable i am Leaving the voice channel.')
             .setTimestamp(),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 10000) });
     player.destroy()
   },
 };

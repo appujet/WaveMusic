@@ -24,18 +24,15 @@ module.exports = {
         const previousEmoji = client.emoji.previous;
         let data2 = await db.findOne({ Guild: interaction.guildId })
         let pass = false;
-        if (!data2) {
-            if (interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) pass = true;
-        } else {
+        if (data2) {
             if (data2.Mode) {
-
                 if (data2.Roles.length > 0) {
                     interaction.member.roles.cache.forEach((x) => {
                         let role = data2.Roles.find((r) => r === x.id);
                         if (role) pass = true;
                     });
                 };
-                if (!pass) return await buttonReply(interaction, `You don't have dj role to use this command`, color)
+                if (!pass && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return await buttonReply(interaction, `You don't have dj role to use this command`, color)
             };
         };
         if (!interaction.member.voice.channel) return await buttonReply(interaction, `You are not connected to a voice channel to use this button.`, color);
@@ -45,7 +42,7 @@ module.exports = {
         if (!player) return await buttonReply(interaction, `Nothing is playing right now.`, color);
         if (!player.queue) return await buttonReply(interaction, `Nothing is playing right now.`, color);
         if (!player.current) return await buttonReply(interaction, `Nothing is playing right now.`, color);
-        
+
 
         let message;
         try {
@@ -54,7 +51,7 @@ module.exports = {
 
         } catch (e) { };
 
-        let icon = `${player.current.thumbnail ? player.current.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}`|| client.config.links.bg;
+        let icon = `${player.current.thumbnail ? player.current.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}` || client.config.links.bg;
 
         let nowplaying = new MessageEmbed().setColor(color).setDescription(`[${player.current.title}](${player.current.uri}) • \`[ ${player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.current.requester.tag}`, iconURL: player.current.requester.displayAvatarURL({ dynamic: true }) });
 
@@ -78,8 +75,8 @@ module.exports = {
             if (message) await message.edit({
                 embeds: [nowplaying]
             }).catch(() => { });
-           return await buttonReply(interaction, `${emojiskip} Skipped - [${player.current.title}](${player.current.uri})`, color)
-            
+            return await buttonReply(interaction, `${emojiskip} Skipped - [${player.current.title}](${player.current.uri})`, color)
+
         } else if (interaction.customId === `${interaction.guildId}previous`) {
             if (!player.previous) {
                 return await buttonReply(interaction, `No Previous song found`, color);
@@ -106,7 +103,7 @@ module.exports = {
 
         } else if (interaction.customId === `${interaction.guildId}volup`) {
             let amount = Number(player.player.filters.volume * 100 + 10);
-        if (amount >= 100) return await buttonReply(interaction, `Volume Cannot Exceed \`[ 100% ]\``, color);
+            if (amount >= 100) return await buttonReply(interaction, `Volume Cannot Exceed \`[ 100% ]\``, color);
             await player.setVolume(amount / 1);
             await buttonReply(interaction, `${volumeEmoji} Volume set to: \`[ ${player.player.filters.volume * 100}% ]\``, color);
             if (message) await message.edit({

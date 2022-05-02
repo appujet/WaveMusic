@@ -28,9 +28,9 @@ module.exports = {
       const player = interaction.client.manager.players.get(interaction.guildId);
       if (SlashCommands.player && !player) {
         return await interaction.reply({
-            content: `There is no player for this guild.`,
-            ephemeral: true,
-          })
+          content: `There is no player for this guild.`,
+          ephemeral: true,
+        })
           .catch(() => { });
       }
       if (!interaction.member.permissions.has(SlashCommands.botPrams || [])) {
@@ -70,11 +70,7 @@ module.exports = {
       if (SlashCommands.dj) {
         let data = await db2.findOne({ Guild: interaction.guildId })
         let perm = Permissions.FLAGS.MANAGE_GUILD;
-
-        console.log(data)
-        if (!data) {
-          if (!interaction.member.permissions.has(perm)) return await interaction.reply({ content: `You don't have permission or dj role to use this command`, ephemeral: true })
-        } else {
+        if (data) {
           if (data.Mode) {
             let pass = false;
             if (data.Roles.length > 0) {
