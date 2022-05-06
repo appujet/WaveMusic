@@ -20,7 +20,7 @@ module.exports = {
 		if (data && data.Channel) {
 			let textChannel = guild.channels.cache.get(data.Channel);
 			const id = data.Message;
-			if (channel.id === textChannel.id) {
+			if (channel === textChannel) {
 				return await trackStartEventHandler(id, textChannel, player, track, client);
 			} else {
 				await trackStartEventHandler(id, textChannel, player, track, client);

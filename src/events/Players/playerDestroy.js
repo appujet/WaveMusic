@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 const db = require("../../schema/setup");
+const db2 = require("../../schema/autoReconnect");
 
 module.exports = {
     name: "playerDestroy",
@@ -38,11 +39,11 @@ module.exports = {
             embeds: [embed1],
             components: [row]
         });
-        const vc = player.data.get("247");
+        const vc = await db2.findOne({Guild: player.guild})
         if(vc) await client.manager.createPlayer({
-            guildId: player.guild,
-            voiceId: player.voice,
-            textId: player.text,
+            guildId: vc.Guild,
+            voiceId: vc.VoiceId,
+            textId: vc.TextId,
             deaf: true,
           });
     }

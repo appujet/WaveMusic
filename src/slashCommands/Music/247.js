@@ -1,4 +1,5 @@
 const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
+const db = require("../../schema/autoReconnect");
 
 module.exports = {
     name: '247',
@@ -22,16 +23,20 @@ module.exports = {
        });
         const player = client.manager.players.get(interaction.guild.id);
 
-        const data = await player.data.get('247');
-        const TwoFourSeven = player.voice;
+        let data = await db.findOne({Guild: interaction.guild.id})
         if (data) {
-            await player.data.delete('247')
+            await data.delete();
             let thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(` 247 Mode is Disabled`);
             interaction.editReply({ embeds: [thing] })
         } else {
-            await player.data.set("247", TwoFourSeven)
+            data = new db({
+                Guild: player.guild,
+                TextId: player.text,
+                VoiceId: player.voice
+            })
+            await data.save();
             let thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(`247 Mode is Enabled`);

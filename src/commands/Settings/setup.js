@@ -16,7 +16,6 @@ module.exports = {
             if (args.length) {
                 if (!data) return await message.reply({ content: `This server doesn't have any song request channel setup to use this sub command.` });
                 if (["clear", "delete", "reset"].includes(args[0])) {
-                    console.log(data);
                     await data.delete();
                     return await message.reply({ content: `Successfully deleted all the setup data.` });
 
