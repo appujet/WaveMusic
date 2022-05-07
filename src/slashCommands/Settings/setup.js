@@ -118,11 +118,11 @@ module.exports = {
             let embed1 = new MessageEmbed().setColor(client.embedColor).setTitle(title).setFooter({ text: footer.text, iconURL: footer.iconURL }).setImage(image);
 
             if (player && player.queue && player.current) embed1.setDescription(desc);
-            const but1 = new MessageButton().setCustomId(`${message.guildId}pause`).setEmoji(`⏸️`).setStyle('SECONDARY').setDisabled(disabled)
-            const but2 = new MessageButton().setCustomId(`${message.guildId}previous`).setEmoji(`⏮️`).setStyle('SECONDARY').setDisabled(disabled)
-            const but3 = new MessageButton().setCustomId(`${message.guildId}skip`).setEmoji(`⏭️`).setStyle('SECONDARY').setDisabled(disabled)
-            const but4 = new MessageButton().setCustomId(`${message.guildId}voldown`).setEmoji(`🔉`).setStyle('SECONDARY').setDisabled(disabled)
-            const but5 = new MessageButton().setCustomId(`${message.guildId}volup`).setEmoji(`🔊`).setStyle('SECONDARY').setDisabled(disabled)
+            const but1 = new MessageButton().setCustomId(`${interaction.guildId}pause`).setEmoji(`⏸️`).setStyle('SECONDARY').setDisabled(disabled)
+            const but2 = new MessageButton().setCustomId(`${interaction.guildId}previous`).setEmoji(`⏮️`).setStyle('SECONDARY').setDisabled(disabled)
+            const but3 = new MessageButton().setCustomId(`${interaction.guildId}skip`).setEmoji(`⏭️`).setStyle('SECONDARY').setDisabled(disabled)
+            const but4 = new MessageButton().setCustomId(`${interaction.guildId}voldown`).setEmoji(`🔉`).setStyle('SECONDARY').setDisabled(disabled)
+            const but5 = new MessageButton().setCustomId(`${interaction.guildId}volup`).setEmoji(`🔊`).setStyle('SECONDARY').setDisabled(disabled)
 
             const row = new MessageActionRow().addComponents(but4, but2, but1, but3, but5)
 
