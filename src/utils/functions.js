@@ -159,7 +159,7 @@ async function buttonReply(int, args, client) {
     if (int.replied) {
         await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.tag, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
     } else {
-        await int.followUp({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.tag, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
+        await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.tag, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
     };
 
     setTimeout(async () => {
