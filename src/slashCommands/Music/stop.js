@@ -25,6 +25,7 @@ module.exports = {
       return interaction.editReply({ embeds: [thing] });
     }
     player.queue.length = 0;
+    player.data.delete("autoplay")
     player.repeat = 'off';
     player.stopped = true;
     await player.player.stopTrack();

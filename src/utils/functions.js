@@ -37,7 +37,24 @@ function neb(embed, player, client) {
 
     return embed.setDescription(`[${player.current.title}](${player.current.uri}) • \`[ ${player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.current.requester.tag}`, iconURL: player.current.requester.displayAvatarURL({ dynamic: true }) });
 };
+/**
+ * 
+ * @param {*} player 
+ * @param {Client} client
+ * @returns 
+ */
+async function autoplay(player, client) {
 
+    const searched = `https://www.youtube.com/watch?v=${player.data.get("autoplaySystem")}&list=RD${player.data.get("autoplaySystem")}`;
+    let requester = player.data.get("requester");
+    if (!searched[0]) {
+        return message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`Unable to autoplay from the previous track. Destroyed the player.`)] });
+    }
+    const { tracks } = await player.search(searched, requester);
+    await player.addSong(tracks[1]);
+    await player.addSong(tracks[2]);
+    return player.play();
+}
 /**
  * 
  * @param {String} query 
@@ -63,7 +80,7 @@ async function playerhandler(query, player, message) {
         textId: message.channel.id,
         deaf: true,
     });
-    
+
     const result = await player.search(query, message.author);
     if (!result.tracks.length) return message.reply({ content: 'No result was found' });
     const tracks = result.tracks;
@@ -173,5 +190,6 @@ module.exports = {
     playerhandler,
     trackStartEventHandler,
     buttonReply,
-    oops
+    oops,
+    autoplay
 }

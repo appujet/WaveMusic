@@ -22,6 +22,7 @@ module.exports = {
     }
     player.queue.length = 0;
     player.repeat = 'off';
+    player.data.delete("autoplay")
     player.stopped = true;
     await player.player.stopTrack();
     Wait(500);
