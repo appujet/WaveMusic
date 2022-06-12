@@ -45,7 +45,7 @@ class MusicBot extends Client {
     return this.manager;
   };
   _loadClientEvents() {
-    readdirSync("./src/events/Client/").forEach(file => {
+    readdirSync("./src/events/Client").forEach(file => {
       const event = require(`../events/Client/${file}`);
       let eventName = file.split(".")[0];
       this.logger.log(`Loading Events Client ${eventName}`, "event");
@@ -57,7 +57,7 @@ class MusicBot extends Client {
    * Node Manager Events 
    */
   _loadNodeEvents() {
-    readdirSync("./src/events/Node/").forEach(file => {
+    readdirSync("./src/events/Node").forEach(file => {
       const event = require(`../events/Node/${file}`);
       let eventName = file.split(".")[0];
       this.logger.log(`Loading Events Lavalink  ${eventName}`, "event");
@@ -68,7 +68,7 @@ class MusicBot extends Client {
    * Player Manager Events
    */
   _loadPlayerEvents() {
-    readdirSync("./src/events/Players/").forEach(file => {
+    readdirSync("./src/events/Players").forEach(file => {
       const event = require(`../events/Players/${file}`);
       let eventName = file.split(".")[0];
       this.logger.log(`Loading Events Players ${eventName}`, "event");
@@ -79,7 +79,7 @@ class MusicBot extends Client {
    * Import all commands
    */
   _loadCommands() {
-    readdirSync("./src/commands/").forEach(dir => {
+    readdirSync("./src/commands").forEach(dir => {
       const commandFiles = readdirSync(`./src/commands/${dir}/`).filter(f => f.endsWith('.js'));
       for (const file of commandFiles) {
         const command = require(`../commands/${dir}/${file}`);
@@ -93,7 +93,7 @@ class MusicBot extends Client {
    */
   _loadSlashCommands() {
     const data = [];
-    readdirSync("./src/slashCommands/").forEach((dir) => {
+    readdirSync("./src/slashCommands").forEach((dir) => {
       const slashCommandFile = readdirSync(`./src/slashCommands/${dir}/`).filter((files) => files.endsWith(".js"));
 
       for (const file of slashCommandFile) {
