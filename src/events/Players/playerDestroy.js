@@ -6,7 +6,7 @@ module.exports = {
     name: "playerDestroy",
     run: async (client, player) => {
         client.logger.log(`Player Destroy in @ ${player.guild}`, "log");
-        if (player.data.get("autoplay") && !player.data.delete("autoplay").catch(() => null));
+        if (player.data.get("autoplay")) try { player.data.delete("autoplay") } catch (err) { client.logger.log(err.stack ? err.stack : err, "log") };
         let guild = client.guilds.cache.get(player.guild);
         if (!guild) return;
         const data = await db.findOne({ Guild: guild.id });
