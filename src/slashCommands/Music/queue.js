@@ -74,7 +74,7 @@ module.exports = {
           )
           .setFooter({
             text: `Page ${page + 1}/${pages.length}`,
-            iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
           .setThumbnail(
             `${
@@ -83,7 +83,7 @@ module.exports = {
                 : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
             }`,
           )
-          .setTitle(`${message.guild.name} Queue`);
+          .setTitle(`${interaction.guild.name} Queue`);
         await interaction.editReply({
             embeds: [embed2],
           })
@@ -98,7 +98,7 @@ module.exports = {
            )
            .setFooter({
              text: `Page ${page + 1}/${pages.length}`,
-             iconURL: message.author.displayAvatarURL({ dynamic: true }),
+             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
            })
            .setThumbnail(
              `${
@@ -107,7 +107,7 @@ module.exports = {
                  : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
              }`,
            )
-           .setTitle(`${message.guild.name} Queue`);
+           .setTitle(`${interaction.guild.name} Queue`);
 
         const but1 = new MessageButton()
           .setCustomId('queue_cmd_but_1_app')
@@ -177,7 +177,7 @@ module.exports = {
               )
               .setFooter({
                 text: `Page ${page + 1}/${pages.length}`,
-                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                iconURL:interaction.user.displayAvatarURL({ dynamic: true }),
               })
               .setThumbnail(
                 `${
@@ -186,7 +186,7 @@ module.exports = {
                     : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
                 }`,
               )
-              .setTitle(`${message.guild.name} Queue`);
+              .setTitle(`${interaction.guild.name} Queue`);
 
             await interaction.editReply({
               embeds: [embed4],
@@ -206,7 +206,7 @@ module.exports = {
 
               .setFooter({
                 text: `Page ${page + 1}/${pages.length}`,
-                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                iconURL:interaction.user.displayAvatarURL({ dynamic: true }),
               })
               .setThumbnail(
                 `${
@@ -215,7 +215,7 @@ module.exports = {
                     : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
                 }`,
               )
-              .setTitle(`${message.guild.name} Queue`);
+              .setTitle(`${interaction.guild.name} Queue`);
             await interaction
               .editReply({
                 embeds: [embed5],
