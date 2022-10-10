@@ -1,5 +1,5 @@
 const { MessageEmbed, CommandInteraction, Client } = require('discord.js');
-
+const Wait = require('util').promisify(setTimeout);
 module.exports = {
   name: 'stop',
   description: 'Stops the music',
