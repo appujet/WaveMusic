@@ -30,7 +30,7 @@
     "fs": "^0.0.1-security",
     "kazagumo": "^1.0.14",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.4.6",
     "ms": "^2.1.3",
     "node-superfetch": "^0.2.3",
