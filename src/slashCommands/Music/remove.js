@@ -45,7 +45,7 @@ module.exports = {
 
     const song = player.queue[position];
 
-    await player.queue.splice(position);
+    await player.queue.splice(position, 1);
 
     const emojieject = client.emoji.remove;
 
