@@ -30,20 +30,20 @@ module.exports = {
 
     const player = client.manager.players.get(interaction.guildId);
     
-    if (!player.queue)
+    if (!player.queue.current)
       return await interaction
         .editReply({
           content: `Nothing is playing right now.`,
         })
         .catch(() => {});
 
-    if (player.queue.length === '0' || !player.queue.length) {
+    if (player.queue.length === 0 || !player.queue.length) {
       const embed = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(
-          `**Now playing** [${player.current.title}](${player.current.uri}) • \`[ ${
-            player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)
-          } ]\` • [${player.current.requester}]`,
+          `**Now playing** [${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
+            player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
+          } ]\` • [${player.queue.current.requester}]`,
         );
       await interaction.editReply({
         embeds: [embed],
@@ -68,9 +68,9 @@ module.exports = {
         const embed2 = new MessageEmbed()
           .setColor(client.embedColor)
           .setDescription(
-            `**Now playing**\n[${player.current.title}](${player.current.uri}) • \`[ ${
-              player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)
-            } ]\` • [${player.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
+            `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
+              player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
+            } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
           )
           .setFooter({
             text: `Page ${page + 1}/${pages.length}`,
@@ -78,9 +78,9 @@ module.exports = {
           })
           .setThumbnail(
             `${
-              player.current.thumbnail
-                ? player.current.thumbnail
-                : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+              player.queue.current.thumbnail
+                ? player.queue.current.thumbnail
+                : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
             }`,
           )
           .setTitle(`${interaction.guild.name} Queue`);
@@ -92,9 +92,9 @@ module.exports = {
          const embed3 = new MessageEmbed()
            .setColor(client.embedColor)
            .setDescription(
-             `**Now playing**\n[${player.current.title}](${player.current.uri}) • \`[ ${
-               player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)
-             } ]\` • [${player.current.requester}]\n\n **Queued Songs**\n${pages[page]}`,
+             `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
+               player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
+             } ]\` • [${player.queue.current.requester}]\n\n **Queued Songs**\n${pages[page]}`,
            )
            .setFooter({
              text: `Page ${page + 1}/${pages.length}`,
@@ -102,9 +102,9 @@ module.exports = {
            })
            .setThumbnail(
              `${
-               player.current.thumbnail
-                 ? player.current.thumbnail
-                 : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+               player.queue.current.thumbnail
+                 ? player.queue.current.thumbnail
+                 : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
              }`,
            )
            .setTitle(`${interaction.guild.name} Queue`);
@@ -142,14 +142,14 @@ module.exports = {
           .setEmoji('⏹️')
           .setStyle('SECONDARY');
 
-        await interaction
+        const msg = await interaction
           .editReply({
             embeds: [embed3],
             components: [new MessageActionRow().addComponents([but2, but3, but1])],
           })
           .catch(() => {});
 
-        const collector = interaction.channel.createMessageComponentCollector({
+        const collector = msg.createMessageComponentCollector({
           filter: (b) => {
             if (b.user.id === interaction.user.id) return true;
             else
@@ -171,9 +171,9 @@ module.exports = {
             const embed4 = new MessageEmbed()
               .setColor(client.embedColor)
               .setDescription(
-                `**Now playing**\n[${player.current.title}](${player.current.uri}) • \`[ ${
-                  player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)
-                } ]\` • [${player.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
+                `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
+                  player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
+                } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
               )
               .setFooter({
                 text: `Page ${page + 1}/${pages.length}`,
@@ -181,9 +181,9 @@ module.exports = {
               })
               .setThumbnail(
                 `${
-                  player.current.thumbnail
-                    ? player.current.thumbnail
-                    : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+                  player.queue.current.thumbnail
+                    ? player.queue.current.thumbnail
+                    : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
                 }`,
               )
               .setTitle(`${interaction.guild.name} Queue`);
@@ -199,9 +199,9 @@ module.exports = {
             const embed5 = new MessageEmbed()
               .setColor(client.embedColor)
               .setDescription(
-                `**Now playing**\n[${player.current.title}](${player.current.uri}) • \`[ ${
-                  player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)
-                } ]\` • [${player.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
+                `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
+                  player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
+                } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
               )
 
               .setFooter({
@@ -210,9 +210,9 @@ module.exports = {
               })
               .setThumbnail(
                 `${
-                  player.current.thumbnail
-                    ? player.current.thumbnail
-                    : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+                  player.queue.current.thumbnail
+                    ? player.queue.current.thumbnail
+                    : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
                 }`,
               )
               .setTitle(`${interaction.guild.name} Queue`);

@@ -32,9 +32,9 @@ module.exports = {
             interaction.editReply({ embeds: [thing] })
         } else {
             data = new db({
-                Guild: player.guild,
-                TextId: player.text,
-                VoiceId: player.voice
+                Guild: player.guildId,
+                TextId: player.textId,
+                VoiceId: player.voiceId
             })
             await data.save();
             let thing = new MessageEmbed()

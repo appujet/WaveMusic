@@ -64,20 +64,20 @@ module.exports = {
     for (const track of data.Playlist) {
       let s = await player.search(track.uri ? track.uri : track.title, interaction.user);
       if (s.type === 'PLAYLIST') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       } else if (s.type === 'TRACK') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       } else if (s.type === 'SEARCH') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       }
     }
-    if (player && !player.current) player.destroy(interaction.guild.id);
+    if (player && !player.queue.current) player.destroy(interaction.guild.id);
     if (count <= 0 && m)
       return await m.editReply({
         embeds: [

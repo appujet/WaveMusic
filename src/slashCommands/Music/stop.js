@@ -20,7 +20,7 @@ module.exports = {
       ephemeral: false,
     });
     const player = client.manager.players.get(interaction.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
@@ -28,7 +28,7 @@ module.exports = {
     player.data.delete("autoplay")
     player.repeat = 'off';
     player.stopped = true;
-    await player.player.stopTrack();
+    await player.skip();
     Wait(500);
     const emojistop = client.emoji.stop;
     let thing = new MessageEmbed()

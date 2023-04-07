@@ -21,23 +21,23 @@ module.exports = {
       ephemeral: false,
     });
     const player = client.manager.players.get(interaction.guild.id);
-    const song = player.current;
+    const song = player.queue.current;
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
 
     const emojiresume = client.emoji.resume;
 
-    if (!player.player.paused) {
+    if (!player.paused) {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`${emojiresume} The player is already **resumed**.`);
       return interaction.editReply({ embeds: [thing] });
     }
 
-    await player.setPaused(false);
+    await player.pause(false);
 
     let thing = new MessageEmbed()
       .setDescription(`${emojiresume} **Resumed**\n[${song.title}](${song.uri})`)

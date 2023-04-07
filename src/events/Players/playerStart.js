@@ -2,21 +2,28 @@ const { MessageEmbed, Client, MessageButton, MessageActionRow } = require("disco
 const { convertTime } = require('../../utils/convert.js');
 const { trackStartEventHandler } = require("../../utils/functions");
 const db = require("../../schema/setup");
+const { KazagumoPlayer, KazagumoTrack } = require("kazagumo");
 
 module.exports = {
 	name: "playerStart",
 	/**
 	 * 
 	 * @param {Client} client 
-	 * @param {*} player 
-	 * @param {*} track 
+	 * @param {KazagumoPlayer} player 
+	 * @param {KazagumoTrack} track 
 	 */
+
+
 	run: async (client, player, track) => {
-		let guild = client.guilds.cache.get(player.guild);
+
+		let guild = client.guilds.cache.get(player.guildId);
 		if (!guild) return;
-		let channel = guild.channels.cache.get(player.text);
+
+		let channel = guild.channels.cache.get(player.textId);
 		if (!channel) return;
+		
 		let data = await db.findOne({ Guild: guild.id });
+
 		if (data && data.Channel) {
 			let textChannel = guild.channels.cache.get(data.Channel);
 			const id = data.Message;
@@ -29,13 +36,31 @@ module.exports = {
 		const emojiplay = client.emoji.play;
 
 		const main = new MessageEmbed()
-			.setAuthor({ name: track.requester.tag, iconURL: track.requester.displayAvatarURL() })
-			.setDescription(`${emojiplay} Now Playing - [${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``)
+			.setTitle(`${emojiplay} Now Playing`)
+			.setDescription(`[${track.title}](${track.uri})`)
 			.setColor(client.embedColor)
 			.setTimestamp()
-			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}`)
+			.setThumbnail(`${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`}`)
+			.addFields([
+				{
+				  name: 'Duration',
+				  value: `\`${track.isStream ? '◉ LIVE' : convertTime(player.queue.current.length)}\``,
+				  inline: true,
+				},
+				{
+				  name: 'Author',
+				  value: `${track.author}`,
+				  inline: true,
+				},
+				{
+				  name: 'Requested by',
+				  value: `${track.requester ? track.requester : `<@${client.user.id}>`}`,
+				  inline: true,
+				},
+			  ])
 			
-		client.channels.cache.get(player.text)?.send({embeds: [main]}).then(x => player.data.set("message", x));
-		await player.data.set("autoplaySystem", player.current.identifier);
+		client.channels.cache.get(player.textId)?.send({embeds: [main]}).then(x => player.data.set("message", x));
+
+		await player.data.set("autoplaySystem", track.identifier);
 	}
 };

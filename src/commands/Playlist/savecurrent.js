@@ -18,7 +18,7 @@ module.exports = {
     const Name = args[0];
     const data = await db.findOne({ UserId: message.author.id, PlaylistName: Name });
     const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription(`There is no music playing.`);
       return message.reply({ embeds: [thing] });
     }
@@ -40,7 +40,7 @@ module.exports = {
         ],
       });
     }
-    const song = player.current;
+    const song = player.queue.current;
     let oldSong = data.Playlist;
     if (!Array.isArray(oldSong)) oldSong = [];
     oldSong.push({

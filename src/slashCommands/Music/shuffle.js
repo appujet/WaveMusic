@@ -22,7 +22,7 @@ module.exports = {
     });
     const player = client.manager.players.get(interaction.guild.id);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
@@ -31,7 +31,7 @@ module.exports = {
     let thing = new MessageEmbed()
       .setDescription(`${emojishuffle} Shuffled the queue`)
       .setColor(client.embedColor);
-    await player.shuffle();
+    await player.queue.shuffle();
     return interaction
       .editReply({ embeds: [thing] })
       .catch((error) => client.logger.log(error, 'error'));

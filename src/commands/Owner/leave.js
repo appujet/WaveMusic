@@ -14,6 +14,7 @@ module.exports = {
    
 
     let guild = client.guilds.cache.get(args[0]);
+    
     if (!guild)
       return message.reply({
         content: 'Could not find the Guild to Leave',

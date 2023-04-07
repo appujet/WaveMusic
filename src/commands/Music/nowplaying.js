@@ -16,19 +16,24 @@ module.exports = {
   inVoiceChannel: false,
   sameVoiceChannel: false,
   execute: async (message, args, client, prefix) => {
+
     const player = client.manager.players.get(message.guild.id);
-    const song = player.current;
-    if (!player.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.channel.send(thing);
+    const song = player.queue.current;
+
+    if (!player.queue.current) {
+      let thing = new MessageEmbed()
+      .setColor('RED')
+      .setDescription('There is no music playing.');
+
+      return message.channel.send({ embeds: [thing] });
     }
 
     const emojimusic = client.emoji.music;
     var total = song.length;
-    var current = player.player.position;
+    var current = player.position;
 
     let embed = new MessageEmbed()
-      .addField(`${emojimusic} **Now Playing**`, `[${song.title}](${song.uri})`)
+      .setDescription(`${emojimusic} **Now Playing**\n [${song.title}](${song.uri})`)
       .addFields([
         {
           name: 'Duration',
@@ -37,7 +42,7 @@ module.exports = {
         },
         {
           name: 'Author',
-          value: `${player.current.author}`,
+          value: `${player.queue.current.author}`,
           inline: true,
         },
         {
@@ -56,9 +61,9 @@ module.exports = {
 
       .setThumbnail(
         `${
-          player.current.thumbnail
-            ? player.current.thumbnail
-            : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+          player.queue.current.thumbnail
+            ? player.queue.current.thumbnail
+            : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
         }`,
       )
       .setColor(client.embedColor);

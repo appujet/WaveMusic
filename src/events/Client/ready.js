@@ -6,7 +6,7 @@ run: async (client) => {
     client.logger.log(`${client.user.username} online!`, "ready");
     client.logger.log(`Ready on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users`, "ready");
    
-    let statuses = ['/help', `Prefix ${prefix}`];
+    let statuses = ['/play | /help', `${prefix}play | ${prefix}help`];
     setInterval(function() {
   	let status = statuses[Math.floor(Math.random()*statuses.length)];		
         client.user.setPresence({
@@ -16,7 +16,7 @@ run: async (client) => {
                     type: "PLAYING"
                 }
             ],
-            status: "idle"
+            status: "online"
         });
     }, 10000)
  }
