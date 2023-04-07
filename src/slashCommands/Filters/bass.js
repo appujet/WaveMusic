@@ -39,13 +39,13 @@ module.exports = {
     });
     const input = interaction.options.getString('input');
     const player = client.manager.players.get(interaction.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
     const emojiequalizer = interaction.client.emoji.filter;
     if (input === 'off') {
-      await player.player.clearFilters();
+      await player.shoukaku.clearFilters();
       return await interaction.editReply({
         embeds: [
           new MessageEmbed()
@@ -54,7 +54,7 @@ module.exports = {
         ],
       });
     } else if (input === 'on') {
-      await player.player.setFilters({
+      await player.shoukaku.setFilters({
         op: 'filters',
         guildId: interaction.guild.id,
         equalizer: [

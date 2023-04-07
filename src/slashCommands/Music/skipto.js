@@ -30,7 +30,7 @@ module.exports = {
     const args = interaction.options.getNumber('number');
     const player = client.manager.players.get(interaction.guildId);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return await interaction.editReply({ embeds: [thing] });
     }
@@ -40,12 +40,12 @@ module.exports = {
     if (!position || position < 0 || position > player.queue.size) {
       let thing = new MessageEmbed()
         .setColor('RED')
-        .setDescription(`Usage: ${prefix}volume <Number of song in queue>`);
+        .setDescription(`Usage: ${prefix}skipto <Number of song in queue>`);
       return await interaction.editReply({ embeds: [thing] });
     }
-    if (args[0] == 1) player.player.stopTrack();
+    if (args[0] == 1) player.skip();
     player.queue.splice(0, position - 1);
-    await player.player.stopTrack();
+    await player.skip();
 
     const emojijump = client.emoji.jump;
 

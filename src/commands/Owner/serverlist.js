@@ -26,7 +26,7 @@ module.exports = {
         text: `Page ${page + 1}/${pages.length}`,
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
-      .setTitle(`${message.client.user.username} serverlist`);
+      .setTitle(`${message.client.user.username} Server list`);
 
     const but1 = new MessageButton()
       .setCustomId('queue_cmd_but_1')
@@ -50,7 +50,7 @@ module.exports = {
       components: [row1],
     });
 
-    const collector = message.channel.createMessageComponentCollector({
+    const collector = msg.createMessageComponentCollector({
       filter: (b) => {
         if (b.user.id === message.author.id) return true;
         else {

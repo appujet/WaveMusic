@@ -16,15 +16,15 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
     const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
     player.queue.length = 0;
-    player.repeat = 'off';
+    player.repeat = 'none';
     player.data.delete("autoplay")
     player.stopped = true;
-    await player.player.stopTrack();
+    await player.skip();
     Wait(500);
     const emojistop = client.emoji.stop;
     let thing = new MessageEmbed()

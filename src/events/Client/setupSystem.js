@@ -24,8 +24,8 @@ module.exports = {
             return;
         };
 
-        if(message.guild.me.voice.channel && message.guild.me.voice.channelId !== message.member.voice.channelId) {
-            await oops(message.channel, `You are not connected to <#${message.guild.me.voice.channelId}> to queue songs`);
+        if(message.guild.members.me.voice.channel && message.guild.members.me.voice.channelId !== message.member.voice.channelId) {
+            await oops(message.channel, `You are not connected to <#${message.guild.members.me.voice.channelId}> to queue songs`);
             if(message) await message.delete().catch(() => {});
             return;
         };

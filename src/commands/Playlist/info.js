@@ -42,14 +42,12 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle(`${message.author.username}'s Playlists`)
       .setColor(client.embedColor)
-      .setDescription(`**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`);
+      .setDescription(`**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page] ? pages[page] : ""}`);
     if (pages.length <= 1) {
       return await message.reply({ embeds: [embed] });
     } else {
-      let previousbut = new MessageButton()
-        .setCustomId('Previous')
-        .setEmoji('⏪')
-        .setStyle('SECONDARY');
+
+      let previousbut = new MessageButton().setCustomId('Previous').setEmoji('⏪').setStyle('SECONDARY');
 
       let nextbut = new MessageButton().setCustomId('Next').setEmoji('⏩').setStyle('SECONDARY');
 
@@ -79,29 +77,26 @@ module.exports = {
         });
       });
 
-      collector.on('collect', async (b) => {
-        if (!b.deferred) await b.deferUpdate().catch(() => {});
-        if (b.customId === 'Previous') {
-          page = page - 1 < 0 ? pages.length - 1 : --page;
-          if (!m) return;
+      collector.on("collect", async (b) => {
+        if (!b.deferred) await b.deferUpdate().catch(() => { });
+        if (b.customId === "Previous") {
+            page = page - 1 < 0 ? pages.length - 1 : --page;
+            if (!m) return;
 
-          embed.setDescription(
-            `**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`,
-          );
+            embed.setDescription(`**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`);
 
-          return await m.edit({ embeds: [embed] });
-        } else if (b.customId === 'Stop') {
-          return collector.stop();
-        } else if (b.customId === 'playlist_cmd_uwu-next')
-          page = page + 1 >= pages.length ? 0 : ++page;
+            return await m.edit({ embeds: [embed] });
+        } else if (b.customId === "Stop") {
+            return collector.stop();
+        } else if (b.customId === "Next")
+            page = page + 1 >= pages.length ? 0 : ++page;
         if (!m) return;
 
-        embed.setDescription(
-          `**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`,
-        );
+        embed.setDescription(`**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`);
 
         return await m.edit({ embeds: [embed] });
-      });
+    });
+    
     }
   },
 };

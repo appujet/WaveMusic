@@ -16,7 +16,7 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
        const player = client.manager.players.get(message.guild.id);
-       if (!player.current) {
+       if (!player.queue.current) {
          let thing = new MessageEmbed()
            .setColor('RED')
            .setDescription('There is no music playing.');
@@ -79,7 +79,7 @@ module.exports = {
     collector.on("collect", async (b) => {
       if (!b.replied) await b.deferUpdate({ ephemeral: true });
       if (b.customId === "clear_but") {
-        await player.player.clearFilters();
+        await player.shoukaku.clearFilters();
         return await b.editReply({
           embeds: [
             embed1.setDescription(`${emojiequalizer} Party Mode Is \`OFF\``),
@@ -87,7 +87,7 @@ module.exports = {
           components: [row2],
         });
       } else if (b.customId === "party_but") {
-        await player.player.setFilters({
+        await player.shoukaku.setFilters({
           op: 'filters',
           guildId: message.guild.id,
           equalizer: [

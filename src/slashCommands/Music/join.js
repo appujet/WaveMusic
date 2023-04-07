@@ -30,7 +30,7 @@ module.exports = {
       });
     } else {
       if (
-        !interaction.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
+        !interaction.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
       )
         return interaction.editReply({
           embeds: [
@@ -43,8 +43,8 @@ module.exports = {
         });
 
       if (
-        !interaction.guild.me
-          .permissionsIn(channel)
+        !interaction.guild.members.me.
+          permissionsIn(channel)
           .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
       )
         return interaction.editReply({

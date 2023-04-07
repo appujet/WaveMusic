@@ -30,7 +30,7 @@ module.exports = {
     const data = await db.findOne({ UserId: interaction.member.user.id, PlaylistName: Name });
 
     const player = client.manager.players.get(interaction.guildId);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription(i18n.__('player.nomusic'));
       return interaction.editReply({ embeds: [thing] });
     }
@@ -52,7 +52,7 @@ module.exports = {
         ],
       });
     }
-    const song = player.current;
+    const song = player.queue.current;
     let oldSong = data.Playlist;
     if (!Array.isArray(oldSong)) oldSong = [];
     oldSong.push({

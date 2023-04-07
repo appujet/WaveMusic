@@ -43,7 +43,7 @@ module.exports = {
     const input = interaction.options.getString('input');
 
     let player = client.manager.players.get(interaction.guildId);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.channel.send({ embeds: [thing] });
     }
@@ -55,7 +55,7 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`${emojiloop} Loop track is now **enable**`),
+            .setDescription(`${emojiloop} Loop track is now **Enable**`),
         ],
       });
     } else if (input === 'queue') {
@@ -64,16 +64,16 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`${emojiloop} Loop queue is now **enable**`),
+            .setDescription(`${emojiloop} Loop queue is now **Enable**`),
         ],
       });
     } else if (input === 'off') {
-      await player.setLoop('off');
+      await player.setLoop('none');
       return await interaction.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`${emojiloop} Loop is now **disabled**`),
+            .setDescription(`${emojiloop} Loop is now **Disabled**`),
         ],
       });
     }

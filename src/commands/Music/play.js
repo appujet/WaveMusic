@@ -14,7 +14,8 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
-    if (!message.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
+
+    if (!message.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
       return message.channel.send({
         embeds: [
           new MessageEmbed()
@@ -30,7 +31,7 @@ module.exports = {
     const { channel } = message.member.voice;
 
     if (
-      !message.guild.me
+      !message.guild.members.me
         .permissionsIn(channel)
         .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
     )
@@ -51,12 +52,17 @@ module.exports = {
       textId: message.channel.id,
       deaf: true,
     });
-    const result = await player.search(query, message.author);
+
+    const result = await player.search(query, { requester: message.author });
+
     if (!result.tracks.length) return message.reply({ content: 'No result was found' });
+
     const tracks = result.tracks;
-   if (result.type === 'PLAYLIST') for (let track of tracks) player.addSong(track);
-   else player.addSong(tracks[0]);
-   if (!player.current) player.play();
+
+   if (result.type === 'PLAYLIST') for (let track of tracks) player.queue.add(track);
+   else player.queue.add(tracks[0]);
+
+   if (!player.playing && !player.paused) player.play();
     return message.reply(
       result.type === 'PLAYLIST'
         ? {

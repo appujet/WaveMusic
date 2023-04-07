@@ -15,7 +15,9 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
+
     const player = client.manager.players.get(message.guild.id);
+
     if (!player.queue) {
       let thing = new MessageEmbed()
         .setColor('RED')
@@ -71,21 +73,18 @@ module.exports = {
       if (!b.deferred) await b.deferUpdate();
       if (b.customId === 'cqueue') {
          if (!player.queue[0]) {
-      let thing = new MessageEmbed()
-        .setColor(message.client.embedColor)
-        .setDescription('There Is Nothing In The Queue');
-      return message.reply({ embeds: [thing] });
+         return await m.edit({ embeds: [new MessageEmbed().setDescription('There Is Nothing In The Queue').setColor(message.client.embedColor)] , components: [] })
     }
-        var size = player.queue[0];
-        player.queue = [];
+        await player.queue.clear();
         await m.edit({
           embeds: [new MessageEmbed().setDescription('Which one do you want to clear?').setColor(message.client.embedColor)],
           components: [new MessageActionRow().addComponents(but_, but_2)],
         });
         return await m.reply({ embeds: [new MessageEmbed().setDescription('Cleared the Queue.').setColor(message.client.embedColor)] });
       }
+
       if (b.customId === 'cfilter') {
-         await player.player.clearFilters();
+        player.shoukaku.clearFilters()
         await m.edit({
           embeds: [new MessageEmbed().setDescription('Which one do you want to clear?').setColor(message.client.embedColor)],
           components: [new MessageActionRow().addComponents(but_, but_2)],

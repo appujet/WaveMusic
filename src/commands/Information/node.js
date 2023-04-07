@@ -14,7 +14,7 @@ module.exports = {
   
   const all = [...client.manager.shoukaku.nodes.values()].map(node => 
         `Node ${node.name} Connected` +
-        `\nPlayer:  ${client.guilds.cache.filter((g) => g.me.voice.channel).size}` +
+        `\nPlayer:  ${client.guilds.cache.filter((g) => g.members.me.voice.channel).size}` +
         `\nUptime: ${new Date(node.stats.uptime).toISOString().slice(11, 19)}` +
         `\n\nMemory` +
         `\nReservable Memory: ${Math.round(node.stats.memory.reservable / 1024 / 1024)}mb` +

@@ -21,18 +21,18 @@ module.exports = {
       ephemeral: false,
     });
     const player = client.manager.players.get(interaction.guild.id);
-    const song = player.current;
-    if (!player.current) {
+    const song = player.queue.current;
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
 
     const emojimusic = client.emoji.music;
     var total = song.length;
-    var current = player.player.position;
+    var current = player.position;
 
     let embed = new MessageEmbed()
-      .addField(`${emojimusic} **Now Playing**`, `[${song.title}](${song.uri})`)
+      .setDescription(`${emojimusic} **Now Playing** \n[${song.title}](${song.uri})`)
       .addFields([
         {
           name: 'Duration',
@@ -41,7 +41,7 @@ module.exports = {
         },
         {
           name: 'Author',
-          value: `${player.current.author}`,
+          value: `${player.queue.current.author}`,
           inline: true,
         },
         {
@@ -51,18 +51,16 @@ module.exports = {
         },
         {
           name: '**Progress Bar**',
-          value: `**[ ${progressbar(player)}** ] \n\`${convertTime(current)}  ${convertTime(
-            total,
-          )}\``,
+          value: `** ${progressbar(player)} **  \n\`${convertTime(current)} / ${convertTime(total)}\``,
           inline: true,
         },
       ])
 
       .setThumbnail(
         `${
-          player.current.thumbnail
-            ? player.current.thumbnail
-            : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`
+          player.queue.current.thumbnail
+            ? player.queue.current.thumbnail
+            : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
         }`,
       )
       .setColor(client.embedColor);

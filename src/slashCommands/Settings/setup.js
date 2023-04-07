@@ -107,17 +107,17 @@ module.exports = {
             let player = client.manager.players.get(interaction.guildId);
             if (player) disabled = false;
 
-            const title = player && player.queue && player.current ? `Now playing` : "Nothing is playing right now";
-            const desc = player && player.queue && player.current ? `[${player.current.title}](${player.current.uri})` : null;
+            const title = player && player.queue && player.queue.current ? `Now playing` : "Nothing is playing right now";
+            const desc = player && player.queue && player.queue.current ? `[${player.queue.current.title}](${player.queue.current.uri})` : null;
             const footer = {
-                text: player && player.queue && player.current ? `Requested by ${player.current.requester.tag}` : "",
-                iconURL: player && player.queue && player.current ? `${player.current.requester.displayAvatarURL({ dynamic: true })}` : `${client.user.displayAvatarURL({ dynamic: true })}`
+                text: player && player.queue && player.queue.current ? `Requested by ${player.queue.current.requester.tag}` : "",
+                iconURL: player && player.queue && player.queue.current ? `${player.queue.current.requester.displayAvatarURL({ dynamic: true })}` : `${client.user.displayAvatarURL({ dynamic: true })}`
             };
             const image = client.config.links.bg;
 
             let embed1 = new MessageEmbed().setColor(client.embedColor).setTitle(title).setFooter({ text: footer.text, iconURL: footer.iconURL }).setImage(image);
 
-            if (player && player.queue && player.current) embed1.setDescription(desc);
+            if (player && player.queue && player.queue.current) embed1.setDescription(desc);
             const but1 = new MessageButton().setCustomId(`${interaction.guildId}pause`).setEmoji(`⏸️`).setStyle('SECONDARY').setDisabled(disabled)
             const but2 = new MessageButton().setCustomId(`${interaction.guildId}previous`).setEmoji(`⏮️`).setStyle('SECONDARY').setDisabled(disabled)
             const but3 = new MessageButton().setCustomId(`${interaction.guildId}skip`).setEmoji(`⏭️`).setStyle('SECONDARY').setDisabled(disabled)

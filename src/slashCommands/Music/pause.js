@@ -20,25 +20,26 @@ module.exports = {
     await interaction.deferReply({
       ephemeral: false,
     });
-    const player = client.manager.players.get(interaction.guild.id);
 
-    if (!player.current) {
+    const player = client.manager.players.get(interaction.guildId);
+
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
 
     const emojipause = client.emoji.pause;
 
-    if (player.player.paused) {
+    if (player.paused) {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`${emojipause} The player is already paused.`);
       return interaction.editReply({ embeds: [thing] });
     }
 
-    await player.setPaused(true);
+    await player.pause(true);
 
-    const song = player.current;
+    const song = player.queue.current;
 
     let thing = new MessageEmbed()
       .setColor(client.embedColor)

@@ -15,14 +15,16 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
+    
     const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
+
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
-    const song = player.current;
+    const song = player.queue.current;
 
-    await player.player.stopTrack();
+    await player.skip();
 
     const emojiskip = message.client.emoji.skip;
 

@@ -14,6 +14,7 @@ module.exports = {
   inVoiceChannel: true,
   sameVoiceChannel: false,
   execute: async (message, args, client, prefix) => {
+
     const { channel } = message.member.voice;
     const player = client.manager.players.get(message.guild.id);
     if (player) {
@@ -25,7 +26,7 @@ module.exports = {
         ],
       });
     } else {
-      if (!message.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
+      if (!message.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
         return message.channel.send({
           embeds: [
             new MessageEmbed()
@@ -37,7 +38,7 @@ module.exports = {
         });
 
       if (
-        !message.guild.me
+        !message.guild.members.me
           .permissionsIn(channel)
           .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
       )
