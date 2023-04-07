@@ -16,7 +16,8 @@ module.exports = {
 
         let guildId = newState.guild.id;
         const player = client.manager.players.get(guildId);
-
+        if (!player) return;
+        
         if (!newState.guild.members.cache.get(client.user.id).voice.channelId) {
             const text = player?.textId;
             await player.destroy(player.guildId);
