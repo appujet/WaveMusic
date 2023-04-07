@@ -1,6 +1,6 @@
 const { Client, Intents, Collection } = require("discord.js");
 const { Kazagumo } = require("kazagumo");
-const { connect } = require('mongoose');
+const  mongoose  = require('mongoose');
 const { readdirSync } = require("fs");
 const shoukakuOptions = require("../utils/options");
 const { Connectors } = require("shoukaku");
@@ -142,12 +142,22 @@ class MusicBot extends Client {
     const dbOptions = {
       useNewUrlParser: true,
       autoIndex: false,
-      connectTimeoutMS: 10000,
+      connectTimeoutMS: 1000,
       family: 4,
       useUnifiedTopology: true,
     };
-    await connect(this.config.mongourl, dbOptions);
-    this.logger.log('[DB] DATABASE CONNECTED', "ready");
+    mongoose.set('strictQuery', true);
+    mongoose.connect(this.config.mongourl, dbOptions);
+    mongoose.Promise = global.Promise;
+    mongoose.connection.on("connected", () => {
+      this.logger.log("[DB] DATABASE CONNECTED", "ready");
+    });
+    mongoose.connection.on("err", (err) => {
+      this.logger.log(`[DB]Mongoose connection error: \n ${err.stack}`, "error");
+    });
+    mongoose.connection.on("disconnected", () => {
+      this.logger.log("[DB]Mongoose disconnected", "error");
+    });
   }
   connect() {
     return super.login(this.token);
