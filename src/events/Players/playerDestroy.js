@@ -8,7 +8,9 @@ module.exports = {
 
         let name = client.guilds.cache.get(player.guildId).name;
 
-        client.logger.log(`Player Destroy in @ ${name}`, "log");
+        client.logger.log(`Player Destroy in ${name} [ ${player.guildId} ]`, "log");
+
+        if (player.data.get('message') && player.data.get('message').deletable ) player.data.get('message').delete().catch(() => null);
 
         if (player.data.get("autoplay")) try { player.data.delete("autoplay") } catch (err) { client.logger.log(err.stack ? err.stack : err, "log") };
 

@@ -15,7 +15,7 @@ module.exports = {
         
         let name = client.guilds.cache.get(player.guildId).name;
 
-        client.logger.log(`Player Create in ${name}`, "log");
+        client.logger.log(`Player Create in ${name} [ ${player.guildId} ]`, "log");
 
         let guild = client.guilds.cache.get(player.guildId);
         if (!guild) return;
