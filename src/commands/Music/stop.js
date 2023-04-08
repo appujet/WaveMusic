@@ -20,10 +20,12 @@ module.exports = {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
-    player.queue.length = 0;
-    player.repeat = 'none';
+    
+    player.queue.clear();
     player.data.delete("autoplay")
-    player.stopped = true;
+    player.loop = 'none';
+    player.playing = false;
+    player.paused = false;
     await player.skip();
     Wait(500);
     const emojistop = client.emoji.stop;

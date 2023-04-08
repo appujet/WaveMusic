@@ -1,5 +1,5 @@
 const { Client, Intents, Collection } = require("discord.js");
-const { Kazagumo } = require("kazagumo");
+const { Kazagumo, Plugins } = require("kazagumo");
 const  mongoose  = require('mongoose');
 const { readdirSync } = require("fs");
 const shoukakuOptions = require("../utils/options");
@@ -47,7 +47,6 @@ class MusicBot extends Client {
   //   return this.Kazagumo;
   // };
 
-
   _loadPlayer() {
     this.manager = new Kazagumo({
       plugins: [
@@ -59,6 +58,7 @@ class MusicBot extends Client {
           searchLimit: 10, // optional ( track search limit. Max 50 )
           searchMarket: 'IN', // optional || default: US ( Enter the country you live in. [ Can only be of 2 letters. For eg: US, IN, EN ] )//
         }),
+        new Plugins.PlayerMoved(this),
       ],
       defaultSearchEngine: "youtube",
       send: (guildId, payload) => {
