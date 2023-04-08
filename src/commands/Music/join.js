@@ -22,7 +22,7 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`I'm already connected to <#${player.voice}> voice channel!`),
+            .setDescription(`I'm already connected to <#${player.voiceId}> voice channel!`),
         ],
       });
     } else {
