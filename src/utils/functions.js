@@ -51,7 +51,7 @@ async function autoplay(player, client) {
     if (!searched[0]) {
         return message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`Unable to autoplay from the previous track. Destroyed the player.`)] });
     }
-    const { tracks } = await player.search(searched, requester);
+    const { tracks } = await player.search(searched, { requester: requester });
     await player.queue.add(tracks[1]);
     await player.queue.add(tracks[2]);
     return player.play();
