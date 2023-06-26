@@ -33,15 +33,15 @@ module.exports = {
         })
           .catch(() => { });
       }
-      if (!interaction.member.permissions.has(SlashCommands.botPrams || [])) {
+      if (!interaction.member.permissions.has(SlashCommands.userPrams || [])) {
         return await interaction.reply({
-          content: `I Need Permission to Work this \`${SlashCommands.botPrams.join(', ')}\``,
+          content: `You Need Permission to Work this \`${SlashCommands.userPrams.join(', ')}\``,
           ephemeral: true,
         });
       }
-      if (!interaction.guild.members.me.permissions.has(SlashCommands.userPrams || [])) {
+      if (!interaction.guild.members.me.permissions.has(SlashCommands.botPrams || [])) {
         return await interaction.reply({
-          content: `You Need this \`${SlashCommands.userPrams.join(
+          content: `I Need this \`${SlashCommands.botPrams.join(
             ', ',
           )}\` Permission to Work this command!`,
           ephemeral: true,
@@ -109,5 +109,3 @@ module.exports = {
     };
   }
 };
-
-
