@@ -25,12 +25,12 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`I'm already connected to <#${player.voice}> voice channel!`),
+            .setDescription(`I'm already connected to <#${player.voiceId}> voice channel!`),
         ],
       });
     } else {
       if (
-        !interaction.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
+        !interaction.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
       )
         return interaction.editReply({
           embeds: [
@@ -43,8 +43,8 @@ module.exports = {
         });
 
       if (
-        !interaction.guild.me
-          .permissionsIn(channel)
+        !interaction.guild.members.me.
+          permissionsIn(channel)
           .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
       )
         return interaction.editReply({

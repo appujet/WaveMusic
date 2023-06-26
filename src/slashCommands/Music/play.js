@@ -27,7 +27,7 @@ module.exports = {
     await interaction.deferReply({
       ephemeral: false,
     });
-    if (!interaction.guild.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
+    if (!interaction.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
       return interaction.editReply({
         embeds: [
           new MessageEmbed()
@@ -38,11 +38,8 @@ module.exports = {
         ],
       });
     const { channel } = interaction.member.voice;
-    if (
-      !interaction.guild.me
-        .permissionsIn(channel)
-        .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
-    )
+
+    if (!interaction.guild.members.me.permissionsIn(channel).has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
       return interaction.editReply({
         embeds: [
           new MessageEmbed()
@@ -63,30 +60,35 @@ module.exports = {
       textId: interaction.channelId,
       deaf: true,
     });
-    const result = await player.search(query, interaction.user);
+
+    const result = await player.search(query, { requester: interaction.user });
+
     if (!result.tracks.length) return interaction.editReply({ content: 'No result was found' });
     const tracks = result.tracks;
-    if (result.type === 'PLAYLIST') for (let track of tracks) player.addSong(track);
-    else player.addSong(tracks[0]);
-    if (!player.current) player.play();
+
+    if (result.type === "PLAYLIST") for (let track of result.tracks) player.queue.add(track);
+    else player.queue.add(result.tracks[0]);
+
+
+    if (!player.playing && !player.paused) player.play();
+
     return interaction.editReply(
-      result.type === 'PLAYLIST'
-        ? {
-            embeds: [
-              new MessageEmbed()
-                .setColor(client.embedColor)
-                .setDescription(
-                  `${emojiplaylist} Queued ${tracks.length} from ${result.playlistName}`,
-                ),
-            ],
-          }
+      result.type === 'PLAYLIST' ? {
+          embeds: [
+            new MessageEmbed()
+              .setColor(client.embedColor)
+              .setDescription(
+                `${emojiplaylist} Queued ${tracks.length} from ${result.playlistName}`,
+              ),
+          ],
+        }
         : {
-            embeds: [
-              new MessageEmbed()
-                .setColor(client.embedColor)
-                .setDescription(`${emojiaddsong} Queued [${tracks[0].title}](${tracks[0].uri})`),
-            ],
-          },
+          embeds: [
+            new MessageEmbed()
+              .setColor(client.embedColor)
+              .setDescription(`${emojiaddsong} Queued [${tracks[0].title}](${tracks[0].uri})`),
+          ],
+        },
     );
   },
 };

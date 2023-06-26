@@ -16,7 +16,7 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
     const Name = args[0];
-    
+
     const data = await db.findOne({ UserId: message.author.id, PlaylistName: Name });
 
     let name = Name;
@@ -47,23 +47,24 @@ module.exports = {
           .setDescription(`Adding ${data.PlaylistName} track(s) from your playlist **${name}** to the queue.`),
       ],
     });
+
     for (const track of data.Playlist) {
-      let s = await player.search(track.uri ? track.uri : track.title, message.author);
-      if (s.type === 'PLAYLIST') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
-        ++count;
-      } else if (s.type === 'TRACK') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+      let s = await player.search(track.uri ? track.uri : track.title, { requester: message.author });
+      if (s.type === "TRACK") {
+        if (player) player.queue.add(s.tracks[0]);
+        if (player && !player.playing && !player.paused) await player.play();
         ++count;
       } else if (s.type === 'SEARCH') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (player && !player.playing && !player.paused) await player.play();
         ++count;
-      }
+      } else if (s.type === 'PLAYLIST') {
+        await player.queue.add(s.tracks[0]);
+        if (player && !player.playing && !player.paused) await player.play();
+        ++count;
+      };
     }
-    if (player && !player.current) player.destroy(message.guild.id);
+    if (player && !player.queue.current) player.destroy(message.guild.id);
     if (count <= 0 && m)
       return await m.edit({
         embeds: [

@@ -17,7 +17,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     const player = client.manager.players.get(message.guild.id);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
@@ -29,15 +29,15 @@ module.exports = {
         .setColor(client.embedColor)
         .setDescription(`${emojiloop} Loop queue is now **enable**`);
       return message.reply({ embeds: [thing] });
-    } else if (['track', 't'].includes(args[0])) {
+    } else if (['track', 't', 'song'].includes(args[0])) {
       await player.setLoop('track');
 
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`${emojiloop} Loop track is now **enable**`);
       return message.reply({ embeds: [thing] });
-    } else if (['off', 'c', 'clear'].includes(args[0])) {
-      await player.setLoop('off');
+    } else if (['off', 'c', 'clear', 'reset'].includes(args[0])) {
+      await player.setLoop('none');
 
       let thing = new MessageEmbed()
         .setColor(client.embedColor)

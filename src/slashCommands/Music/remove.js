@@ -1,4 +1,5 @@
 const { CommandInteraction, Client, MessageEmbed } = require('discord.js');
+const { intersection } = require('lodash');
 
 module.exports = {
   name: 'remove',
@@ -29,12 +30,13 @@ module.exports = {
     });
     const player = client.manager.players.get(interaction.guild.id);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
 
-    const position = Number(args[0]) - 1;
+    const pos = interaction.options.getNumber("number");
+    const position = Number(pos) - 1;
     if (position > player.queue.length) {
       const number = position + 1;
       let thing = new MessageEmbed()
@@ -45,7 +47,7 @@ module.exports = {
 
     const song = player.queue[position];
 
-    await player.queue.splice(position);
+    await player.queue.splice(position, 1);
 
     const emojieject = client.emoji.remove;
 

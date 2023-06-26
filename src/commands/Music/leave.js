@@ -15,8 +15,9 @@ module.exports = {
     inVoiceChannel: true,
     sameVoiceChannel: true,
     execute: async (message, args, client, prefix) => {
-        const player = client.manager.players.get(message.guild.id);
 
+        const player = client.manager.players.get(message.guild.id);
+        
         const emojiLeave = message.client.emoji.leave;
 
         await player.destroy(message.guild.id);

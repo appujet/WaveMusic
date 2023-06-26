@@ -17,7 +17,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     const Name = args[0];
     const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription(`There is no music playing.`);
       return message.reply({ embeds: [thing] });
     }
@@ -40,13 +40,13 @@ module.exports = {
         ],
       });
     }
-    const song = player.current;
+    const song = player.queue.current;
     const tracks = player.queue;
 
     let oldSong = data.Playlist;
     if (!Array.isArray(oldSong)) oldSong = [];
     const newSong = [];
-    if (player.current) {
+    if (player.queue.current) {
       newSong.push({
         title: song.title,
         uri: song.uri,

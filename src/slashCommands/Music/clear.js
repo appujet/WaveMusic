@@ -21,7 +21,7 @@ module.exports = {
       ephemeral: false,
     });
     const player = client.manager.players.get(interaction.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('No Music Is Playing');
       return interaction.editReply({ embeds: [thing] });
     }
@@ -31,10 +31,8 @@ module.exports = {
         .setDescription('There Is Nothing In The Queue');
       return interaction.editReply({ embeds: [thing] });
     }
-    var size = player.queue[0];
-    player.queue = [];
-
-    await player.queue.push(size);
+  
+    await player.queue.clear();
 
     const embed = new MessageEmbed()
       .setColor(client.embedColor)

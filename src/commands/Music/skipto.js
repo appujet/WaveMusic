@@ -17,7 +17,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     const player = client.manager.players.get(message.guild.id);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
@@ -30,9 +30,10 @@ module.exports = {
         .setDescription(`Usage: ${message.client.prefix}skipto <Number of song in queue>`);
       return message.reply({ embeds: [thing] });
     }
-    if (args[0] == 1) player.player.stopTrack();
+    if (args[0] == 1) player.skip();
+
     player.queue.splice(0, position - 1);
-    await player.player.stopTrack();
+    await player.skip();
 
     const emojijump = client.emoji.jump;
 

@@ -1,13 +1,25 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 const db = require("../../schema/setup");
+const { KazagumoPlayer } = require("kazagumo")
 
 module.exports = {
     name: "playerCreate",
-    run: async (client, player) => {
-        client.logger.log(`Player Create in @ ${player.guild}`, "log");
 
-        let guild = client.guilds.cache.get(player.guild);
+    /**
+	 * 
+	 * @param {Client} client 
+	 * @param {KazagumoPlayer} player 
+	 */
+
+    run: async (client, player) => {
+        
+        let name = client.guilds.cache.get(player.guildId).name;
+
+        client.logger.log(`Player Create in ${name} [ ${player.guildId} ]`, "log");
+
+        let guild = client.guilds.cache.get(player.guildId);
         if (!guild) return;
+        
         const data = await db.findOne({ Guild: guild.id });
         if (!data) return;
 

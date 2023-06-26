@@ -11,7 +11,9 @@ module.exports = {
   botPrams: ['EMBED_LINKS'],
   owner: false,
   execute: async (message, args, client, prefix) => {
-    var invite = client.config.links.invite;
+
+    var invite = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
+    
     const row = new MessageActionRow().addComponents(
       new MessageButton().setLabel('Invite').setStyle('LINK').setURL(invite),
     );

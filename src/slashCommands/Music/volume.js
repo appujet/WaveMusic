@@ -35,7 +35,7 @@ module.exports = {
     const vol = interaction.options.getNumber('number');
 
     const player = client.manager.players.get(interaction.guildId);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }

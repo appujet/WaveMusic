@@ -1,8 +1,10 @@
 const { Client, Intents, Collection } = require("discord.js");
-const Manager = require("kazagumo");
-const { connect } = require('mongoose');
+const { Kazagumo, Plugins } = require("kazagumo");
+const  mongoose  = require('mongoose');
 const { readdirSync } = require("fs");
 const shoukakuOptions = require("../utils/options");
+const { Connectors } = require("shoukaku");
+const Spotify = require("kazagumo-spotify")
 
 class MusicBot extends Client {
   constructor() {
@@ -32,18 +34,42 @@ class MusicBot extends Client {
     this.manager
     this._connectMongodb();
   }
-  
+
+  // _loadPlayer() {
+  //   const Spotify = {
+  //     spotify: {
+  //       clientId: this.config.SpotifyID,
+  //       clientSecret: this.config.SpotifySecret
+  //     },
+  //     defaultSearchEngine: "youtube_music"
+  //   };
+  //   this.Kazagumo = new Kazagumo(this, this.config.nodes, shoukakuOptions );
+  //   return this.Kazagumo;
+  // };
+
   _loadPlayer() {
-    const Spotify = {
-      spotify: {
-        clientId: this.config.SpotifyID,
-        clientSecret: this.config.SpotifySecret
-      },
-      defaultSearchEngine: "youtube_music"
-    };
-    this.manager = new Manager(this, this.config.nodes, shoukakuOptions, Spotify);
-    return this.manager;
-  };
+    this.manager = new Kazagumo({
+      plugins: [
+        new Spotify({
+          clientId: this.config.SpotifyID,
+          clientSecret: this.config.SpotifySecret,
+          playlistPageLimit: 3, // optional ( 100 tracks per page )
+          albumPageLimit: 4, // optional ( 50 tracks per page )
+          searchLimit: 10, // optional ( track search limit. Max 50 )
+          searchMarket: 'IN', // optional || default: US ( Enter the country you live in. [ Can only be of 2 letters. For eg: US, IN, EN ] )//
+        }),
+        new Plugins.PlayerMoved(this),
+      ],
+      defaultSearchEngine: "youtube",
+      send: (guildId, payload) => {
+        const guild = this.guilds.cache.get(guildId);
+        if (guild) guild.shard.send(payload);
+      }
+    }, new Connectors.DiscordJS(this), this.config.nodes, shoukakuOptions);
+    return this.Kazagumo;
+  }
+
+
   _loadClientEvents() {
     readdirSync("./src/events/Client").forEach(file => {
       const event = require(`../events/Client/${file}`);
@@ -116,12 +142,22 @@ class MusicBot extends Client {
     const dbOptions = {
       useNewUrlParser: true,
       autoIndex: false,
-      connectTimeoutMS: 10000,
+      connectTimeoutMS: 1000,
       family: 4,
       useUnifiedTopology: true,
     };
-    await connect(this.config.mongourl, dbOptions);
-    this.logger.log('[DB] DATABASE CONNECTED', "ready");
+    mongoose.set('strictQuery', true);
+    mongoose.connect(this.config.mongourl, dbOptions);
+    mongoose.Promise = global.Promise;
+    mongoose.connection.on("connected", () => {
+      this.logger.log("[DB] DATABASE CONNECTED", "ready");
+    });
+    mongoose.connection.on("err", (err) => {
+      this.logger.log(`[DB]Mongoose connection error: \n ${err.stack}`, "error");
+    });
+    mongoose.connection.on("disconnected", () => {
+      this.logger.log("[DB]Mongoose disconnected", "error");
+    });
   }
   connect() {
     return super.login(this.token);

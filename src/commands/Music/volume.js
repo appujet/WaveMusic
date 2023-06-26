@@ -17,7 +17,7 @@ module.exports = {
   execute: async (message, args, client, prefix) => {
     const player = client.manager.players.get(message.guild.id);
 
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
@@ -26,7 +26,7 @@ module.exports = {
     if (!args.length) {
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
-        .setDescription(`Player Current Volume: \`[ ${player.player.filters.volume * 100}% ]\``);
+        .setDescription(`Player Current Volume: \`[ ${player.volume * 100}% ]\``);
       return message.reply({ embeds: [thing] });
     }
 

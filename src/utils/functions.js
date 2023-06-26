@@ -1,6 +1,7 @@
 const { Message, MessageEmbed, Client, TextChannel, MessageButton, MessageActionRow } = require("discord.js");
 const db = require("../schema/setup");
 const { convertTime } = require("./convert");
+const { KazagumoPlayer, KazagumoTrack } = require("kazagumo");
 
 /**
  * 
@@ -26,7 +27,7 @@ async function oops(channel, args) {
 /**
  * 
  * @param {String} query 
- * @param {Player} player 
+ * @param {KazagumoPlayer} player 
  * @param {Message} message 
  * @param {Client}  client
  */
@@ -35,11 +36,11 @@ function neb(embed, player, client) {
     const config = require("../config")
     let icon = config.links.bg;
 
-    return embed.setDescription(`[${player.current.title}](${player.current.uri}) • \`[ ${player.current.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.current.requester.tag}`, iconURL: player.current.requester.displayAvatarURL({ dynamic: true }) });
+    return embed.setDescription(`[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 };
 /**
  * 
- * @param {*} player 
+ * @param {KazagumoPlayer} player 
  * @param {Client} client
  * @returns 
  */
@@ -50,15 +51,15 @@ async function autoplay(player, client) {
     if (!searched[0]) {
         return message.channel.send({ embeds: [new MessageEmbed().setColor(client.embedColor).setDescription(`Unable to autoplay from the previous track. Destroyed the player.`)] });
     }
-    const { tracks } = await player.search(searched, requester);
-    await player.addSong(tracks[1]);
-    await player.addSong(tracks[2]);
+    const { tracks } = await player.search(searched, { requester: requester });
+    await player.queue.add(tracks[1]);
+    await player.queue.add(tracks[2]);
     return player.play();
 }
 /**
  * 
  * @param {String} query 
- * @param {Player} player 
+ * @param {KazagumoPlayer} player 
  * @param {Message} message 
  * @param {Client}  client
  */
@@ -74,19 +75,19 @@ async function playerhandler(query, player, message) {
         if (d) m = await message.channel.messages.fetch(d.Message, { cache: true });
     } catch (e) { };
 
-    if (!message.guild.me.voice.channel || player.state !== "CONNECTED") player = await message.client.manager.createPlayer({
+    if (!message.guild.members.me.voice.channel || player.state !== "CONNECTED") player = await message.client.manager.createPlayer({
         guildId: message.guild.id,
         voiceId: message.member.voice.channel.id,
         textId: message.channel.id,
         deaf: true,
     });
 
-    const result = await player.search(query, message.author);
+    const result = await player.search(query, { requester: message.author });
     if (!result.tracks.length) return message.reply({ content: 'No result was found' });
     const tracks = result.tracks;
-    if (result.type === 'PLAYLIST') for (let track of tracks) player.addSong(track);
-    else player.addSong(tracks[0]);
-    if (!player.current) player.play();
+    if (result.type === 'PLAYLIST') for (let track of tracks) player.queue.add(track);
+    else player.queue.add(tracks[0]);
+    if (!player.playing && !player.paused) await player.play();
     return message.channel.send(
         result.type === 'PLAYLIST'
             ? {
@@ -113,15 +114,15 @@ async function playerhandler(query, player, message) {
  * 
  * @param {String} msgId
  * @param {TextChannel} channel 
- * @param {Player} player 
- * @param {import("erela.js").Track} track 
+ * @param {KazagumoPlayer} player 
+ * @param {KazagumoTrack} track 
  * @param {Client} client
  */
 
 async function trackStartEventHandler(msgId, channel, player, track, client) {
     try {
 
-        let icon = `${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.current.identifier}/hqdefault.jpg`}` || client.config.links.bg;
+        let icon = `${track.thumbnail ? track.thumbnail : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`}` || client.config.links.bg;
 
         let message;
         try {
@@ -133,13 +134,13 @@ async function trackStartEventHandler(msgId, channel, player, track, client) {
 
         if (!message) {
 
-            let embed1 = new MessageEmbed().setColor(client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.current.requester.tag}`, iconURL: player.current.requester.displayAvatarURL({ dynamic: true }) });
+            let embed1 = new MessageEmbed().setColor(client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 
-            const but1 = new MessageButton().setCustomId(`${player.guild}pause`).setEmoji(`⏸️`).setStyle('SECONDARY')
-            const but2 = new MessageButton().setCustomId(`${player.guild}previous`).setEmoji(`⏮️`).setStyle('SECONDARY')
-            const but3 = new MessageButton().setCustomId(`${player.guild}skip`).setEmoji(`⏭️`).setStyle('SECONDARY')
-            const but4 = new MessageButton().setCustomId(`${player.guild}voldown`).setEmoji(`🔉`).setStyle('SECONDARY')
-            const but5 = new MessageButton().setCustomId(`${player.guild}volup`).setEmoji(`🔊`).setStyle('SECONDARY')
+            const but1 = new MessageButton().setCustomId(`${player.guildId}pause`).setEmoji(`⏸️`).setStyle('SECONDARY')
+            const but2 = new MessageButton().setCustomId(`${player.guildId}previous`).setEmoji(`⏮️`).setStyle('SECONDARY')
+            const but3 = new MessageButton().setCustomId(`${player.guildId}skip`).setEmoji(`⏭️`).setStyle('SECONDARY')
+            const but4 = new MessageButton().setCustomId(`${player.guildId}voldown`).setEmoji(`🔉`).setStyle('SECONDARY')
+            const but5 = new MessageButton().setCustomId(`${player.guildId}volup`).setEmoji(`🔊`).setStyle('SECONDARY')
 
             const row = new MessageActionRow().addComponents(but4, but2, but1, but3, but5)
 
@@ -152,7 +153,7 @@ async function trackStartEventHandler(msgId, channel, player, track, client) {
             return await db.findOneAndUpdate({ Guild: channel.guildId }, { Message: m.id });
         } else {
 
-            let embed2 = new MessageEmbed().setColor(message.client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.current.requester.tag}`, iconURL: player.current.requester.displayAvatarURL({ dynamic: true }) });
+            let embed2 = new MessageEmbed().setColor(message.client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 
             await message.edit({
                 content: "__**Join a voice channel and queue songs by name/url.**__\n",

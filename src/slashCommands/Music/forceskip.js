@@ -21,13 +21,13 @@ module.exports = {
       ephemeral: false,
     });
     const player = client.manager.players.get(interaction.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return interaction.editReply({ embeds: [thing] });
     }
-    const song = player.current;
+    const song = player.queue.current;
 
-    await player.player.stopTrack();
+    await player.skip();
 
     const emojiskip = message.client.emoji.skip;
 

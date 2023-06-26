@@ -15,8 +15,7 @@ module.exports = {
     sameVoiceChannel: true,
     execute: async (message, args, client, prefix) => {
         const player = client.manager.players.get(message.guild.id);
-
-        if (!player.current) {
+        if (!player.queue.current) {
             let thing = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("There is no music playing.");
@@ -25,16 +24,16 @@ module.exports = {
 
         const emojipause = client.emoji.pause;
 
-        if (player.player.paused) {
+        if (player.shoukaku.paused) {
             let thing = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(`${emojipause} The player is already paused.`);
             return message.reply({ embeds: [thing] });
         }
 
-        await player.setPaused(true);
+        await player.pause(true);
 
-        const song = player.current;
+        const song = player.queue.current;
 
         let thing = new MessageEmbed()
             .setColor(client.embedColor)

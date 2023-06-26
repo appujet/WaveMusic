@@ -29,17 +29,12 @@ module.exports = {
         'https://media.discordapp.net/attachments/966675680907657256/966675755453018133/20220411_160253.png',
       )
       .setColor('#303236')
-      .addField(
-        'Creator',
-        '[Blacky](https://github.com/brblacky), [Venom#9718](https://github.com/Venom9718/) and [AkAbhijit](https://github.com/AkAbhijit)',
-        true,
-      )
-      .addField('Organization', '[Blacky](https://github.com/brblacky)', true)
-      .addField('Repository', '[Here](https://github.com/brblacky/WaveMusic)', true)
-      .addField(
-        '\u200b',
-        `[WaveMusic](https://github.com/brblacky/WaveMusic/) is [Blacky](https://github.com/brblacky)'s Was created by blacky and Venom. He really wants to make his first open source project ever. Because he wants more for coding experience. In this project, he was challenged to make project with less bugs. Hope you enjoy using WaveMusic!`,
-      );
+      .addFields([
+        { name: 'Creator' , value: '[Blacky](https://github.com/brblacky), [Venom#9718](https://github.com/Venom9718/) and [AkAbhijit](https://github.com/AkAbhijit)', inline: true },
+        { name: 'Organization' , value: '[Blacky](https://github.com/brblacky)' , inline: true },
+        { name: 'Repository', value: '[Here](https://github.com/brblacky/WaveMusic)' , inline: true },
+        { name: '\u200b' , value: `[WaveMusic](https://github.com/brblacky/WaveMusic/) is [Blacky](https://github.com/brblacky)'s Was created by blacky and Venom. He really wants to make his first open source project ever. Because he wants more for coding experience. In this project, he was challenged to make project with less bugs. Hope you enjoy using WaveMusic!` }
+      ])
     return message.reply({ embeds: [mainPage], components: [row] });
   },
 };

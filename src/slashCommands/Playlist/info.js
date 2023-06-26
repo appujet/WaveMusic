@@ -104,7 +104,7 @@ module.exports = {
           return await interaction.editReply({ embeds: [embed] });
         } else if (b.customId === 'Stop') {
           return collector.stop();
-        } else if (b.customId === 'playlist_cmd_uwu-next')
+        } else if (b.customId === 'Next')
           page = page + 1 >= pages.length ? 0 : ++page;
 
         embed.setDescription(
