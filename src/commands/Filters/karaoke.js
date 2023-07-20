@@ -84,10 +84,15 @@ module.exports = {
         });
       } else if (b.customId === "Karaoke_but") {
         await player.shoukaku.setFilters({
-          op: 'filters',
-          guildId: message.guild.id,
-          rotation: { rotationHz: 0.2 },
-        });
+        op: 'filters',
+        guildId: message.guild.id,
+        karaoke: {
+          level: 1.0,
+          monoLevel: 1.0,
+          filterBand: 220.0,
+          filterWidth: 100.0,
+        },
+      });
         return await b.editReply({
           embeds: [
             embed1.setDescription(`${emojiequalizer} Karaoke Mode Is \`ON\``),
