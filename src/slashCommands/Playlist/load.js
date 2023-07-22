@@ -58,7 +58,7 @@ module.exports = {
       embeds: [
         new MessageEmbed()
           .setColor(client.embedColor)
-          .setDescription(`Adding ${length} track(s) from your playlist **${Name}** to the queue.`),
+          .setDescription(`Adding ${data.Playlist.length} track(s) from your playlist **${Name}** to the queue.`),
       ],
     });
     for (const track of data.Playlist) {
@@ -83,7 +83,7 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`Couldn't add any tracks from your playlist **${name}** to the queue.`),
+            .setDescription(`Couldn't add any tracks from your playlist **${Name}** to the queue.`),
         ],
       });
     if (m)
@@ -91,7 +91,7 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`Added ${count} track(s) from your playlist **${name}** to the queue.`),
+            .setDescription(`Added ${count} track(s) from your playlist **${Name}** to the queue.`),
         ],
       });
   },
