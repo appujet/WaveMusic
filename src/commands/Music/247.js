@@ -4,7 +4,7 @@ const db = require("../../schema/autoReconnect");
 module.exports = {
     name: '247',
     category: 'Music',
-    description: 'To force skip the current playing song.',
+    description: 'Joins the voice channel for 24/7.',
     args: false,
     usage: '',
     userPrams: [],
