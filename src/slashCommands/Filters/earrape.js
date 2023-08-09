@@ -45,7 +45,7 @@ module.exports = {
     }
     const emojiequalizer = interaction.client.emoji.filter;
 
-    if (b.customId === 'clear_but') {
+    if (input === off) {
       await player.shoukaku.clearFilters();
       return await interaction.editReply({
         embeds: [
@@ -54,7 +54,7 @@ module.exports = {
             .setDescription(`${emojiequalizer} EarRape Mode Is \`OFF\``),
         ],
       });
-    } else if (b.customId === 'EarRape_but') {
+    } else if (input === on) {
       await player.shoukaku.setFilters({
         op: 'filters',
         guildId: interaction.guild.id,
