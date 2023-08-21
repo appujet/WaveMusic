@@ -25,11 +25,11 @@ module.exports = {
 
         let data = await db.findOne({Guild: interaction.guild.id})
         if (data) {
-            await data.delete();
+            await data.deleteOne();
             let thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(` 247 Mode is Disabled`);
-            interaction.editReply({ embeds: [thing] })
+            interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         } else {
             data = new db({
                 Guild: player.guildId,
@@ -40,7 +40,7 @@ module.exports = {
             let thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(`247 Mode is Enabled`);
-            interaction.editReply({ embeds: [thing] })
+            interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
 
     }

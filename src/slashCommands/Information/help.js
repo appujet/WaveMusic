@@ -27,7 +27,7 @@ module.exports = {
       .setColor(client.embedColor)
       .setTimestamp()
       .setFooter({
-        text: `Requested by ${interaction.user.tag}`,
+        text: `Requested by ${interaction.user.username}`,
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       });
     const row = new MessageActionRow().addComponents(
@@ -117,7 +117,7 @@ module.exports = {
         else {
           b.reply({
             ephemeral: true,
-            content: `Only **${interaction.user.tag}** can use this button, if you want then you've to run the command again.`,
+            content: `Only **${interaction.user.username}** can use this button, if you want then you've to run the command again.`,
           });
           return false;
         }

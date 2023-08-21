@@ -40,7 +40,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guild.id);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const emojiequalizer = interaction.client.emoji.filter;
     if (input === 'off') {
@@ -51,7 +51,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`${emojiequalizer} 8D Mode Is \`OFF\``)
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (input === 'on') {
       await player.shoukaku.setFilters({
         op: 'filters',
@@ -64,7 +64,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`${emojiequalizer} 8D Mode Is \`ON\``)
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

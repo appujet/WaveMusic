@@ -23,7 +23,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guild.id);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const song = player.queue.current;
 
@@ -34,6 +34,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setDescription(`${emojiskip} Skipped [${song.title}](${song.uri})`)
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [thing] });
+    return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

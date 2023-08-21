@@ -54,7 +54,7 @@ module.exports = {
 
         let icon = `${player.queue.current.thumbnail ? player.queue.current.thumbnail : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`}`;
 
-        let nowplaying = new MessageEmbed().setColor(color).setDescription(`[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
+        let nowplaying = new MessageEmbed().setColor(color).setDescription(`[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.username}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 
         if (interaction.customId === `${interaction.guildId}pause`) {
             if (player.shoukaku.paused) {

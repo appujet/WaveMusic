@@ -19,7 +19,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
     }
 
     const position = Number(args[0]);
@@ -28,18 +28,19 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`Usage: ${message.client.prefix}skipto <Number of song in queue>`);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (args[0] == 1) player.skip();
 
     player.queue.splice(0, position - 1);
     await player.skip();
+    player.paused = false;
 
     const emojijump = client.emoji.jump;
 
     let thing = new MessageEmbed()
       .setDescription(`${emojijump} Forward **${position}** Songs`)
       .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] });
+    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

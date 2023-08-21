@@ -24,7 +24,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You Do Not Have Any Playlist`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (!args[0]) {
       let list = data.map(
@@ -42,7 +42,7 @@ module.exports = {
         .setDescription(pages[page])
         .setFooter({ text: `Playlist (${List} / 10)` })
         .setColor(client.embedColor);
-      return await message.channel.send({ embeds: [embeds] });
+      return await message.channel.send({ embeds: [embeds] })
     }
   },
 };

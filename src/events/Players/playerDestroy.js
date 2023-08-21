@@ -1,6 +1,7 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 const db = require("../../schema/setup");
 const db2 = require("../../schema/autoReconnect");
+const { defaultVol } = require("../../utils/functions");
 
 module.exports = {
     name: "playerDestroy",
@@ -53,6 +54,7 @@ module.exports = {
             voiceId: vc.VoiceId,
             textId: vc.TextId,
             deaf: true,
+            volume: await defaultVol(vc.Guild)
           });
     }
 

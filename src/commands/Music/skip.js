@@ -20,7 +20,7 @@ module.exports = {
     
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     // if (player.queue.size == 0) {
@@ -31,8 +31,10 @@ module.exports = {
     // }
 
     await player.skip();
+    player.paused = false;
 
     const emojiskip = client.emoji.skip;
+
 
     let thing = new MessageEmbed()
       .setDescription(`${emojiskip} **Skipped**\n[${player.queue.current.title}](${player.queue.current.uri})`)
@@ -40,7 +42,7 @@ module.exports = {
     return message.reply({ embeds: [thing] }).then((msg) => {
       setTimeout(() => {
         msg.delete();
-      }, 3000);
+      }, 5000);
     });
   },
 };

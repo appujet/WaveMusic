@@ -41,7 +41,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (data.length == 0) {
       return interaction.editReply({
@@ -50,7 +50,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const Options = interaction.options.getString('number');
     if (!Options || isNaN(Options)) {
@@ -62,7 +62,7 @@ module.exports = {
               `You didn't entered track number (the Track you want to remove (ID OF IT))\nSee all your Tracks: ${prefix}info ${Name}`,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     let tracks = data.Playlist;
     if (Number(Options) >= tracks.length || Number(Options) < 0) {
@@ -76,7 +76,7 @@ module.exports = {
               })\nSee all your Tracks: \`${prefix}info\` showdetails ${Name}`,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     await db.updateOne(
       {
@@ -92,6 +92,6 @@ module.exports = {
     const embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Removed **${tracks[Options].title}** from \`${Name}\``);
-    return interaction.editReply({ embeds: [embed] });
+    return interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

@@ -22,23 +22,10 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription('There Is Nothing In The Queue');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const but = new MessageButton().setCustomId('cqueue').setLabel('Queue').setStyle('PRIMARY');
     const but2 = new MessageButton().setCustomId('cfilter').setLabel('Filter').setStyle('PRIMARY');
-
-    const but_ = new MessageButton()
-      .setCustomId('dqueue')
-      .setLabel('Queue')
-      .setStyle('PRIMARY')
-      .setDisabled(true);
-    const but_2 = new MessageButton()
-      .setCustomId('dfilter')
-      .setLabel('Filter')
-      .setStyle('PRIMARY')
-      .setDisabled(true);
-
-
     const row = new MessageActionRow().addComponents(but, but2);
 
     let thing = new MessageEmbed()
@@ -51,7 +38,7 @@ module.exports = {
         else {
           b.reply({
             ephemeral: true,
-            content: `Only **${message.author.tag}** can use this button, if you want then you've to run the command again.`,
+            content: `Only **${message.author.username}** can use this button, if you want then you've to run the command again.`,
           });
           return false;
         }
@@ -73,25 +60,15 @@ module.exports = {
       if (!b.deferred) await b.deferUpdate();
       if (b.customId === 'cqueue') {
          if (!player.queue[0]) {
-         return await m.edit({ embeds: [new MessageEmbed().setDescription('There Is Nothing In The Queue').setColor(message.client.embedColor)] , components: [] })
+         return await m.edit({ embeds: [new MessageEmbed().setDescription('There is Nothing in the Queue').setColor(message.client.embedColor)], components: [] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
         await player.queue.clear();
-        await m.edit({
-          embeds: [new MessageEmbed().setDescription('Which one do you want to clear?').setColor(message.client.embedColor)],
-          components: [new MessageActionRow().addComponents(but_, but_2)],
-        });
-        return await m.reply({ embeds: [new MessageEmbed().setDescription('Cleared the Queue.').setColor(message.client.embedColor)] });
+        return await m.reply({ embeds: [new MessageEmbed().setDescription('Cleared the Queue.').setColor(message.client.embedColor)], components: [] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
       }
 
       if (b.customId === 'cfilter') {
-        player.shoukaku.clearFilters()
-        await m.edit({
-          embeds: [new MessageEmbed().setDescription('Which one do you want to clear?').setColor(message.client.embedColor)],
-          components: [new MessageActionRow().addComponents(but_, but_2)],
-        });
-        return await m.reply({
-          embeds: [new MessageEmbed().setDescription('Cleared the Filter.').setColor(message.client.embedColor)],
-        });
+        player.shoukaku.clearFilters();
+        return await m.edit({ embeds: [new MessageEmbed().setDescription('Cleared the Filter.').setColor(message.client.embedColor)], components: [] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
       }
     });
   },

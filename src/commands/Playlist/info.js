@@ -26,7 +26,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     let tracks = data.Playlist.map(
       (x, i) =>

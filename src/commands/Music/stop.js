@@ -18,7 +18,7 @@ module.exports = {
     const player = client.manager.players.get(message.guild.id);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     
     player.queue.clear();
@@ -32,6 +32,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`${emojistop} Stopped the music`);
-    message.reply({ embeds: [thing] });
+    message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

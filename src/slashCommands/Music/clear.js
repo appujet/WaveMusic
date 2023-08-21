@@ -23,13 +23,13 @@ module.exports = {
     const player = client.manager.players.get(interaction.guild.id);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('No Music Is Playing');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (!player.queue[0]) {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription('There Is Nothing In The Queue');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   
     await player.queue.clear();
@@ -37,6 +37,6 @@ module.exports = {
     const embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Successfully Clear Queue `);
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const db = require('../../schema/playlist');
+const { defaultVol } = require("../../utils/functions");
 
 module.exports = {
   name: 'load',
@@ -30,13 +31,14 @@ module.exports = {
               `Playlist not found. Please enter the correct playlist name\n\nDo ${prefix}list To see your Playlist`,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const player = await client.manager.createPlayer({
       guildId: message.guild.id,
       voiceId: message.member.voice.channel.id,
       textId: message.channel.id,
       deaf: true,
+      volume: await defaultVol(message.guild.id)
     });
     if (!player) return;
     let count = 0;

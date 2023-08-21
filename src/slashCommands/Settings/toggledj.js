@@ -5,7 +5,7 @@ module.exports = {
     name: "toggledj",
     description: "Toggle Dj role.",
     userPrams: ['ADMINISTRATOR'],
-    botPrams: ['MANAGE_GUILD'],
+    botPrams: ['EMBED_LINKS'],
     options: [
         {
             name: 'toggledj',
@@ -14,11 +14,11 @@ module.exports = {
             required: true,
             choices: [
                 {
-                    name: 'enable',
+                    name: 'Enable',
                     value: `dj_on`,
                 },
                 {
-                    name: 'disable',
+                    name: 'Disable',
                     value: `dj_off`,
                 },
             ],
@@ -38,7 +38,7 @@ module.exports = {
         let data = await db.findOne({ Guild: interaction.guildId });
         const input = interaction.options.getString('toggledj')
 
-        if (!data) return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Don't have any dj role(s) setuped.`).setColor(client.embedColor)] })
+        if (!data) return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Don't have any dj role(s) setuped.`).setColor(client.embedColor)] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         if (input === `dj_on`) {
             let mode = false;
             if (!data.Mode) mode = true;
@@ -47,7 +47,7 @@ module.exports = {
             const thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(`DJ mode is successfully \`Enabled.\``)
-            await interaction.editReply({ embeds: [thing] })
+            await interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
 
         if (input === `dj_off`) {
@@ -58,7 +58,7 @@ module.exports = {
             const thing = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription(`DJ mode is successfully \`Disabled\`.`)
-            return await interaction.editReply({ embeds: [thing] })
+            return await interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
 
     }

@@ -32,7 +32,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guildId);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription(i18n.__('player.nomusic'));
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (!data) {
       return interaction.editReply({
@@ -41,7 +41,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (data.length == 0) {
       return interaction.editReply({
@@ -50,7 +50,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const song = player.queue.current;
     let oldSong = data.Playlist;
@@ -80,6 +80,6 @@ module.exports = {
     const embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Added [${song.title.substr(0, 256)}](${song.uri}) in \`${Name}\``);
-    return interaction.editReply({ embeds: [embed] });
+    return interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

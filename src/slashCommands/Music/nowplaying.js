@@ -24,7 +24,7 @@ module.exports = {
     const song = player.queue.current;
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const emojimusic = client.emoji.music;
@@ -64,6 +64,6 @@ module.exports = {
         }`,
       )
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [embed] });
+    return interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 10000) }).catch(() => { });
   },
 };

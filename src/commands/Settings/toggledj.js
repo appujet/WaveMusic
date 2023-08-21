@@ -15,16 +15,16 @@ module.exports = {
 
         let data = await db.findOne({ Guild: message.guild.id });
 
-        if(!data) return message.reply({embeds:[new MessageEmbed().setDescription(`Don't Have Dj Setup In This Guild`).setColor(client.embedColor)]})
+        if(!data) return message.reply({embeds:[new MessageEmbed().setDescription(`Don't Have Dj Setup In This Guild`).setColor(client.embedColor)]}).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
 
         let mode = false;
         if(!data.Mode)mode = true;
         data.Mode = mode;
         await data.save();
         if(mode) {
-            await message.reply({embeds: [new MessageEmbed().setDescription(`Enabled DJ Mode.`).setColor(client.embedColor)]})
+            await message.reply({embeds: [new MessageEmbed().setDescription(`Enabled DJ Mode.`).setColor(client.embedColor)]}).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
         } else {
-           return await message.reply({embeds: [new MessageEmbed().setDescription(`Disabled DJ Mode.`).setColor(client.embedColor)]})
+           return await message.reply({embeds: [new MessageEmbed().setDescription(`Disabled DJ Mode.`).setColor(client.embedColor)]}).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
         }
     }
 }

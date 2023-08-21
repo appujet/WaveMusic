@@ -44,7 +44,7 @@ module.exports = {
 			.addFields([
 				{
 				  name: 'Duration',
-				  value: `\`${track.isStream ? '◉ LIVE' : convertTime(player.queue.current.length)}\``,
+				  value: `\`${track.isStream ? '◉ LIVE' : convertTime(player.queue.current?.length)}\``,
 				  inline: true,
 				},
 				{

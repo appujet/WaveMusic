@@ -50,7 +50,7 @@ module.exports = {
       });
     }
 
-    await data.delete();
+    await data.deleteOne();
     const embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Successfully deleted ${Name} playlist`);

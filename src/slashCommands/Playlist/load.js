@@ -6,6 +6,7 @@ const {
   MessageButton,
 } = require('discord.js');
 const db = require('../../schema/playlist');
+const { defaultVol } = require("../../utils/functions")
 
 module.exports = {
   name: 'load',
@@ -38,6 +39,7 @@ module.exports = {
       voiceId: interaction.member.voice.channelId,
       textId: interaction.channelId,
       deaf: true,
+      volume: await defaultVol(interaction.guild.id)
     });
 
     if (!data) {
@@ -49,7 +51,7 @@ module.exports = {
               `Playlist not found. Please enter the correct playlist name\n\nDo ${prefix}list To see your Playlist`,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (!player) return;
 

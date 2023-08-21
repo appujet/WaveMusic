@@ -2,6 +2,7 @@ const { Message, MessageEmbed, Client, TextChannel, MessageButton, MessageAction
 const db = require("../schema/setup");
 const { convertTime } = require("./convert");
 const { KazagumoPlayer, KazagumoTrack } = require("kazagumo");
+const volumedb = require("../schema/volume");
 
 /**
  * 
@@ -36,7 +37,7 @@ function neb(embed, player, client) {
     const config = require("../config")
     let icon = config.links.bg;
 
-    return embed.setDescription(`[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
+    return embed.setDescription(`[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.username}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 };
 /**
  * 
@@ -80,6 +81,7 @@ async function playerhandler(query, player, message) {
         voiceId: message.member.voice.channel.id,
         textId: message.channel.id,
         deaf: true,
+        volume: await defaultVol(message.guild.id)
     });
 
     const result = await player.search(query, { requester: message.author });
@@ -134,7 +136,7 @@ async function trackStartEventHandler(msgId, channel, player, track, client) {
 
         if (!message) {
 
-            let embed1 = new MessageEmbed().setColor(client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
+            let embed1 = new MessageEmbed().setColor(client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.username}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 
             const but1 = new MessageButton().setCustomId(`${player.guildId}pause`).setEmoji(`⏸️`).setStyle('SECONDARY')
             const but2 = new MessageButton().setCustomId(`${player.guildId}previous`).setEmoji(`⏮️`).setStyle('SECONDARY')
@@ -153,7 +155,7 @@ async function trackStartEventHandler(msgId, channel, player, track, client) {
             return await db.findOneAndUpdate({ Guild: channel.guildId }, { Message: m.id });
         } else {
 
-            let embed2 = new MessageEmbed().setColor(message.client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.tag}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
+            let embed2 = new MessageEmbed().setColor(message.client.embedColor).setDescription(`[${track.title}](${track.uri}) - \`[ ${track.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)} ]\``).setImage(icon).setFooter({ text: `Requested by ${player.queue.current.requester.username}`, iconURL: player.queue.current.requester.displayAvatarURL({ dynamic: true }) });
 
             await message.edit({
                 content: "__**Join a voice channel and queue songs by name/url.**__\n",
@@ -175,9 +177,9 @@ async function trackStartEventHandler(msgId, channel, player, track, client) {
 async function buttonReply(int, args, client) {
 
     if (int.replied) {
-        await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.tag, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
+        await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.username, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
     } else {
-        await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.tag, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
+        await int.editReply({ embeds: [new MessageEmbed().setColor(int.client.embedColor).setAuthor({ name: int.member.user.username, iconURL: int.member.user.displayAvatarURL() }).setDescription(args)] })
     };
 
     setTimeout(async () => {
@@ -187,10 +189,28 @@ async function buttonReply(int, args, client) {
     }, 2000);
 };
 
+async function defaultVol (guildid) {
+
+    const vl = await volumedb.findOne({ Guild: guildid });
+    if (!vl) {
+        const newData = new volumedb({
+            Guild: guildid,
+            volLevel: 100
+        });
+        await newData.save();
+        return 100;
+    } else {
+        const vol = vl.volLevel
+        return vol;
+    }
+
+}
+
 module.exports = {
     playerhandler,
     trackStartEventHandler,
     buttonReply,
     oops,
-    autoplay
+    autoplay,
+    defaultVol
 }

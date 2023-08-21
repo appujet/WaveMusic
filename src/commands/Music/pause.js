@@ -19,7 +19,7 @@ module.exports = {
             let thing = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("There is no music playing.");
-            return message.reply({ embeds: [thing] });
+            return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
         }
 
         const emojipause = client.emoji.pause;
@@ -28,9 +28,9 @@ module.exports = {
             let thing = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(`${emojipause} The player is already paused.`);
-            return message.reply({ embeds: [thing] });
+            return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
-
+        
         await player.pause(true);
 
         const song = player.queue.current;
@@ -38,6 +38,6 @@ module.exports = {
         let thing = new MessageEmbed()
             .setColor(client.embedColor)
             .setDescription(`${emojipause} **Paused**\n[${song.title}](${song.uri})`);
-        return message.reply({ embeds: [thing] });
+        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     },
 };

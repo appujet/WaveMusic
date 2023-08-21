@@ -29,7 +29,7 @@ module.exports = {
               `\`\`\`ini\n[ Bot Latency ] :: ${ping}ms \n[ API Latency ] :: ${api_ping}ms \`\`\``,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
     });
   },
 };

@@ -3,9 +3,9 @@ const db = require("../../schema/dj");
 
 module.exports = {
     name: "removedj",
-    description: "Delete Dj role.",
+    description: "Delete Dj roles.",
     userPrams: ['ADMINISTRATOR'],
-    botPrams: ['MANAGE_GUILD'],
+    botPrams: ['EMBED_LINKS'],
     /**
     * @param {Client} client
     * @param {CommandInteraction} interaction
@@ -19,9 +19,9 @@ module.exports = {
 
         let data = await db.findOne({ Guild: interaction.guildId });
         if (data) {
-            await data.delete()
-            return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Removed All DJ Roles.`).setColor("BLURPLE")] })
-        } else return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Don't Have Dj Setup In This Guild`).setColor("BLURPLE")] })
+            await data.deleteOne();
+            return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Removed All DJ Roles.`).setColor("BLURPLE")] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+        } else return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Don't Have Dj Setup In This Guild`).setColor("BLURPLE")] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
 
     }
 }

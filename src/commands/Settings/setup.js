@@ -8,7 +8,7 @@ module.exports = {
     usage: "",
     aliases: [],
     userPrams: ['MANAGE_GUILD'],
-    botPrams: ['EMBED_LINKS'],
+    botPrams: ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
     owner: false,
     execute: async (message, args, client, prefix) => {
         try {
@@ -16,7 +16,7 @@ module.exports = {
             if (args.length) {
                 if (!data) return await message.reply({ content: `This server doesn't have any song request channel setup to use this sub command.` });
                 if (["clear", "delete", "reset"].includes(args[0])) {
-                    await data.delete();
+                    await data.deleteOne();
                     return await message.reply({ content: `Successfully deleted all the setup data.` });
 
                 } else return await message.reply({ content: "Please provide a valid  command." });
@@ -106,7 +106,7 @@ module.exports = {
                 const title = player && player.queue && player.queue.current ? `Now playing` : "Nothing is playing right now";
                 const desc = player && player.queue && player.queue.current ? `[${player.queue.current.title}](${player.queue.current.uri})` : null;
                 const footer = {
-                    text: player && player.queue && player.queue.current ? `Requested by ${player.queue.current.requester.tag}` : "",
+                    text: player && player.queue && player.queue.current ? `Requested by ${player.queue.current.requester.username}` : "",
                     iconURL: player && player.queue && player.queue.current ? `${player.queue.current.requester.displayAvatarURL({ dynamic: true })}` : `${client.user.displayAvatarURL({ dynamic: true })}`
                 };
                 const image = client.config.links.bg;
@@ -136,7 +136,7 @@ module.exports = {
 
                 await Ndata.save();
                 return await message.channel.send({
-                    embeds: [new MessageEmbed().setColor(client.embedColor).setTitle("Setup Finished").setDescription(`**Song request channel has been created.**\n\nChannel: ${textChannel}\n\nNote: Deleting the template embed in there may cause this setup to stop working. (Please don't delete it.)*`).setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) })]
+                    embeds: [new MessageEmbed().setColor(client.embedColor).setTitle("Setup Finished").setDescription(`**Song request channel has been created.**\n\nChannel: ${textChannel}\n\nNote: Deleting the template embed in there may cause this setup to stop working. (Please don't delete it.)*`).setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL({ dynamic: true }) })]
                 });
             };
         } catch (error) {

@@ -1,4 +1,5 @@
 const { MessageEmbed, Permissions, MessageActionRow, MessageButton } = require('discord.js');
+const Wait = require('util').promisify(setTimeout);
 const db = require('../../schema/prefix.js');
 const db2 = require('../../schema/setup');
 const db3 = require("../../schema/dj");
@@ -37,23 +38,18 @@ module.exports = {
 
     if (!command) return;
 
-    if (!message.guild.members.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-      return await message.author.dmChannel
-        .send({
-          content: `I don't have **\`SEND_MESSAGES\`** permission in <#${message.channelId}> to execute this **\`${command.name}\`** command.`,
-        })
-        .catch(() => { });
-
     if (!message.guild.members.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
 
-    if (!message.guild.members.me.permissions.has(Permissions.FLAGS.EMBED_LINKS))
-      return await message.channel
-        .send({
-          content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${command.name}\`** command.`,
-        })
-        .catch(() => { });
-
     const embed = new MessageEmbed().setColor('RED');
+
+    if (!message.guild.members.cache.get(client.user.id).permissionsIn(message.channel).has(Permissions.FLAGS.SEND_MESSAGES)) {
+        embed.setDescription(`I don't have **Send_Messages** permission in Channel: <#${message.channelId}>`) 
+        return message.author.send({ embeds: [embed] }).catch(() => { });
+      }
+
+    if (!message.guild.members.cache.get(client.user.id).permissionsIn(message.channel).has(Permissions.FLAGS.EMBED_LINKS)) {
+          return await message.reply({ content: `I don't have **Embed_Links** permission in <#${message.channelId}>` }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+      }
 
     // args: true,
     if (command.args && !args.length) {
@@ -92,24 +88,24 @@ module.exports = {
         if (!devs)
           return message.channel.send({
             embeds: [embed.setDescription(`Only <@${client.owner[0] ? client.owner[0] : "**Bot Owner**"}> can use this command!`)],
-          });
+          }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
       }
     }
 
     const player = client.manager.players.get(message.guild.id);
     if (command.player && !player) {
       embed.setDescription('There is no player for this guild.');
-      return message.channel.send({ embeds: [embed] });
+      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (command.inVoiceChannel && !message.member.voice.channelId) {
       embed.setDescription('You must be in a voice channel!');
-      return message.channel.send({ embeds: [embed] });
+      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (command.sameVoiceChannel) {
       if (message.guild.members.me.voice.channel) {
         if (message.guild.members.me.voice.channelId !== message.member.voice.channelId) {
           embed.setDescription(`You must be in the same channel as ${message.client.user}!`);
-          return message.channel.send({ embeds: [embed] });
+          return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
       }
     }
@@ -126,17 +122,22 @@ module.exports = {
             });
           };
           if (!pass && !message.member.permissions.has(perm)) return message.channel.send({ embeds: [embed.setDescription(`You don't have permission or dj role to use this command`)] })
+          .then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
         };
       };
     }
     try {
       command.execute(message, args, client, prefix);
+      await Wait(5000);
+      if (message && message.deletable){
+        message.delete().catch((e) => { console.error("User Messages Delete Error:", e) });
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       embed.setDescription(
         'There was an error executing that command.\nI have contacted the owner of the bot to fix it immediately.',
       );
-      return message.channel.send({ embeds: [embed] });
+      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

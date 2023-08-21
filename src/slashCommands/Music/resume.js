@@ -25,7 +25,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const emojiresume = client.emoji.resume;
@@ -34,7 +34,7 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`${emojiresume} The player is already **resumed**.`);
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     await player.pause(false);
@@ -42,6 +42,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setDescription(`${emojiresume} **Resumed**\n[${song.title}](${song.uri})`)
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [thing] });
+    return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

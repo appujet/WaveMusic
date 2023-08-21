@@ -22,7 +22,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guild.id);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     player.queue.clear();
@@ -36,6 +36,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`${emojistop} Stopped the music`);
-    interaction.editReply({ embeds: [thing] });
+    interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

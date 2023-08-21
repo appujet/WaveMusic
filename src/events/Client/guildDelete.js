@@ -15,7 +15,7 @@ module.exports = {
         .addFields([
           { name: 'Name', value: `\`${guild.name}\`` },
           { name: 'ID', value: `\`${guild.id}\`` },
-          { name: 'Owner', value: `\`${guild.members.cache.get(own.id) ? guild.members.cache.get(own.id).user.tag : "Unknown user"} [ ${own.id} ]\`` },
+          { name: 'Owner', value: `\`${guild.members.cache.get(own.id) ? guild.members.cache.get(own.id).user.username : "Unknown user"} [ ${own.id} ]\`` },
           { name: 'Member Count', value: `\`${guild.memberCount}\` Members` },
           { name: 'Creation Date', value: `\`${moment.utc(guild.createdAt).format('DD/MMM/YYYY')}\`` },
           { name: `${client.user.username}'s Server Count`, value: `\`${client.guilds.cache.size}\` Severs` }

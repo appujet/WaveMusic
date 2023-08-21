@@ -23,7 +23,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     // if (player.queue.length == 0) {
     //   let noskip = new MessageEmbed()
@@ -33,12 +33,13 @@ module.exports = {
     // }
 
     await player.skip();
+    player.paused = false;
 
     const emojiskip = client.emoji.skip;
 
     let thing = new MessageEmbed()
       .setDescription(`${emojiskip} **Skipped**\n[${player.queue.current.title}](${player.queue.current.uri})`)
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [thing] });
+    return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

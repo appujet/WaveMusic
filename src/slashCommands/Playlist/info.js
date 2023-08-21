@@ -38,7 +38,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } 
     let pname = data.PlaylistName;
     let plist = data.Playlist.length;
@@ -56,7 +56,7 @@ module.exports = {
       .setColor(client.embedColor)
       .setDescription(`**Playlist Name** ${pname} **Total Tracks** \`${plist}\`\n\n${pages[page]}`);
     if (pages.length <= 1) {
-      return await interaction.editReply({ embeds: [embed] });
+      return await interaction.editReply({ embeds: [embed] })
     } else {
       let previousbut = new MessageButton()
         .setCustomId('Previous')
