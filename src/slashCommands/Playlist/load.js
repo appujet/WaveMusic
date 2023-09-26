@@ -30,8 +30,10 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
 
-  run: async (client, interaction) => {
-    await interaction.deferReply({});
+  run: async (client, interaction, prefix) => {
+    await interaction.deferReply({
+
+    });
     const Name = interaction.options.getString('name');
     const data = await db.findOne({ UserId: interaction.member.user.id, PlaylistName: Name });
     const player = await client.manager.createPlayer({
@@ -64,24 +66,24 @@ module.exports = {
       ],
     });
     for (const track of data.Playlist) {
-      let s = await player.search(track.uri ? track.uri : track.title, interaction.user);
+      let s = await player.search(track.uri ? track.uri : track.title, { requester: interaction.user });
       if (s.type === 'PLAYLIST') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       } else if (s.type === 'TRACK') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       } else if (s.type === 'SEARCH') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       }
     }
     if (player && !player.queue.current) player.destroy(interaction.guild.id);
     if (count <= 0 && m)
-      return await m.editReply({
+      return await interaction.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
@@ -89,7 +91,7 @@ module.exports = {
         ],
       });
     if (m)
-      return await m.editReply({
+      return await interaction.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
