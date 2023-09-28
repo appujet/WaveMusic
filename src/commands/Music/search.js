@@ -66,6 +66,10 @@ module.exports = {
         const row = new MessageActionRow().addComponents(but, but2, but3, but4, but5);
 
         let s = await player.search(query, { requester: message.author });
+        if (!s.tracks.length) {
+            if (player && !player.playing && !player.paused) player.destroy();
+            return msg.edit({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${emojisearch} No results found for **${query}**`)] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+        }
 
         switch (s.type) {
             case "TRACK":
@@ -152,6 +156,7 @@ module.exports = {
                     }
 
                 });
+            break;
 
         }
 

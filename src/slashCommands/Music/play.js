@@ -54,8 +54,9 @@ module.exports = {
     const emojiaddsong = client.emoji.addsong;
     const emojiplaylist = client.emoji.playlist;
     let query = interaction.options.getString('input');
+    let player = client.manager.players.get(interaction.guildId);
 
-    const player = await client.manager.createPlayer({
+    if(!player) player = await client.manager.createPlayer({
       guildId: interaction.guildId,
       voiceId: interaction.member.voice.channelId,
       textId: interaction.channelId,

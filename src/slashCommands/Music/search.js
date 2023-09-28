@@ -12,7 +12,7 @@ module.exports = {
   sameVoiceChannel: true,
   options: [
     {
-      name: 'input',
+      name: 'query',
       description: 'The search input (name/url)',
       required: true,
       type: 'STRING',
@@ -65,7 +65,7 @@ module.exports = {
              });
         }
 
-        let query = interaction.options.getString('input');
+        let query = interaction.options.getString('query');
         const emojiaddsong = interaction.client.emoji.addsong;
         const emojiplaylist = interaction.client.emoji.playlist;
 
@@ -77,6 +77,10 @@ module.exports = {
         const row = new MessageActionRow().addComponents(but, but2, but3, but4, but5);
 
         let res = await player.search(query, { requester: interaction.user  });
+        if (!res.tracks.length) {
+          if(player && !player.playing && !player.paused) player.destroy();
+          return interaction.editReply(`No results found for **${query}** `).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+        }
 
         switch (res.type) {
             case "TRACK":
@@ -85,7 +89,7 @@ module.exports = {
                 const embed = new MessageEmbed()
                     .setDescription(` ${emojiaddsong} **Added to queue** - [${res.tracks[0].title}](${res.tracks[0].uri}) \`${convertTime(res.tracks[0].length)}\` • ${res.tracks[0].requester}`)
                     .setColor(client.embedColor)
-                interaction.editReply({ embeds: [embed] });
+                interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
                 break;
             case "PLAYLIST":
                 const playlist = res.tracks;
@@ -95,7 +99,7 @@ module.exports = {
                 const embed1 = new MessageEmbed()
                     .setColor(client.embedColor)
                     .setDescription(`${emojiplaylist} **Added ${playlist.length} tracks from ${res.playlistName}**`)
-                interaction.editReply({ embeds: [embed1] });
+                interaction.editReply({ embeds: [embed1] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
                 break;
             case "SEARCH":
                 let index = 1;
@@ -162,6 +166,7 @@ module.exports = {
                     }
 
                 });
+              break;
 
         }
 

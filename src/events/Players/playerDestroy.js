@@ -48,14 +48,19 @@ module.exports = {
             embeds: [embed1],
             components: [row]
         });
-        const vc = await db2.findOne({Guild: player.guildId})
-        if(vc) await client.manager.createPlayer({
-            guildId: vc.Guild,
-            voiceId: vc.VoiceId,
-            textId: vc.TextId,
-            deaf: true,
-            volume: await defaultVol(vc.Guild)
-          });
+        const vc = await db2.findOne({Guild: player.guildId});
+        if(vc) {
+            const voice = client.channels.cache.get(vc.VoiceId);
+            const text = client.channels.cache.get(vc.TextId);
+            if (!voice || !text) return vc.deleteOne();
+            await client.manager.createPlayer({
+                guildId: vc.Guild,
+                voiceId: vc.VoiceId,
+                textId: vc.TextId,
+                deaf: true,
+                volume: await defaultVol(vc.Guild)
+              });
+        } 
     }
 
 };

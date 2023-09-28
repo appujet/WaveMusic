@@ -25,10 +25,10 @@ module.exports = {
         */
 
     run: async (client, interaction, prefix) => {
-
+        if (!interaction.replied) await interaction.deferReply().catch(() => { });
         let data = await db.findOne({ Guild: interaction.guildId });
         if (interaction.options.getSubcommand() === "set") {
-            if (data) return await interaction.reply({ content: `Music setup is already finished in this server.` });
+            if (data) return await interaction.editReply({ content: `Music setup is already finished in this server.` });
             const parent = await interaction.guild.channels.create(`${client.user.username} Music Zone`, {
                 type: "GUILD_CATEGORY",
                 permissionOverwrites: [
@@ -139,13 +139,13 @@ module.exports = {
             });
 
             await Ndata.save();
-            return await interaction.reply({
+            return await interaction.editReply({
                 embeds: [new MessageEmbed().setColor(client.embedColor).setTitle("Setup Finished").setDescription(`**Song request channel has been created.**\n\nChannel: ${textChannel}\n\nNote: Deleting the template embed in there may cause this setup to stop working. (Please don't delete it.)*`).setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })]
             });
         } else if (interaction.options.getSubcommand() === "delete") {
-            if (!data) return await interaction.reply({ content: `This server doesn't have any song request channel setup to use this sub command.` });
+            if (!data) return await interaction.editReply({ content: `This server doesn't have any song request channel setup to use this sub command.` });
             await data.deleteOne();
-            return await interaction.reply({ content: `Successfully deleted all the setup data.` });
+            return await interaction.editReply({ content: `Successfully deleted all the setup data.` });
         }
     }
 };

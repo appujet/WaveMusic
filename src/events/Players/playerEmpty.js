@@ -23,6 +23,9 @@ module.exports = {
     const TwoFourSeven = await db2.findOne({ Guild: player.guildId })
 
     if (TwoFourSeven) {
+      let text = client.channels.cache.get(TwoFourSeven.TextId);
+      let voice = client.channels.cache.get(TwoFourSeven.VoiceId);
+      if (!text || !voice) await TwoFourSeven.deleteOne();
       client.channels.cache.get(player.textId)?.send({
         embeds: [
           new MessageEmbed()

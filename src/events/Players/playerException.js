@@ -5,6 +5,6 @@ module.exports = {
         client.logger.log(`Player Get exception ${reason}`, "error");
         const guild = client.guilds.cache.get(player.guildId);
         if(!guild) return;
-        await player.destroy(guild);
+        await player.destroy();
     }
 };

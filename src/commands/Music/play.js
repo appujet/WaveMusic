@@ -47,7 +47,9 @@ module.exports = {
       });
     const query = args.join(' ');
 
-    const player = await client.manager.createPlayer({
+    let player = client.manager.players.get(message.guildId);
+
+    if (!player) player = await client.manager.createPlayer({
       guildId: message.guild.id,
       voiceId: message.member.voice.channel.id,
       textId: message.channel.id,

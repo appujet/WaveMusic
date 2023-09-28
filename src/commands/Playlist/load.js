@@ -66,7 +66,7 @@ module.exports = {
         ++count;
       };
     }
-    if (player && !player.queue.current) player.destroy(message.guild.id);
+    if (player && !player.queue.current) player.destroy();
     if (count <= 0 && m)
       return await m.edit({
         embeds: [

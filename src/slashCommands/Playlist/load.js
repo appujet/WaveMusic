@@ -81,7 +81,7 @@ module.exports = {
         ++count;
       }
     }
-    if (player && !player.queue.current) player.destroy(interaction.guild.id);
+    if (player && !player.queue.current) player.destroy();
     if (count <= 0 && m)
       return await interaction.editReply({
         embeds: [

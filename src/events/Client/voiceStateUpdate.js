@@ -20,11 +20,11 @@ module.exports = {
         
         if (!newState.guild.members.cache.get(client.user.id).voice.channelId) {
             const text = player?.textId;
-            await player.destroy(player.guildId);
+            await player.destroy();
             let emb = new MessageEmbed()
                 .setColor(client.embedColor)
                 .setDescription("I've been Disconnected")
-            client.channels.cache.get(text).send({ embeds: [emb] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) });
+            client.channels.cache.get(text)?.send({ embeds: [emb] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) });
 
         }
     }
