@@ -23,7 +23,7 @@ module.exports = {
                 .setColor(client.embedColor)
                 .setTimestamp()
                 .setDescription(`${emojireplay} Autoplay is now ${player.data.get("autoplay") ? "**enabled**" : "**disabled**"}.`)
-            return message.channel.send({ embeds: [thing] });
+            return message.channel.send({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         }
     
 }

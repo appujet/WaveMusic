@@ -25,7 +25,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`Nothing is playing right now.`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
 
     if (player.queue.length === '0' || !player.queue.length) {
       const embed = new MessageEmbed()
@@ -126,7 +126,7 @@ module.exports = {
             else {
               b.reply({
                 ephemeral: true,
-                content: `Only **${message.author.tag}** can use this button, if you want then you've to run the command again.`,
+                content: `Only **${message.author.username}** can use this button, if you want then you've to run the command again.`,
               });
               return false;
             }

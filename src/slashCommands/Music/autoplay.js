@@ -27,7 +27,7 @@ module.exports = {
         let thing = new MessageEmbed()
             .setColor(client.embedColor)
             .setTimestamp()
-            .setDescription(`${emojireplay} Autoplay is now ${player.data.get("autoplay") ? "**enabled**" : "**disabled**"}.`)
-        return interaction.editReply({ embeds: [thing] });
+            .setDescription(`${emojireplay} Autoplay is now ${player.data.get("autoplay") ? "**Enabled**" : "**Disabled**"}.`)
+        return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 }

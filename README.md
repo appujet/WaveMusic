@@ -43,6 +43,7 @@
 - [x] Music System
 - [x] Playlists System
 - [x] Custom Prefix
+- [x] Custom Volume(Per Server)
 - [x] Slash commands
 - [x] Custom Filters
 - [x] Easy to use

@@ -1,5 +1,5 @@
 const { Client, Message, Permissions } = require("discord.js");
-const { playerhandler, oops } = require("../../utils/functions");
+const { playerhandler, oops, defaultVol } = require("../../utils/functions");
 
 module.exports = {
     name: "setupSystem",
@@ -37,9 +37,12 @@ module.exports = {
             voiceId: message.member.voice.channel.id,
             textId: message.channel.id,
             deaf: true,
+            volume: await defaultVol(message.guild.id)
           });
 
         await playerhandler(message.content, player, message);
-        if(message) await message.delete().catch(() => {});
+        if (message.deletable) {
+            message.delete().catch(( ) => { });
+        }
     }
 }

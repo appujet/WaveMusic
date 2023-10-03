@@ -6,6 +6,7 @@ const {
   MessageButton,
 } = require('discord.js');
 const db = require('../../schema/playlist');
+const { defaultVol } = require("../../utils/functions")
 
 module.exports = {
   name: 'load',
@@ -29,8 +30,10 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
 
-  run: async (client, interaction) => {
-    await interaction.deferReply({});
+  run: async (client, interaction, prefix) => {
+    await interaction.deferReply({
+
+    });
     const Name = interaction.options.getString('name');
     const data = await db.findOne({ UserId: interaction.member.user.id, PlaylistName: Name });
     const player = await client.manager.createPlayer({
@@ -38,6 +41,7 @@ module.exports = {
       voiceId: interaction.member.voice.channelId,
       textId: interaction.channelId,
       deaf: true,
+      volume: await defaultVol(interaction.guild.id)
     });
 
     if (!data) {
@@ -49,7 +53,7 @@ module.exports = {
               `Playlist not found. Please enter the correct playlist name\n\nDo ${prefix}list To see your Playlist`,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (!player) return;
 
@@ -62,24 +66,24 @@ module.exports = {
       ],
     });
     for (const track of data.Playlist) {
-      let s = await player.search(track.uri ? track.uri : track.title, interaction.user);
+      let s = await player.search(track.uri ? track.uri : track.title, { requester: interaction.user });
       if (s.type === 'PLAYLIST') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       } else if (s.type === 'TRACK') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       } else if (s.type === 'SEARCH') {
         await player.queue.add(s.tracks[0]);
-        if (!player.queue.current) player.play();
+        if (!player.playing && !player.paused) player.play();
         ++count;
       }
     }
-    if (player && !player.queue.current) player.destroy(interaction.guild.id);
+    if (player && !player.queue.current) player.destroy();
     if (count <= 0 && m)
-      return await m.editReply({
+      return await interaction.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
@@ -87,7 +91,7 @@ module.exports = {
         ],
       });
     if (m)
-      return await m.editReply({
+      return await interaction.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)

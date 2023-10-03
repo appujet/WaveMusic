@@ -66,7 +66,7 @@ class MusicBot extends Client {
         if (guild) guild.shard.send(payload);
       }
     }, new Connectors.DiscordJS(this), this.config.nodes, shoukakuOptions);
-    return this.Kazagumo;
+    return this.manager;
   }
 
 

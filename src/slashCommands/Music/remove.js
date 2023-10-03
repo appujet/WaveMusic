@@ -32,7 +32,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const pos = interaction.options.getNumber("number");
@@ -42,7 +42,7 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`No songs at number ${number}.\nTotal Songs: ${player.queue.length}`);
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const song = player.queue[position];
@@ -54,6 +54,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`${emojieject} Removed\n[${song.title}](${song.uri})`);
-    return interaction.editReply({ embeds: [thing] });
+    return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

@@ -1,4 +1,5 @@
 const db = require("../../schema/autoReconnect");
+const { defaultVol } = require("../../utils/functions");
 
 module.exports = {
     name: "ready",
@@ -12,12 +13,13 @@ module.exports = {
             setTimeout(async () => {
                 const channel = client.channels.cache.get(data.TextId)
                 const voice = client.channels.cache.get(data.VoiceId)
-                if (!channel || !voice) return data.delete()
+                if (!channel || !voice) return data.deleteOne()
                 await client.manager.createPlayer({
                     guildId: data.Guild,
                     voiceId: data.VoiceId,
                     textId: data.TextId,
                     deaf: true,
+                    volume: await defaultVol(data.Guild)
                   });
                 }
             ), index * 5000}

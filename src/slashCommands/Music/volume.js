@@ -37,7 +37,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guildId);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const volume = Number(vol);
     if (!volume || volume < 0 || volume > 100)
@@ -49,7 +49,7 @@ module.exports = {
               .setDescription(`Usage: ${client.prefix}volume <Number of volume between 0 - 100>`),
           ],
         })
-        .catch(() => {});
+        .then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     await player.setVolume(volume / 1);
     if (volume > player.volume)
       return await interaction
@@ -60,7 +60,7 @@ module.exports = {
               .setDescription(`${emojivolume} Volume set to: **${volume}%**`),
           ],
         })
-        .catch(() => {});
+        .then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     else if (volume < player.volume)
       return await interaction
         .editReply({
@@ -70,7 +70,7 @@ module.exports = {
               .setDescription(`${emojivolume} Volume set to: **${volume}%**`),
           ],
         })
-        .catch(() => {});
+        .then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     else
       await interaction
         .editReply({
@@ -80,6 +80,6 @@ module.exports = {
               .setDescription(`${emojivolume} Volume set to: **${volume}%**`),
           ],
         })
-        .catch(() => {});
+        .then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

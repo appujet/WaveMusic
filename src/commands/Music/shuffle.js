@@ -19,7 +19,7 @@ module.exports = {
     
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
     }
     const emojishuffle = client.emoji.shuffle;
 
@@ -27,6 +27,7 @@ module.exports = {
       .setDescription(`${emojishuffle} Shuffled the queue`)
       .setColor(client.embedColor);
     await player.queue.shuffle();
-    return message.reply({ embeds: [thing] }).catch((error) => client.logger.log(error, 'error'));
+    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) })
+    .catch((error) => client.logger.log(error, 'error'));
   },
 };

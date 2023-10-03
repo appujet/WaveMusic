@@ -20,7 +20,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const emojiresume = client.emoji.resume;
@@ -29,7 +29,7 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`${emojiresume} The player is already **resumed**.`);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     await player.pause(false);
@@ -37,6 +37,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setDescription(`${emojiresume} **Resumed**\n[${song.title}](${song.uri})`)
       .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] });
+    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

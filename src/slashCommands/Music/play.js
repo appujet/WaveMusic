@@ -1,5 +1,6 @@
 const { CommandInteraction, Client, MessageEmbed, Permissions } = require('discord.js');
 const { convertTime } = require('../../utils/convert.js');
+const { defaultVol } = require("../../utils/functions.js");
 
 module.exports = {
   name: 'play',
@@ -53,17 +54,19 @@ module.exports = {
     const emojiaddsong = client.emoji.addsong;
     const emojiplaylist = client.emoji.playlist;
     let query = interaction.options.getString('input');
+    let player = client.manager.players.get(interaction.guildId);
 
-    const player = await client.manager.createPlayer({
+    if(!player) player = await client.manager.createPlayer({
       guildId: interaction.guildId,
       voiceId: interaction.member.voice.channelId,
       textId: interaction.channelId,
       deaf: true,
+      volume: await defaultVol(interaction.guild.id)
     });
 
     const result = await player.search(query, { requester: interaction.user });
 
-    if (!result.tracks.length) return interaction.editReply({ content: 'No result was found' });
+    if (!result.tracks.length) return interaction.editReply({ content: 'No result was found' }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     const tracks = result.tracks;
 
     if (result.type === "PLAYLIST") for (let track of result.tracks) player.queue.add(track);
@@ -89,6 +92,6 @@ module.exports = {
               .setDescription(`${emojiaddsong} Queued [${tracks[0].title}](${tracks[0].uri})`),
           ],
         },
-    );
+    ).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

@@ -1,5 +1,6 @@
 const { MessageEmbed, Permissions } = require('discord.js');
 const { convertTime } = require('../../utils/convert.js');
+const { defaultVol } = require("../../utils/functions.js");
 
 module.exports = {
   name: 'play',
@@ -46,11 +47,14 @@ module.exports = {
       });
     const query = args.join(' ');
 
-    const player = await client.manager.createPlayer({
+    let player = client.manager.players.get(message.guildId);
+
+    if (!player) player = await client.manager.createPlayer({
       guildId: message.guild.id,
       voiceId: message.member.voice.channel.id,
       textId: message.channel.id,
       deaf: true,
+      volume: await defaultVol(message.guild.id)
     });
 
     const result = await player.search(query, { requester: message.author });
@@ -81,6 +85,6 @@ module.exports = {
                 .setDescription(`${emojiaddsong} Queued [${tracks[0].title}](${tracks[0].uri})`),
             ],
           },
-    );
+    ).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

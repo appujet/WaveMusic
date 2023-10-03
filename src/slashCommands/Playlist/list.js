@@ -27,7 +27,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You Do Not Have Any Playlist`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     let list = data.map(
@@ -44,6 +44,6 @@ module.exports = {
       .setDescription(pages[page])
       .setFooter({ text: `Playlist (${list} / 10)` })
       .setColor(client.embedColor);
-    return await interaction.editReply({ embeds: [embeds] });
+    return await interaction.editReply({ embeds: [embeds] }).then(msg => { setTimeout(() => { msg.delete() }, 10000) }).catch(() => { });
   },
 };

@@ -21,7 +21,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const time = ms(args[0]);
@@ -44,7 +44,7 @@ module.exports = {
             )} / ${convertTime(duration)}\``,
           )
           .setColor(client.embedColor);
-        return message.reply({ embeds: [thing] });
+        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
       } else {
         await player.shoukaku.seekTo(time);
         let thing = new MessageEmbed()
@@ -54,7 +54,7 @@ module.exports = {
             )} / ${convertTime(duration)}\``,
           )
           .setColor(client.embedColor);
-        return message.reply({ embeds: [thing] });
+        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
       }
     } else {
       let thing = new MessageEmbed()
@@ -62,7 +62,7 @@ module.exports = {
         .setDescription(
           `Seek duration exceeds Song duration.\nSong duration: \`${convertTime(duration)}\``,
         );
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

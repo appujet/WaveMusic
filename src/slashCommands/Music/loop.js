@@ -45,7 +45,7 @@ module.exports = {
     let player = client.manager.players.get(interaction.guildId);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.channel.send({ embeds: [thing] });
+      return message.channel.send({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const emojiloop = client.emoji.loop;
 
@@ -57,7 +57,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`${emojiloop} Loop track is now **Enable**`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (input === 'queue') {
       await player.setLoop('queue');
       return await interaction.editReply({
@@ -66,7 +66,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`${emojiloop} Loop queue is now **Enable**`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (input === 'off') {
       await player.setLoop('none');
       return await interaction.editReply({
@@ -75,7 +75,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`${emojiloop} Loop is now **Disabled**`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

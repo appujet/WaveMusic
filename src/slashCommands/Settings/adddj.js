@@ -5,7 +5,7 @@ module.exports = {
     name: "adddj",
     description: "Setup Dj role.",
     userPrams: ['ADMINISTRATOR'],
-    botPrams: ['MANAGE_GUILD'],
+    botPrams: ['EMBED_LINKS'],
     options: [
         {
             name: "role",
@@ -30,17 +30,17 @@ module.exports = {
         if (!data) {
             data = new db({
                 Guild: interaction.guildId,
-                Roles: [role.id],
+                Roles: [role],
                 Mode: true
             })
             await data.save();
-            return await interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Added DJ Role ${role}.`).setColor(client.embedColor)] })
+            return await interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Added DJ Role <@&${role}>.`).setColor(client.embedColor)] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
         } else {
-            let rolecheck = data.Roles.find((x) => x === role.id);
-            if (rolecheck) return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Role Already Exists in List.`).setColor(client.embedColor)] })
-            data.Roles.push(role.id);
+            let rolecheck = data.Roles.find((x) => x === role);
+            if (rolecheck) return interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Role Already Exists in List.`).setColor(client.embedColor)] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+            data.Roles.push(role);
             await data.save();
-            return await interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Added New DJ Role ${role}.`).setColor(client.embedColor)] })
+            return await interaction.editReply({ embeds: [new MessageEmbed().setDescription(`Successfully Added New DJ Role <@&${role}>.`).setColor(client.embedColor)] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
 
         }
     }

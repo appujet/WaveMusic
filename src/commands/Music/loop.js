@@ -6,7 +6,7 @@ module.exports = {
   category: 'Music',
   description: 'Toggle music loop',
   args: true,
-  usage: '',
+  usage: 'track || queue || clear',
   userPrams: [],
   botPrams: ['EMBED_LINKS'],
   dj: true,
@@ -27,22 +27,22 @@ module.exports = {
       await player.setLoop('queue');
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
-        .setDescription(`${emojiloop} Loop queue is now **enable**`);
-      return message.reply({ embeds: [thing] });
+        .setDescription(`${emojiloop} Loop queue is now **Enable**`);
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (['track', 't', 'song'].includes(args[0])) {
       await player.setLoop('track');
 
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
-        .setDescription(`${emojiloop} Loop track is now **enable**`);
-      return message.reply({ embeds: [thing] });
+        .setDescription(`${emojiloop} Loop track is now **Enable**`);
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (['off', 'c', 'clear', 'reset'].includes(args[0])) {
       await player.setLoop('none');
 
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
-        .setDescription(`${emojiloop} Loop is now **disabled**`);
-      return message.reply({ embeds: [thing] });
+        .setDescription(`${emojiloop} Loop is now **Disabled**`);
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

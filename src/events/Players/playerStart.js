@@ -26,6 +26,10 @@ module.exports = {
 
 		if (data && data.Channel) {
 			let textChannel = guild.channels.cache.get(data.Channel);
+			let voiceChannel = guild.channels.cache.get(data.voiceChannel);
+			if ( !textChannel || !voiceChannel ) {
+				return data.deleteOne();
+			}
 			const id = data.Message;
 			if (channel === textChannel) {
 				return await trackStartEventHandler(id, textChannel, player, track, client);
@@ -33,6 +37,7 @@ module.exports = {
 				await trackStartEventHandler(id, textChannel, player, track, client);
 			};
 		}
+
 		const emojiplay = client.emoji.play;
 
 		const main = new MessageEmbed()
@@ -44,7 +49,7 @@ module.exports = {
 			.addFields([
 				{
 				  name: 'Duration',
-				  value: `\`${track.isStream ? '◉ LIVE' : convertTime(player.queue.current.length)}\``,
+				  value: `\`${track.isStream ? '◉ LIVE' : convertTime(player.queue.current?.length)}\``,
 				  inline: true,
 				},
 				{

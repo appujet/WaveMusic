@@ -36,7 +36,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`Playlist Name Cant Be Greater Than 10 Charecters`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (data.length > 0) {
       return interaction.editReply({
@@ -47,7 +47,7 @@ module.exports = {
               `This playlist already Exists! delete it using: \`${prefix}\`delete \`${Name}\``,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     let userData = db.find({
       UserId: interaction.user.id,
@@ -59,10 +59,10 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You Can Only Create 10 Playlist`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const newData = new db({
-      UserName: interaction.user.tag,
+      UserName: interaction.user.username,
       UserId: interaction.user.id,
       PlaylistName: Name,
       CreatedOn: Math.round(Date.now() / 1000),
@@ -71,6 +71,6 @@ module.exports = {
     const embed = new MessageEmbed()
       .setDescription(`Successfully created a playlist for you **${Name}**`)
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [embed] });
+    return interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

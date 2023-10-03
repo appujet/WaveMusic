@@ -20,7 +20,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const song = player.queue.current;
 
@@ -31,6 +31,6 @@ module.exports = {
     let thing = new MessageEmbed()
       .setDescription(`${emojiskip} Skipped [${song.title}](${song.uri})`)
       .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] });
+    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

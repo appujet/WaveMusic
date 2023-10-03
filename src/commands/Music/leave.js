@@ -11,7 +11,7 @@ module.exports = {
     botPrams: ["EMBED_LINKS"],
     dj: true,
     owner: false,
-    player: false,
+    player: true,
     inVoiceChannel: true,
     sameVoiceChannel: true,
     execute: async (message, args, client, prefix) => {
@@ -20,11 +20,11 @@ module.exports = {
         
         const emojiLeave = message.client.emoji.leave;
 
-        await player.destroy(message.guild.id);
+        await player.destroy();
 
         let thing = new MessageEmbed()
             .setColor(message.client.embedColor)
-            .setDescription(`${emojiLeave} **Leaved the voice channel**`);
-        return message.reply({ embeds: [thing] });
+            .setDescription(`${emojiLeave} **Left the voice channel**`);
+        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     },
 };

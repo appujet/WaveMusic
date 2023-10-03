@@ -25,7 +25,7 @@ module.exports = {
       .setColor('RED')
       .setDescription('There is no music playing.');
 
-      return message.channel.send({ embeds: [thing] });
+      return message.channel.send({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
     }
 
     const emojimusic = client.emoji.music;
@@ -67,6 +67,6 @@ module.exports = {
         }`,
       )
       .setColor(client.embedColor);
-    return message.channel.send({ embeds: [embed] });
+    return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 12000) }).catch(() => { });
   },
 };

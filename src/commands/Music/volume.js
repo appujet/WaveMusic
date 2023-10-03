@@ -19,7 +19,7 @@ module.exports = {
 
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     const volumeEmoji = client.emoji.volumehigh;
 
@@ -27,7 +27,7 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`Player Current Volume: \`[ ${player.volume * 100}% ]\``);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const volume = Number(args[0]);
@@ -36,7 +36,7 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor('RED')
         .setDescription(`Usage: ${prefix}volume <Number of volume between 0 - 100>`);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     await player.setVolume(volume / 1);
@@ -46,18 +46,18 @@ module.exports = {
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`${emojivolume} Volume set to: \`[ ${volume}% ]\``);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else if (volume < player.volume) {
       var emojivolume = message.client.emoji.volumelow;
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`${emojivolume} Volume set to: \`[ ${volume}% ]\``);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else {
       let thing = new MessageEmbed()
         .setColor(client.embedColor)
         .setDescription(`${volumeEmoji} Volume set to: \`[ ${volume}% ]\``);
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

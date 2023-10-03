@@ -1,4 +1,5 @@
 const { MessageEmbed, CommandInteraction, Client, Permissions } = require('discord.js');
+const { defaultVol } = require("../../utils/functions");
 
 module.exports = {
   name: 'join',
@@ -27,7 +28,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`I'm already connected to <#${player.voiceId}> voice channel!`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else {
       if (
         !interaction.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
@@ -64,6 +65,7 @@ module.exports = {
         voiceId: interaction.member.voice.channel.id,
         textId: interaction.channel.id,
         deaf: true,
+        volume: await defaultVol(interaction.guild.id)
       });
 
       let thing = new MessageEmbed()
@@ -71,7 +73,7 @@ module.exports = {
         .setDescription(
           `${emojiJoin} **Join the voice channel**\nJoined <#${channel.id}> and bound to <#${interaction.channel.id}>`,
         );
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

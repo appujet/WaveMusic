@@ -23,7 +23,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription('Playlist Name Cant Be Greater Than `10` Charecters'),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
     }
     let data = await db.find({
       UserId: message.author.id,
@@ -39,7 +39,7 @@ module.exports = {
               `This playlist already Exists! delete it using: \`${prefix}\`delete \`${Name}\``,
             ),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
     }
     let userData = db.find({
       UserId: message.author.id,
@@ -51,11 +51,11 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You Can Only Create \`10\` Playlist`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const newData = new db({
-      UserName: message.author.tag,
+      UserName: message.author.username,
       UserId: message.author.id,
       PlaylistName: Name,
       CreatedOn: Math.round(Date.now() / 1000),
@@ -64,6 +64,6 @@ module.exports = {
     const embed = new MessageEmbed()
       .setDescription(`Successfully created a playlist for you **${Name}**`)
       .setColor(client.embedColor);
-    return message.channel.send({ embeds: [embed] });
+    return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

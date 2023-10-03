@@ -1,4 +1,5 @@
 const { MessageEmbed, Permissions } = require('discord.js');
+const { defaultVol } = require("../../utils/functions");
 
 module.exports = {
   name: 'join',
@@ -24,7 +25,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`I'm already connected to <#${player.voiceId}> voice channel!`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     } else {
       if (!message.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
         return message.channel.send({
@@ -59,6 +60,7 @@ module.exports = {
         voiceId: message.member.voice.channel.id,
         textId: message.channel.id,
         deaf: true,
+        volume: await defaultVol(message.guild.id)
       });
 
       let thing = new MessageEmbed()
@@ -66,7 +68,7 @@ module.exports = {
         .setDescription(
           `${emojiJoin} **Join the voice channel**\nJoined <#${channel.id}> and bound to <#${message.channel.id}>`,
         );
-      return message.reply({ embeds: [thing] });
+      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
   },
 };

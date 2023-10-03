@@ -10,10 +10,10 @@ module.exports = class Logger {
 			return console.log(`[${chalk.yellow(date)}]: [${chalk.black.bgBlue(type.toUpperCase())}] ${chalk.blue(content)}`);
 		}
 		case "warn": {
-			return console.log(`[${chalk.yellow(date)}]: [${chalk.black.bgYellow(type.toUpperCase())}] ${chalk.blue(content)}`);
+			return console.warn(`[${chalk.yellow(date)}]: [${chalk.black.bgYellow(type.toUpperCase())}] ${chalk.blue(content)}`);
 		}
 		case "error": {
-			return console.log(`[${chalk.yellow(date)}]: [${chalk.black.bgRed(type.toUpperCase())}] ${chalk.blue(content)}`);
+			return console.error(`[${chalk.yellow(date)}]: [${chalk.black.bgRed(type.toUpperCase())}] ${chalk.blue(content)}`);
 		}
 		case "debug": {
 			return console.log(`[${chalk.yellow(date)}]: [${chalk.black.bgGreen(type.toUpperCase())}] ${chalk.blue(content)}`);

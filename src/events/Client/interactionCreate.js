@@ -1,4 +1,4 @@
-const { Permissions } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
 const db = require('../../schema/setup');
 const db2 = require("../../schema/dj");
 
@@ -9,22 +9,36 @@ module.exports = {
       const SlashCommands = client.slashCommands.get(interaction.commandName);
       if (!SlashCommands) return;
 
-      if (!interaction.guild.members.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-        return await interaction.user.dmChannel
-          .send({
-            content: `I don't have **\`SEND_interactionS\`** permission in <#${interaction.channelId}> to execute this **\`${SlashCommands.name}\`** command.`,
-          })
-          .catch(() => { });
+      const embed = new MessageEmbed().setColor('RED');
+
+          if (!interaction.guild.members.cache.get(client.user.id).permissionsIn(interaction.channel).has(Permissions.FLAGS.SEND_MESSAGES)) {
+            embed.setDescription(`I don't have **Send_Messages** permission in Channel: <#${interaction.channelId}>`)
+            if (interaction.replied) {
+                return await interaction.user.send({
+                    embeds: [embed], ephemeral: true
+                }).catch(() => { });
+            } else {
+                return await interaction.user.send({
+                    embeds: [embed], ephemeral: true
+                }).catch(() => { });
+            }
+        }
+
+        if (!interaction.guild.members.cache.get(client.user.id).permissionsIn(interaction.channel).has(Permissions.FLAGS.EMBED_LINKS)) {
+            embed.setDescription( `I don't have **Embed_Links** permission in <#${interaction.channelId}>`);
+            if (interaction.replied) {
+                return await interaction.editReply({
+                    embeds: [embed], ephemeral: true
+                }).catch(() => { });
+            } else {
+                return await interaction.reply({
+                    embeds: [embed], ephemeral: true
+                }).catch(() => { });
+            }
+        }
 
       if (!interaction.guild.members.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
 
-      if (!interaction.guild.members.me.permissions.has(Permissions.FLAGS.EMBED_LINKS))
-        return await interaction
-          .reply({
-            content: `I don't have **\`EMBED_LINKS\`** permission to execute this **\`${SlashCommands.name}\`** command.`,
-            ephemeral: true,
-          })
-          .catch(() => { });
       const player = interaction.client.manager.players.get(interaction.guildId);
       if (SlashCommands.player && !player) {
         return await interaction.reply({

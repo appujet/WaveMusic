@@ -32,7 +32,7 @@ module.exports = {
     const player = client.manager.players.get(interaction.guildId);
     if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription(`There is no music playing.`);
-      return interaction.editReply({ embeds: [thing] });
+      return interaction.editReply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     if (!data) {
@@ -42,7 +42,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`Playlist not found. Please enter the correct playlist name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (data.length == 0) {
       return interaction.editReply({
@@ -51,7 +51,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`Playlist not found. Please enter the correct playlist name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
 
     const song = player.queue.current;
@@ -90,7 +90,7 @@ module.exports = {
     const embed = new MessageEmbed()
       .setDescription(`**Added** \`${playlist.length - oldSong.length}\`song in \`${Name}\``)
       .setColor(client.embedColor);
-    return interaction.editReply({ embeds: [embed] });
+    return interaction.editReply({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };
 

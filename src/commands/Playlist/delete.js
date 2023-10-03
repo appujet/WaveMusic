@@ -24,7 +24,7 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
     if (data.length == 0) {
       return message.reply({
@@ -33,12 +33,12 @@ module.exports = {
             .setColor(client.embedColor)
             .setDescription(`You don't have a playlist with **${Name}** name`),
         ],
-      });
+      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
     }
-    await data.delete();
+    await data.deleteOne();
     const embed = new MessageEmbed()
       .setColor(client.embedColor)
       .setDescription(`Successfully deleted ${Name} playlist`);
-    return message.channel.send({ embeds: [embed] });
+    return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
   },
 };

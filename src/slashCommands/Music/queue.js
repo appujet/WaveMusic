@@ -35,7 +35,7 @@ module.exports = {
         .editReply({
           content: `Nothing is playing right now.`,
         })
-        .catch(() => {});
+        .then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
 
     if (player.queue.length === 0 || !player.queue.length) {
       const embed = new MessageEmbed()
@@ -155,7 +155,7 @@ module.exports = {
             else
               return b
                 .reply({
-                  content: `Only **${interaction.user.tag}** can use this button, if you want then you've to run the command again.`,
+                  content: `Only **${interaction.user.username}** can use this button, if you want then you've to run the command again.`,
                 })
                 .catch(() => {});
           },
