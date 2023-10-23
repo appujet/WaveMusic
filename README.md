@@ -116,33 +116,73 @@ Before starting with the installation, you need to have the following:
 - ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white) [v4.4.0 or higher](https://www.mongodb.com/try/download/community)
 - ![Lavalink](https://img.shields.io/badge/Lavalink-7289DA?style=for-the-badge&logo=discord&logoColor=white) [v3.7.8 or higher](https://github.com/freyacodes/Lavalink)
 
-## ⚙️ Installation 
-Fill all requirement in `src/config.js` or `.env` **(rename `.env.example` to `.env`)**
+## 🚀 Installation from source
 
-• [yarn](https://yarnpkg.com/)
+1. Clone the WaveMusic repository:
 
-For install all dependencies use
+```bash
+git clone https://github.com/brblacky/WaveMusic.git
 ```
-yarn
-```
-To start your bot 
-```
-yarn start
-```
-**Or**
 
-• [Npm](https://www.npmjs.com/)
+2. change the directory to WaveMusic
 
-For install all dependencies use
+```bash
+cd WaveMusic
 ```
-npm install
+
+3. Install the required packages:
+
+```bash
+npm i
 ```
-To start your bot 
+
+4. Set up your environment variables:
+
+Create a `.env` file in the root directory of your project with the following variables:
+
+```bash
+TOKEN="." # Your bot token
+PREFIX="!" # Your prefix
+OWNER_IDS="859640640640640640, 859640640640640640" # Your ID
+CLIENT_ID="960072976412340254" # Your bot client ID
+GUILD_ID="859640640640640640" # Your server ID (if you want to use it for a single server)
+PRODUCTION="true" # "true" for production
+DATABASE_URL="mongodb+srv://Blacky:xxxxxxxxxxxx" # Your MongoDB URL
+LAVALINK_URL="lava.moebot.xyz:443" # Your lavalink url
+LAVALINK_AUTH="youshallnotpass" # Your lavalink password
+LAVALINK_NAME="Blacky" # Your lavalink name
+LAVALINK_SECURE= "true" # true for secure lavalink
+BOT_ACTIVITY_TYPE=0 # Activity type is a number from 0 to 5 see more here https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types
+
 ```
-npm start
+
+5. Generate the Prisma client:
+
+**If you using replit than read this:**
+
+go to **[prisma/schema.prisma](https://github.com/brblacky/WaveMusic/blob/main/prisma/schema.prisma)** and add engine type like this or remove `//` behind the `engineType`
+
+```bash
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
 ```
+
+and then run this command
+
+```bash
+npx prisma generate
+```
+
+6. Run the bot:
+
+```bash
+npm run start or npm start
+```
+
 ###
-WaveMusic is a discord music bot base in [Kazagumo](https://github.com/Takiyo0/Kazagumo) (Shoukaku)
+WaveMusic is a discord music bot base in [Shoukaku](<https://github.com/Deivu/Shoukaku>)
 If you liked this repository, feel free to leave a star ⭐ to help promote !
 
 ## 💌 Support Server
