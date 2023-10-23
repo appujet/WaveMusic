@@ -15,6 +15,7 @@ module.exports = {
     searchEngine: process.env.SEARCH_ENGINE || "ytsearch", // ytsearch, scsearch or ytmsearch read more at https://github.com/lavalink-devs/Lavalink/blob/master/IMPLEMENTATION.md#track-searching
     maxPlaylistSize: parseInt(process.env.MAX_PLAYLIST_SIZE) || 100,
     botStatus: process.env.BOT_STATUS || 'online',
+    keepAlive: parseBoolean(process.env.KEEP_ALIVE) || false,
     botActivity: process.env.BOT_ACTIVITY || 'WaveMusic',
     botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '2'),
     maxQueueSize: parseInt(process.env.MAX_QUEUE_SIZE) || 100,
