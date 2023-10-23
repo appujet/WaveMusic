@@ -12,18 +12,22 @@ class Song {
         if (track.info.sourceName === 'youtube') {
             track.info.thumbnail = `https://img.youtube.com/vi/${track.info.identifier}/hqdefault.jpg`;
         } else if (track.info.sourceName === 'spotify') {
-                new Spotify().getTrack(track.info.uri).then((res) => {
-                    this.info.thumbnail = res.album && res.album.images ? res.album.images[0] ? res.album.images[0].url : null : null;
+            new Spotify().getTrack(track.info.uri).then((res) => {
+                this.info.thumbnail = res.album && res.album.images ? res.album.images[0] ? res.album.images[0].url : null : null;
             });
         } else if (track.info.sourceName === 'applemusic') {
-                new AppleMusic().getTrack(track.info.uri).then((res) => {
-                    this.info.thumbnail = res.data[0].attributes.artwork.url.replace("{w}x{h}", "512x512");
+            new AppleMusic().getTrack(track.info.uri).then((res) => {
+                this.info.thumbnail = res.data[0].attributes.artwork.url.replace("{w}x{h}", "512x512");
             });
         }
     }
 }
 
 class Dispatcher {
+    /**
+     * 
+     * @param {} options 
+     */
     constructor(options) {
         this.history = [];
         this.client = options.client;
@@ -46,14 +50,14 @@ class Dispatcher {
         this.player
             .on('start', () => this.client.shoukaku.emit('trackStart', this.player, this.current, this))
             .on('end', () => {
-            if (!this.queue.length)
-                this.client.shoukaku.emit('queueEnd', this.player, this.current, this);
-            this.client.shoukaku.emit('trackEnd', this.player, this.current, this);
-        })
+                if (!this.queue.length)
+                    this.client.shoukaku.emit('queueEnd', this.player, this.current, this);
+                this.client.shoukaku.emit('trackEnd', this.player, this.current, this);
+            })
             .on('stuck', () => this.client.shoukaku.emit('trackStuck', this.player, this.current))
             .on('closed', (...arr) => {
-            this.client.shoukaku.emit('socketClosed', this.player, ...arr);
-        });
+                this.client.shoukaku.emit('socketClosed', this.player, ...arr);
+            });
     }
     get exists() {
         return this.client.queue.has(this.guildId);
@@ -154,7 +158,17 @@ class Dispatcher {
         this.repeat = 0;
         this.stopped = true;
         this.player.stopTrack();
-        this.player.connection.disconnect();
+        this.disconnect();
+    }
+    async disconnect() {
+        if (!this.player)
+            return;
+        const _247 = await this.client.prisma.stay.findFirst({
+            where: { guildId: this.guildId },
+        });
+        if (!_247) {
+            this.destroy();
+        }
     }
     setLoop(loop) {
         this.loop = loop;
