@@ -7,7 +7,6 @@
 [![MIT License][license-shield]][license-url]
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=WaveMusic&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -29,6 +28,7 @@
 <!-- ABOUT THE PROJECT -->
 
 ## 🌀 About
+
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=brblacky&repo=WaveMusic&theme=tokyonight)](https://github.com/brblacky/WaveMusic)
 
 ## 🔥 Unique Features
@@ -182,19 +182,20 @@ npm run start or npm start
 ```
 
 ###
+
 WaveMusic is a discord music bot base in [Shoukaku](<https://github.com/Deivu/Shoukaku>)
 If you liked this repository, feel free to leave a star ⭐ to help promote !
 
 ## 💌 Support Server
+
 [![DiscordBanner](https://invidget.switchblade.xyz/ns8CTk9J3e)](https://discord.gg/ns8CTk9J3e)
 [Support Server](https://discord.gg/ns8CTk9J3e) - WaveMusic's Support Server Invite
 
 # Donate
 
- By Donating, You Will Help Me To Maintain This Project 
+ By Donating, You Will Help Me To Maintain This Project
 
 - [PayPal](https://www.paypal.me/sdip521)
-
 
 <!-- LICENSE -->
 
@@ -204,13 +205,12 @@ Distributed under the  GPL License. See [`LICENSE`](https://github.com/brblacky/
  ![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbrblacky%2FWaveMusic.svg?type=shield)
 
 [version-shield]: https://img.shields.io/github/package-json/v/brblacky/WaveMusic?style=for-the-badge
-[version-url]: https://github.com/brblacky/WaveMusic
 [contributors-shield]: https://img.shields.io/github/contributors/brblacky/WaveMusic.svg?style=for-the-badge
 [contributors-url]: https://github.com/brblacky/WaveMusic/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/brblacky/WaveMusic.svg?style=for-the-badge
 [forks-url]: https://github.com/brblacky/WaveMusic/network/members
 [stars-shield]: https://img.shields.io/github/stars/brblacky/WaveMusic.svg?style=for-the-badge
-[stars-url]: https://github.com/brblacky/lavamusic/stargazers
+[stars-url]: https://github.com/brblacky/WaveMusic/stargazers
 [issues-shield]: https://img.shields.io/github/issues/brblacky/WaveMusic.svg?style=for-the-badge
 [issues-url]: https://github.com/brblacky/WaveMusic/issues
 [license-shield]: https://img.shields.io/github/license/brblacky/WaveMusic.svg?style=for-the-badge

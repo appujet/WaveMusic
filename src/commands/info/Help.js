@@ -66,7 +66,7 @@ class Help extends Command {
             const helpEmbed = embed
                 .setColor(this.client.color.main)
                 .setTitle('Help Menu')
-                .setDescription(`Hey there! I'm ${this.client.user.username}, a music bot made with [Lavamusic](https://github.com/brblacky/lavamusic) and Discord. You can use \`${prefix}help <command>\` to get more info on a command.`)
+                .setDescription(`Hey there! I'm ${this.client.user.username}, a music bot made with [WaveMusic](https://github.com/brblacky/WaveMusic) and Discord. You can use \`${prefix}help <command>\` to get more info on a command.`)
                 .setFooter({
                     text: `Use ${prefix}help <command> for more info on a command`,
                 });

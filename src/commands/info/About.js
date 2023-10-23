@@ -30,7 +30,7 @@ class About extends Command {
     }
     async run(client, ctx) {
         const row = new ActionRowBuilder().addComponents(new ButtonBuilder()
-            .setLabel('Invite Lavamusic')
+            .setLabel('Invite WaveMusic')
             .setStyle(ButtonStyle.Link)
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=875635121770889257&permissions=8&scope=bot%20applications.commands`), new ButtonBuilder()
                 .setLabel('Support Server')
@@ -39,7 +39,7 @@ class About extends Command {
         const embed = this.client
             .embed()
             .setAuthor({
-                name: 'LavaMusic',
+                name: 'WaveMusic',
                 iconURL: 'https://media.discordapp.net/attachments/876035356460462090/888434725235097610/20210820_124325.png',
             })
             .setThumbnail('https://media.discordapp.net/attachments/876035356460462090/888434725235097610/20210820_124325.png')
@@ -52,7 +52,7 @@ class About extends Command {
                 },
                 {
                     name: 'Repository',
-                    value: '[Here](https://github.com/brblacky/lavamusic)',
+                    value: '[Here](https://github.com/brblacky/WaveMusic)',
                     inline: true,
                 },
                 {
@@ -62,7 +62,7 @@ class About extends Command {
                 },
                 {
                     name: '\u200b',
-                    value: `He really wanted to make his first open source project ever for more coding experience. In this project, he was challenged to make a project with less bugs. Hope you enjoy using LavaMusic!`,
+                    value: `He really wanted to make his first open source project ever for more coding experience. In this project, he was challenged to make a project with less bugs. Hope you enjoy using WaveMusic!`,
                     inline: true,
                 },
             ]);

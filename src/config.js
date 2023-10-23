@@ -16,7 +16,7 @@ module.exports = {
     searchEngine: process.env.SEARCH_ENGINE || 'SearchEngine.YouTube',
     maxPlaylistSize: parseInt(process.env.MAX_PLAYLIST_SIZE) || 100,
     botStatus: process.env.BOT_STATUS || 'online',
-    botActivity: process.env.BOT_ACTIVITY || 'Lavamusic',
+    botActivity: process.env.BOT_ACTIVITY || 'WaveMusic',
     botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '2'),
     maxQueueSize: parseInt(process.env.MAX_QUEUE_SIZE) || 100,
     owners: process.env.OWNERS ? process.env.OWNERS.split(',') : undefined,
