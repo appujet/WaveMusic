@@ -1,43 +1,52 @@
-const { MessageEmbed } = require("discord.js");
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-    name: "pause",
-    category: "Music",
-    description: "Pause the currently playing music",
-    args: false,
-    usage: "",
-    userPrams: [],
-    botPrams: ["EMBED_LINKS"],
-    dj: true,
-    owner: false,
-    player: true,
-    inVoiceChannel: true,
-    sameVoiceChannel: true,
-    execute: async (message, args, client, prefix) => {
-        const player = client.manager.players.get(message.guild.id);
-        if (!player.queue.current) {
-            let thing = new MessageEmbed()
-                .setColor("RED")
-                .setDescription("There is no music playing.");
-            return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
+class Pause extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'pause',
+            description: {
+                content: 'Pauses the current song',
+                examples: ['pause'],
+                usage: 'pause',
+            },
+            category: 'music',
+            aliases: [],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: false,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
+    }
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (!player.paused) {
+            player.pause();
+            return await ctx.sendMessage({
+                embeds: [embed.setColor(this.client.color.main).setDescription(`Paused the song`)],
+            });
         }
-
-        const emojipause = client.emoji.pause;
-
-        if (player.shoukaku.paused) {
-            let thing = new MessageEmbed()
-                .setColor("RED")
-                .setDescription(`${emojipause} The player is already paused.`);
-            return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+        else {
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription(`The song is already paused`),
+                ],
+            });
         }
-        
-        await player.pause(true);
+    }
+}
 
-        const song = player.queue.current;
-
-        let thing = new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(`${emojipause} **Paused**\n[${song.title}](${song.uri})`);
-        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    },
-};
+module.exports = Pause;

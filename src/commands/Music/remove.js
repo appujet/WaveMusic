@@ -1,44 +1,85 @@
-const { MessageEmbed } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'remove',
-  category: 'Music',
-  description: 'Remove song from the queue',
-  args: true,
-  usage: '<Number of song in queue>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  dj: true,
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-    const player = client.manager.players.get(message.guild.id);
-
-    if (!player.queue.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
+class Remove extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'remove',
+            description: {
+                content: 'Removes a song from the queue',
+                examples: ['remove 1'],
+                usage: 'remove <song number>',
+            },
+            category: 'music',
+            aliases: ['rm'],
+            cooldown: 3,
+            args: true,
+            player: {
+                voice: true,
+                dj: true,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [
+                {
+                    name: 'song',
+                    description: 'The song number',
+                    type: 4,
+                    required: true,
+                },
+            ],
+        });
     }
-
-    const position = Number(args[0]) - 1;
-    if (position > player.queue.length) {
-      const number = position + 1;
-      let thing = new MessageEmbed()
-        .setColor('RED')
-        .setDescription(`No songs at number ${number}.\nTotal Songs: ${player.queue.length}`);
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+    async run(client, ctx, args) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (!player.queue.length)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('There are no songs in the queue.'),
+                ],
+            });
+        if (isNaN(Number(args[0])))
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('That is not a valid number.'),
+                ],
+            });
+        if (Number(args[0]) > player.queue.length)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('That is not a valid number.'),
+                ],
+            });
+        if (Number(args[0]) < 1)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('That is not a valid number.'),
+                ],
+            });
+        player.remove(Number(args[0]) - 1);
+        return await ctx.sendMessage({
+            embeds: [
+                embed
+                    .setColor(this.client.color.main)
+                    .setDescription(`Removed song number ${Number(args[0])} from the queue`),
+            ],
+        });
     }
+}
 
-    const song = player.queue[position];
 
-    await player.queue.splice(position, 1);
-
-    const emojieject = client.emoji.remove;
-
-    let thing = new MessageEmbed()
-      .setColor(client.embedColor)
-      .setDescription(`${emojieject} Removed\n[${song.title}](${song.uri})`);
-    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-  },
-};
+module.exports = Remove;

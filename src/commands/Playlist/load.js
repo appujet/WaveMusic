@@ -1,87 +1,78 @@
-const { MessageEmbed } = require('discord.js');
-const db = require('../../schema/playlist');
-const { defaultVol } = require("../../utils/functions");
+const { ApplicationCommandOptionType } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'load',
-  aliases: ['plload'],
-  category: 'Playlist',
-  description: 'Play the saved Playlist.',
-  args: true,
-  usage: '<playlist name>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  owner: false,
-  player: false,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-    const Name = args[0];
 
-    const data = await db.findOne({ UserId: message.author.id, PlaylistName: Name });
-
-    let name = Name;
-
-    if (!data) {
-      return message.reply({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(
-              `Playlist not found. Please enter the correct playlist name\n\nDo ${prefix}list To see your Playlist`,
-            ),
-        ],
-      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+class Load extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'load',
+            description: {
+                content: 'Loads a playlist',
+                examples: ['load <playlist>'],
+                usage: 'load <playlist>',
+            },
+            category: 'playlist',
+            aliases: [],
+            cooldown: 3,
+            args: true,
+            player: {
+                voice: true,
+                dj: false,
+                active: false,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [
+                {
+                    name: 'playlist',
+                    description: 'The playlist you want to load',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                },
+            ],
+        });
     }
-    const player = await client.manager.createPlayer({
-      guildId: message.guild.id,
-      voiceId: message.member.voice.channel.id,
-      textId: message.channel.id,
-      deaf: true,
-      volume: await defaultVol(message.guild.id)
-    });
-    if (!player) return;
-    let count = 0;
-    const m = await message.reply({
-      embeds: [
-        new MessageEmbed()
-          .setColor(client.embedColor)
-          .setDescription(`Adding ${data.PlaylistName} track(s) from your playlist **${name}** to the queue.`),
-      ],
-    });
-
-    for (const track of data.Playlist) {
-      let s = await player.search(track.uri ? track.uri : track.title, { requester: message.author });
-      if (s.type === "TRACK") {
-        if (player) player.queue.add(s.tracks[0]);
-        if (player && !player.playing && !player.paused) await player.play();
-        ++count;
-      } else if (s.type === 'SEARCH') {
-        await player.queue.add(s.tracks[0]);
-        if (player && !player.playing && !player.paused) await player.play();
-        ++count;
-      } else if (s.type === 'PLAYLIST') {
-        await player.queue.add(s.tracks[0]);
-        if (player && !player.playing && !player.paused) await player.play();
-        ++count;
-      };
+    async run(client, ctx, args) {
+        let player = client.queue.get(ctx.guild.id);
+        const playlist = args.join(' ').replace(/\s/g, '');
+        const playlistData = await client.prisma.playlist.findFirst({
+            where: {
+                userId: ctx.author.id,
+                name: playlist,
+            },
+        });
+        if (!playlistData)
+            return await ctx.sendMessage({
+                embeds: [
+                    {
+                        description: 'That playlist doesn\'t exist',
+                        color: client.color.red,
+                    },
+                ],
+            });
+        for await (const song of playlistData.songs.map(s => JSON.parse(s))) {
+            const vc = ctx.member;
+            if (!player)
+                player = await client.queue.create(ctx.guild, vc.voice.channel, ctx.channel, client.shoukaku.getNode());
+            const track = player.buildTrack(song, ctx.author);
+            player.queue.push(track);
+            player.isPlaying();
+        }
+        return await ctx.sendMessage({
+            embeds: [
+                {
+                    description: `Loaded \`${playlistData.name}\` with \`${playlistData.songs.length}\` songs`,
+                    color: client.color.main,
+                },
+            ],
+        });
     }
-    if (player && !player.queue.current) player.destroy();
-    if (count <= 0 && m)
-      return await m.edit({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(`Couldn't add any tracks from your playlist **${name}** to the queue.`),
-        ],
-      });
-    if (m)
-      return await m.edit({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(`Added ${count} track(s) from your playlist **${name}** to the queue.`),
-        ],
-      });
-  },
-};
+}
+
+
+module.exports = Load;

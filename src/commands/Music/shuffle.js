@@ -1,33 +1,51 @@
-const { MessageEmbed } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'shuffle',
-  category: 'Music',
-  description: 'Shuffle queue',
-  args: false,
-  usage: '',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  dj: true,
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
 
-    const player = client.manager.players.get(message.guild.id);
-    
-    if (!player.queue.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
+class Shuffle extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'shuffle',
+            description: {
+                content: 'Shuffles the queue',
+                examples: ['shuffle'],
+                usage: 'shuffle',
+            },
+            category: 'music',
+            aliases: ['sh'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: true,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
     }
-    const emojishuffle = client.emoji.shuffle;
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (!player.queue.length)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('There are no songs in the queue.'),
+                ],
+            });
+        player.setShuffle(true);
+        return await ctx.sendMessage({
+            embeds: [embed.setColor(this.client.color.main).setDescription(`Shuffled the queue`)],
+        });
+    }
+}
 
-    let thing = new MessageEmbed()
-      .setDescription(`${emojishuffle} Shuffled the queue`)
-      .setColor(client.embedColor);
-    await player.queue.shuffle();
-    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) })
-    .catch((error) => client.logger.log(error, 'error'));
-  },
-};
+
+module.exports = Shuffle;

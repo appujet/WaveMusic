@@ -1,48 +1,59 @@
-const { MessageEmbed } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'skip',
-  aliases: ['s'],
-  category: 'Music',
-  description: 'To skip the current playing song.',
-  args: false,
-  usage: '',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  dj: true,
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-
-    const player = client.manager.players.get(message.guild.id);
-    
-    if (!player.queue.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+class Skip extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'skip',
+            description: {
+                content: 'Skips the current song',
+                examples: ['skip'],
+                usage: 'skip',
+            },
+            category: 'music',
+            aliases: ['sk'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: true,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
     }
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (player.queue.length === 0)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('There are no songs in the queue.'),
+                ],
+            });
+        player.skip();
+        if (!ctx.isInteraction) {
+            ctx.message?.react('👍');
+        }
+        else {
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.main)
+                        .setDescription(`Skipped [${player.current.info.title}](${player.current.info.uri})`),
+                ],
+            });
+        }
+    }
+}
 
-    // if (player.queue.size == 0) {
-    //   let noskip = new MessageEmbed()
-    //     .setColor(client.embedColor)
-    //     .setDescription(`No more songs left in the queue to skip.`);
-    //   return message.reply({ embeds: [noskip] });
-    // }
 
-    await player.skip();
-    player.paused = false;
-
-    const emojiskip = client.emoji.skip;
-
-
-    let thing = new MessageEmbed()
-      .setDescription(`${emojiskip} **Skipped**\n[${player.queue.current.title}](${player.queue.current.uri})`)
-      .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] }).then((msg) => {
-      setTimeout(() => {
-        msg.delete();
-      }, 5000);
-    });
-  },
-};
+module.exports = Skip;

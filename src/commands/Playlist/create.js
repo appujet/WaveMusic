@@ -1,69 +1,83 @@
-const { MessageEmbed } = require('discord.js');
-const db = require('../../schema/playlist');
+const { ApplicationCommandOptionType } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'create',
-  aliases: ['plcreate'],
-  category: 'Playlist',
-  description: "Creates the user's playlist.",
-  args: true,
-  usage: '<playlist name>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-    const Name = args[0];
-    if (Name.length > 10) {
-      return message.reply({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription('Playlist Name Cant Be Greater Than `10` Charecters'),
-        ],
-      }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
+class Create extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'create',
+            description: {
+                content: 'Creates a playlist',
+                examples: ['create <name>'],
+                usage: 'create <name>',
+            },
+            category: 'playlist',
+            aliases: ['create'],
+            cooldown: 3,
+            args: true,
+            player: {
+                voice: false,
+                dj: false,
+                active: false,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [
+                {
+                    name: 'name',
+                    description: 'The name of the playlist',
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                },
+            ],
+        });
     }
-    let data = await db.find({
-      UserId: message.author.id,
-      PlaylistName: Name,
-    });
+    async run(client, ctx, args) {
+        const name = args.join(' ').replace(/\s/g, '');
+        if (name.length > 50)
+            return await ctx.sendMessage({
+                embeds: [
+                    {
+                        description: 'Playlist names can only be 50 characters long',
+                        color: client.color.red,
+                    },
+                ],
+            });
+        const playlist = await client.prisma.playlist.findFirst({
+            where: {
+                userId: ctx.author.id,
+                name: name,
+            },
+        });
+        if (playlist)
+            return await ctx.sendMessage({
+                embeds: [
+                    {
+                        description: 'A playlist with that name already exists',
+                        color: client.color.main,
+                    },
+                ],
+            });
+        await client.prisma.playlist.create({
+            data: {
+                name: name,
+                userId: ctx.author.id,
+                songs: [],
+            },
+        });
+        return await ctx.sendMessage({
+            embeds: [
+                {
+                    description: `Playlist **${name}** has been created`,
+                    color: client.color.main,
+                },
+            ],
+        });
+    }
+}
 
-    if (data.length > 0) {
-      return message.reply({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(
-              `This playlist already Exists! delete it using: \`${prefix}\`delete \`${Name}\``,
-            ),
-        ],
-      }).then(msg => { setTimeout(() => { msg.delete() }, 7000) }).catch(() => { });
-    }
-    let userData = db.find({
-      UserId: message.author.id,
-    });
-    if (userData.length >= 10) {
-      return message.reply({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(`You Can Only Create \`10\` Playlist`),
-        ],
-      }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    }
-
-    const newData = new db({
-      UserName: message.author.username,
-      UserId: message.author.id,
-      PlaylistName: Name,
-      CreatedOn: Math.round(Date.now() / 1000),
-    });
-    await newData.save();
-    const embed = new MessageEmbed()
-      .setDescription(`Successfully created a playlist for you **${Name}**`)
-      .setColor(client.embedColor);
-    return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-  },
-};
+module.exports = Create;

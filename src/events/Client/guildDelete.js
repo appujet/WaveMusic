@@ -1,29 +1,34 @@
-const { MessageEmbed } = require('discord.js');
-const moment = require('moment');
+const { EmbedBuilder } = require('discord.js');
+const { Event } = require('../../structures/index.js');
 
-module.exports = {
-  name: "guildDelete",
-  run: async (client, guild) => {
-    const channel = client.channels.cache.get(client.config.logs);
-    let own = await guild?.fetchOwner()
-
-    if (channel) {
-
-      const embed = new MessageEmbed()
-        .setThumbnail(guild.iconURL({ dynamic: true, size: 1024 }))
-        .setTitle(`📤 Left a Guild !!`)
-        .addFields([
-          { name: 'Name', value: `\`${guild.name}\`` },
-          { name: 'ID', value: `\`${guild.id}\`` },
-          { name: 'Owner', value: `\`${guild.members.cache.get(own.id) ? guild.members.cache.get(own.id).user.username : "Unknown user"} [ ${own.id} ]\`` },
-          { name: 'Member Count', value: `\`${guild.memberCount}\` Members` },
-          { name: 'Creation Date', value: `\`${moment.utc(guild.createdAt).format('DD/MMM/YYYY')}\`` },
-          { name: `${client.user.username}'s Server Count`, value: `\`${client.guilds.cache.size}\` Severs` }
-        ])
-        .setColor(client.embedColor)
-        .setTimestamp()
-      channel.send({ embeds: [embed] });
-
+class GuildDelete extends Event {
+    constructor(client, file) {
+        super(client, file, {
+            name: 'guildDelete',
+        });
     }
-  }
-};
+
+    async run(guild) {
+        const owner = await guild.fetchOwner();
+        const embed = new EmbedBuilder()
+            .setColor(this.client.config.color.red)
+            .setAuthor({ name: guild.name, iconURL: guild.iconURL({ extension: 'jpeg' }) })
+            .setDescription(`**${guild.name}** has been removed from my guilds!`)
+            .setThumbnail(guild.iconURL({ extension: 'jpeg' }))
+            .addFields(
+                { name: 'Owner', value: owner.user.tag, inline: true },
+                { name: 'Members', value: guild.memberCount.toString(), inline: true },
+                { name: 'Created At', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:F>`, inline: true },
+                { name: 'Removed At', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true },
+                { name: 'ID', value: guild.id, inline: true }
+            )
+            .setTimestamp();
+
+        const channel = await this.client.channels.fetch(this.client.config.logChannelId);
+        if (!channel) return;
+
+        return await channel.send({ embeds: [embed] });
+    }
+}
+
+module.exports = GuildDelete;

@@ -1,29 +1,47 @@
-const { MessageEmbed } = require("discord.js");
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-    name: "autoplay",
-    aliases: ["ap"],
-    category: "Music",
-    description: "Toggle music autoplay",
-    args: false,
-    usage: "",
-    userPrams: [],
-    botPrams: ['EMBED_LINKS'],
-    dj: true,
-    owner: false,
-    player: true,
-    inVoiceChannel: true,
-    sameVoiceChannel: true,
-    execute: async (message, args, client, prefix) => {
-        const player = client.manager.players.get(message.guild.id);
-        const emojireplay = client.emoji.autoplay;
-        player.data.set("autoplay", !player.data.get("autoplay"));
-        player.data.set("requester", message.author);
-            let thing = new MessageEmbed()
-                .setColor(client.embedColor)
-                .setTimestamp()
-                .setDescription(`${emojireplay} Autoplay is now ${player.data.get("autoplay") ? "**enabled**" : "**disabled**"}.`)
-            return message.channel.send({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+class Autoplay extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'autoplay',
+            description: {
+                content: 'Toggles autoplay',
+                examples: ['autoplay'],
+                usage: 'autoplay',
+            },
+            category: 'music',
+            aliases: ['ap'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: true,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
+    }
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        const autoplay = player.autoplay;
+        if (!autoplay) {
+            embed.setDescription(`Autoplay has been enabled`).setColor(client.color.main);
+            player.setAutoplay(true);
         }
-    
+        else {
+            embed.setDescription(`Autoplay has been disabled`).setColor(client.color.main);
+            player.setAutoplay(false);
+        }
+        ctx.sendMessage({ embeds: [embed] });
+    }
 }
+
+module.exports = Autoplay;

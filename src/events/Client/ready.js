@@ -1,23 +1,25 @@
-const { prefix } = require("../../config.js");
+const config = require('../../config.js');
+const { Event } = require('../../structures/index.js');
 
-module.exports ={
-name: "ready",
-run: async (client) => {
-    client.logger.log(`${client.user.username} online!`, "ready");
-    client.logger.log(`Ready on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users`, "ready");
-   
-    let statuses = ['/play | /help', `${prefix}play | ${prefix}help`];
-    setInterval(function() {
-  	let status = statuses[Math.floor(Math.random()*statuses.length)];		
-        client.user.setPresence({
+class Ready extends Event {
+    constructor(client, file) {
+        super(client, file, {
+            name: 'ready',
+        });
+    }
+
+    async run() {
+        this.client.logger.success(`${this.client.user?.tag} is ready!`);
+        this.client.user?.setPresence({
             activities: [
                 {
-                    name: status,
-                    type: "PLAYING"
-                }
+                    name: config.botActivity,
+                    type: config.botActivityType,
+                },
             ],
-            status: "online"
+            status: config.botStatus,
         });
-    }, 10000)
- }
-};
+    }
+}
+
+module.exports = Ready;

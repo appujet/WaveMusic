@@ -1,30 +1,57 @@
-const { MessageEmbed } = require("discord.js");
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-    name: "leave",
-    aliases: ["dc"],
-    category: "Music",
-    description: "Leave voice channel",
-    args: false,
-    usage: "",
-    userPrams: [],
-    botPrams: ["EMBED_LINKS"],
-    dj: true,
-    owner: false,
-    player: true,
-    inVoiceChannel: true,
-    sameVoiceChannel: true,
-    execute: async (message, args, client, prefix) => {
+class Leave extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'leave',
+            description: {
+                content: 'Leaves the voice channel',
+                examples: ['leave'],
+                usage: 'leave',
+            },
+            category: 'music',
+            aliases: ['dc'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: true,
+                active: false,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
+    }
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (player) {
+            ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.main)
+                        .setDescription(`Left <#${player.player.connection.channelId}>`),
+                ],
+            });
+            player.destroy();
+        }
+        else {
+            ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription(`I'm not in a voice channel`),
+                ],
+            });
+        }
+    }
+}
 
-        const player = client.manager.players.get(message.guild.id);
-        
-        const emojiLeave = message.client.emoji.leave;
 
-        await player.destroy();
-
-        let thing = new MessageEmbed()
-            .setColor(message.client.embedColor)
-            .setDescription(`${emojiLeave} **Left the voice channel**`);
-        return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    },
-};
+module.exports = Leave;

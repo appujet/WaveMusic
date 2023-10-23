@@ -1,46 +1,85 @@
-const { MessageEmbed } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'skipto',
-  aliases: ['jump'],
-  category: 'Music',
-  description: 'Forward song',
-  args: true,
-  usage: '<Number of song in queue>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  dj: true,
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-    const player = client.manager.players.get(message.guild.id);
-
-    if (!player.queue.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
+class Skipto extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'skipto',
+            description: {
+                content: 'Skips to a specific song in the queue',
+                examples: ['skipto 3'],
+                usage: 'skipto <number>',
+            },
+            category: 'music',
+            aliases: ['st'],
+            cooldown: 3,
+            args: true,
+            player: {
+                voice: true,
+                dj: true,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [
+                {
+                    name: 'number',
+                    description: 'The number of the song you want to skip to',
+                    type: 4,
+                    required: true,
+                },
+            ],
+        });
     }
-
-    const position = Number(args[0]);
-
-    if (!position || position < 0 || position > player.queue.length) {
-      let thing = new MessageEmbed()
-        .setColor('RED')
-        .setDescription(`Usage: ${message.client.prefix}skipto <Number of song in queue>`);
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+    async run(client, ctx, args) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (!player.queue.length)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('There are no songs in the queue.'),
+                ],
+            });
+        if (isNaN(Number(args[0])))
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('Please provide a valid number.'),
+                ],
+            });
+        if (Number(args[0]) > player.queue.length)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('Please provide a valid number.'),
+                ],
+            });
+        if (Number(args[0]) < 1)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('Please provide a valid number.'),
+                ],
+            });
+        player.skip(Number(args[0]));
+        return await ctx.sendMessage({
+            embeds: [
+                embed
+                    .setColor(this.client.color.main)
+                    .setDescription(`Skipped to song number ${args[0]}`),
+            ],
+        });
     }
-    if (args[0] == 1) player.skip();
+}
 
-    player.queue.splice(0, position - 1);
-    await player.skip();
-    player.paused = false;
 
-    const emojijump = client.emoji.jump;
-
-    let thing = new MessageEmbed()
-      .setDescription(`${emojijump} Forward **${position}** Songs`)
-      .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-  },
-};
+module.exports = Skipto;

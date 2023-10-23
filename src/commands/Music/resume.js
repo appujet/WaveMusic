@@ -1,42 +1,50 @@
-const { MessageEmbed } = require('discord.js');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'resume',
-  aliases: ['r'],
-  category: 'Music',
-  description: 'Resume currently playing music',
-  args: false,
-  usage: '<Number of song in queue>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  dj: true,
-  owner: false,
-  player: true,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-    const player = client.manager.players.get(message.guild.id);
-    const song = player.queue.current;
-
-    if (!player.queue.current) {
-      let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+class Resume extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'resume',
+            description: {
+                content: 'Resumes the current song',
+                examples: ['resume'],
+                usage: 'resume',
+            },
+            category: 'music',
+            aliases: ['r'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: false,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
+        });
     }
-
-    const emojiresume = client.emoji.resume;
-
-    if (!player.shoukaku.paused) {
-      let thing = new MessageEmbed()
-        .setColor('RED')
-        .setDescription(`${emojiresume} The player is already **resumed**.`);
-      return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        const embed = this.client.embed();
+        if (!player.paused)
+            return await ctx.sendMessage({
+                embeds: [
+                    embed
+                        .setColor(this.client.color.red)
+                        .setDescription('The player is not paused.'),
+                ],
+            });
+        player.pause();
+        return await ctx.sendMessage({
+            embeds: [embed.setColor(this.client.color.main).setDescription(`Resumed the player`)],
+        });
     }
+}
 
-    await player.pause(false);
 
-    let thing = new MessageEmbed()
-      .setDescription(`${emojiresume} **Resumed**\n[${song.title}](${song.uri})`)
-      .setColor(client.embedColor);
-    return message.reply({ embeds: [thing] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-  },
-};
+module.exports = Resume;

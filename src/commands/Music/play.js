@@ -1,90 +1,145 @@
-const { MessageEmbed, Permissions } = require('discord.js');
-const { convertTime } = require('../../utils/convert.js');
-const { defaultVol } = require("../../utils/functions.js");
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'play',
-  category: 'Music',
-  aliases: ['p'],
-  description: 'Plays audio from YouTube or Soundcloud',
-  args: true,
-  usage: '<YouTube URL | Video Name | Spotify URL>',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  owner: false,
-  inVoiceChannel: true,
-  sameVoiceChannel: true,
-  execute: async (message, args, client, prefix) => {
-
-    if (!message.guild.members.me.permissions.has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK]))
-      return message.channel.send({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(
-              `I don't have enough permissions to execute this command! please give me permission \`CONNECT\` or \`SPEAK\`.`,
-            ),
-        ],
-      });
-    const emojiaddsong = message.client.emoji.addsong;
-    const emojiplaylist = message.client.emoji.playlist;
-
-    const { channel } = message.member.voice;
-
-    if (
-      !message.guild.members.me
-        .permissionsIn(channel)
-        .has([Permissions.FLAGS.CONNECT, Permissions.FLAGS.SPEAK])
-    )
-      return message.channel.send({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(
-              `I don't have enough permissions connect your vc please give me permission \`CONNECT\` or \`SPEAK\`.`,
-            ),
-        ],
-      });
-    const query = args.join(' ');
-
-    let player = client.manager.players.get(message.guildId);
-
-    if (!player) player = await client.manager.createPlayer({
-      guildId: message.guild.id,
-      voiceId: message.member.voice.channel.id,
-      textId: message.channel.id,
-      deaf: true,
-      volume: await defaultVol(message.guild.id)
-    });
-
-    const result = await player.search(query, { requester: message.author });
-
-    if (!result.tracks.length) return message.reply({ content: 'No result was found' });
-
-    const tracks = result.tracks;
-
-   if (result.type === 'PLAYLIST') for (let track of tracks) player.queue.add(track);
-   else player.queue.add(tracks[0]);
-
-   if (!player.playing && !player.paused) player.play();
-    return message.reply(
-      result.type === 'PLAYLIST'
-        ? {
-            embeds: [
-              new MessageEmbed()
-                .setColor(client.embedColor)
-                .setDescription(
-                  `${emojiplaylist} Queued ${tracks.length} from ${result.playlistName}`,
-                ),
+class Play extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'play',
+            description: {
+                content: 'Plays a song from YouTube or Spotify',
+                examples: [
+                    'play https://www.youtube.com/watch?v=QH2-TGUlwu4',
+                    'play https://open.spotify.com/track/6WrI0LAC5M1Rw2MnX2ZvEg',
+                ],
+                usage: 'play <song>',
+            },
+            category: 'music',
+            aliases: ['p'],
+            cooldown: 3,
+            args: true,
+            player: {
+                voice: true,
+                dj: false,
+                active: false,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks', 'Connect', 'Speak'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [
+                {
+                    name: 'song',
+                    description: 'The song you want to play',
+                    type: 3,
+                    required: true,
+                    autocomplete: true,
+                },
             ],
-          }
-        : {
-            embeds: [
-              new MessageEmbed()
-                .setColor(client.embedColor)
-                .setDescription(`${emojiaddsong} Queued [${tracks[0].title}](${tracks[0].uri})`),
-            ],
-          },
-    ).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-  },
-};
+        });
+    }
+    async run(client, ctx, args) {
+        const query = args.join(' ');
+        let player = client.queue.get(ctx.guild.id);
+        const vc = ctx.member;
+        if (!player)
+            player = await client.queue.create(ctx.guild, vc.voice.channel, ctx.channel, client.shoukaku.getNode());
+        const res = await this.client.queue.search(query);
+        const embed = this.client.embed();
+        switch (res.loadType) {
+            case 'LOAD_FAILED':
+                ctx.sendMessage({
+                    embeds: [
+                        embed
+                            .setColor(this.client.color.red)
+                            .setDescription('There was an error while searching.'),
+                    ],
+                });
+                break;
+            case 'NO_MATCHES':
+                ctx.sendMessage({
+                    embeds: [
+                        embed
+                            .setColor(this.client.color.red)
+                            .setDescription('There were no results found.'),
+                    ],
+                });
+                break;
+            case 'TRACK_LOADED': {
+                const track = player.buildTrack(res.tracks[0], ctx.author);
+                if (player.queue.length > client.config.maxQueueSize)
+                    return await ctx.sendMessage({
+                        embeds: [
+                            embed
+                                .setColor(this.client.color.red)
+                                .setDescription(`The queue is too long. The maximum length is ${client.config.maxQueueSize} songs.`),
+                        ],
+                    });
+                player.queue.push(track);
+                await player.isPlaying();
+                ctx.sendMessage({
+                    embeds: [
+                        embed
+                            .setColor(this.client.color.main)
+                            .setDescription(`Added [${res.tracks[0].info.title}](${res.tracks[0].info.uri}) to the queue.`),
+                    ],
+                });
+                break;
+            }
+            case 'PLAYLIST_LOADED':
+                if (res.length > client.config.maxPlaylistSize)
+                    return await ctx.sendMessage({
+                        embeds: [
+                            embed
+                                .setColor(this.client.color.red)
+                                .setDescription(`The playlist is too long. The maximum length is ${client.config.maxPlaylistSize} songs.`),
+                        ],
+                    });
+                for (const track of res.tracks) {
+                    const pl = player.buildTrack(track, ctx.author);
+                    if (player.queue.length > client.config.maxQueueSize)
+                        return await ctx.sendMessage({
+                            embeds: [
+                                embed
+                                    .setColor(this.client.color.red)
+                                    .setDescription(`The queue is too long. The maximum length is ${client.config.maxQueueSize} songs.`),
+                            ],
+                        });
+                    player.queue.push(pl);
+                }
+                await player.isPlaying();
+                ctx.sendMessage({
+                    embeds: [
+                        embed
+                            .setColor(this.client.color.main)
+                            .setDescription(`Added ${res.tracks.length} songs to the queue.`),
+                    ],
+                });
+                break;
+            case 'SEARCH_RESULT': {
+                const track1 = player.buildTrack(res.tracks[0], ctx.author);
+                if (player.queue.length > client.config.maxQueueSize)
+                    return await ctx.sendMessage({
+                        embeds: [
+                            embed
+                                .setColor(this.client.color.red)
+                                .setDescription(`The queue is too long. The maximum length is ${client.config.maxQueueSize} songs.`),
+                        ],
+                    });
+                player.queue.push(track1);
+                await player.isPlaying();
+                ctx.sendMessage({
+                    embeds: [
+                        embed
+                            .setColor(this.client.color.main)
+                            .setDescription(`Added [${res.tracks[0].info.title}](${res.tracks[0].info.uri}) to the queue.`),
+                    ],
+                });
+                break;
+            }
+        }
+    }
+}
+
+module.exports = Play;

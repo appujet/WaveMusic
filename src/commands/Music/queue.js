@@ -1,212 +1,63 @@
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
-const { convertTime } = require('../../utils/convert.js');
-const load = require('lodash');
+const { Command } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'queue',
-  category: 'Music',
-  aliases: ['q'],
-  description: 'Show the music queue and now playing.',
-  args: false,
-  usage: '',
-  userPrams: [],
-  botPrams: ['EMBED_LINKS'],
-  owner: false,
-  player: true,
-  inVoiceChannel: false,
-  sameVoiceChannel: false,
-  execute: async (message, args, client, prefix) => {
-    const player = client.manager.players.get(message.guild.id);
-
-    if (!player.queue.current)
-      return message.channel.send({
-        embeds: [
-          new MessageEmbed()
-            .setColor(client.embedColor)
-            .setDescription(`Nothing is playing right now.`),
-        ],
-      }).then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
-
-    if (player.queue.length === '0' || !player.queue.length) {
-      const embed = new MessageEmbed()
-        .setColor(client.embedColor)
-        .setDescription(
-          `**Now playing** [${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
-            player.queue.current.isStream ? '◉ LIVE' : convertTime(player.queue.current.length)
-          } ]\` • [${player.queue.current.requester}]`,
-        );
-
-      await message.channel
-        .send({
-          embeds: [embed],
-        })
-        .catch(() => {});
-    } else {
-      const queuedSongs = player.queue.map(
-        (t, i) =>
-          `\`[ ${++i} ]\` • [${t.title}](${t.uri}) • \`[ ${
-            t.isStream ? '◉ LIVE' : convertTime(t.length)
-          } ]\` • [${t.requester}]`,
-      );
-
-      const mapping = load.chunk(queuedSongs, 10);
-      const pages = mapping.map((s) => s.join('\n'));
-      let page = 0;
-
-      if (player.queue.length < 11) {
-        const embed = new MessageEmbed()
-          .setColor(client.embedColor)
-          .setDescription(
-            `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
-              player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
-            } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
-          )
-          .setFooter({
-            text: `Page ${page + 1}/${pages.length}`,
-            iconURL: message.author.displayAvatarURL({ dynamic: true }),
-          })
-          .setThumbnail(
-            `${
-              player.queue.current.thumbnail
-                ? player.queue.current.thumbnail
-                : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
-            }`,
-          )
-          .setTitle(`${message.guild.name} Queue`);
-
-        await message.channel.send({
-          embeds: [embed],
+class Queue extends Command {
+    constructor(client) {
+        super(client, {
+            name: 'queue',
+            description: {
+                content: 'Shows the current queue',
+                examples: ['queue'],
+                usage: 'queue',
+            },
+            category: 'music',
+            aliases: ['q'],
+            cooldown: 3,
+            args: false,
+            player: {
+                voice: true,
+                dj: false,
+                active: true,
+                djPerm: null,
+            },
+            permissions: {
+                dev: false,
+                client: ['SendMessages', 'ViewChannel', 'EmbedLinks'],
+                user: [],
+            },
+            slashCommand: true,
+            options: [],
         });
-      } else {
-        const embed2 = new MessageEmbed()
-          .setColor(client.embedColor)
-          .setDescription(
-            `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
-              player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
-            } ]\` • [${player.queue.current.requester}]\n\n **Queued Songs**\n${pages[page]}`,
-          )
-          .setFooter({
-            text: `Page ${page + 1}/${pages.length}`,
-            iconURL: message.author.displayAvatarURL({ dynamic: true }),
-          })
-          .setThumbnail(
-            `${
-              player.queue.current.thumbnail
-                ? player.queue.current.thumbnail
-                : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
-            }`,
-          )
-          .setTitle(`${message.guild.name} Queue`);
-
-        const but1 = new MessageButton()
-          .setCustomId('queue_cmd_but_1')
-          .setEmoji('⏭️')
-          .setStyle('PRIMARY');
-
-        const but2 = new MessageButton()
-          .setCustomId('queue_cmd_but_2')
-          .setEmoji('⏮️')
-          .setStyle('PRIMARY');
-
-        const but3 = new MessageButton()
-          .setCustomId('queue_cmd_but_3')
-          .setEmoji('⏹️')
-          .setStyle('DANGER');
-
-        const row1 = new MessageActionRow().addComponents([but2, but3, but1]);
-
-        const msg = await message.channel.send({
-          embeds: [embed2],
-          components: [row1],
-        });
-
-        const collector = msg.createMessageComponentCollector({
-          filter: (b) => {
-            if (b.user.id === message.author.id) return true;
-            else {
-              b.reply({
-                ephemeral: true,
-                content: `Only **${message.author.username}** can use this button, if you want then you've to run the command again.`,
-              });
-              return false;
-            }
-          },
-          time: 60000 * 5,
-          idle: 30e3,
-        });
-
-        collector.on('collect', async (button) => {
-          if (button.customId === 'queue_cmd_but_1') {
-            await button.deferUpdate().catch(() => {});
-            page = page + 1 < pages.length ? ++page : 0;
-
-            const embed3 = new MessageEmbed()
-              .setColor(client.embedColor)
-              .setDescription(
-                `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
-                  player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
-                } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
-              )
-              .setFooter({
-                text: `Page ${page + 1}/${pages.length}`,
-                iconURL: message.author.displayAvatarURL({ dynamic: true }),
-              })
-              .setThumbnail(
-                `${
-                  player.queue.current.thumbnail
-                    ? player.queue.current.thumbnail
-                    : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
-                }`,
-              )
-              .setTitle(`${message.guild.name} Queue`);
-
-            await msg.edit({
-              embeds: [embed3],
-              components: [row1],
-            });
-          } else if (button.customId === 'queue_cmd_but_2') {
-            await button.deferUpdate().catch(() => {});
-            page = page > 0 ? --page : pages.length - 1;
-
-            const embed4 = new MessageEmbed()
-              .setColor(client.embedColor)
-              .setDescription(
-                `**Now playing**\n[${player.queue.current.title}](${player.queue.current.uri}) • \`[ ${
-                  player.queue.current.isStream ? '[**◉ LIVE**]' : convertTime(player.queue.current.length)
-                } ]\` • [${player.queue.current.requester}]\n\n**Queued Songs**\n${pages[page]}`,
-              )
-
-              .setFooter({
-                text: `Page ${page + 1}/${pages.length}`,
-                iconURL: message.author.displayAvatarURL({ dynamic: true }),
-              })
-              .setThumbnail(
-                `${
-                  player.queue.current.thumbnail
-                    ? player.queue.current.thumbnail
-                    : `https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`
-                }`,
-              )
-              .setTitle(`${message.guild.name} Queue`);
-
-            await msg
-              .edit({
-                embeds: [embed4],
-                components: [row1],
-              })
-              .catch(() => {});
-          } else if (button.customId === 'queue_cmd_but_3') {
-            await button.deferUpdate().catch(() => {});
-            collector.stop();
-          } else return;
-        });
-
-        collector.on('end', async () => {
-          await msg.edit({
-            components: [],
-          });
-        });
-      }
     }
-  },
-};
+    async run(client, ctx) {
+        const player = client.queue.get(ctx.guild.id);
+        if (player.queue.length === 0)
+            return await ctx.sendMessage({
+                embeds: [
+                    this.client
+                        .embed()
+                        .setColor(this.client.color.main)
+                        .setDescription(`Now playing: [${player.current.info.title}](${player.current.info.uri}) - Request By: ${player.current?.info.requester} - Duration: ${player.current.info.isStream
+                            ? 'LIVE'
+                            : this.client.utils.formatTime(player.current.info.length)}`),
+                ],
+            });
+        const queue = player.queue.map((track, index) => `${index + 1}. [${track.info.title}](${track.info.uri}) - Request By: ${track?.info
+            .requester} - Duration: ${track.info.isStream ? 'LIVE' : this.client.utils.formatTime(track.info.length)}`);
+        let chunks = client.utils.chunk(queue, 10);
+        if (chunks.length === 0)
+            chunks = 1;
+        const pages = [];
+        for (let i = 0; i < chunks.length; i++) {
+            const embed = this.client
+                .embed()
+                .setColor(this.client.color.main)
+                .setAuthor({ name: 'Queue', iconURL: ctx.guild.iconURL({}) })
+                .setDescription(chunks[i].join('\n'))
+                .setFooter({ text: `Page ${i + 1} of ${chunks.length}` });
+            pages.push(embed);
+        }
+        return await client.utils.paginate(ctx, pages);
+    }
+}
+
+module.exports = Queue;

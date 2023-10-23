@@ -1,143 +1,204 @@
-const { MessageEmbed, Permissions, MessageActionRow, MessageButton } = require('discord.js');
-const Wait = require('util').promisify(setTimeout);
-const db = require('../../schema/prefix.js');
-const db2 = require('../../schema/setup');
-const db3 = require("../../schema/dj");
+const { ChannelType, Collection, PermissionFlagsBits } = require('discord.js');
+const { Context, Event } = require('../../structures/index.js');
 
-module.exports = {
-  name: 'messageCreate',
-  run: async (client, message) => {
-    if (message.author.bot) return;
-    if (!message.guild) return;
-    let data = await db2.findOne({ Guild: message.guildId });
-    if (data && data.Channel && message.channelId === data.Channel) return client.emit("setupSystem", message);
-    let prefix = client.prefix;
-    const channel = message?.channel;
-    const ress = await db.findOne({ Guild: message.guildId });
-    if (ress && ress.Prefix) prefix = ress.Prefix;
 
-    const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
-    if (message.content.match(mention)) {
-      const row = new MessageActionRow().addComponents(
-        new MessageButton().setLabel('Invite').setStyle('LINK').setURL(client.config.links.invite),
-      );
-      const embed = new MessageEmbed()
-        .setColor(client.embedColor)
-        .setDescription(`Hey **${message.author.username}**, my prefix for this server is \`${prefix}\` Want more info? then do \`${prefix}\`**help**\nStay Safe, Stay Awesome!`);
-      message.channel.send({ embeds: [embed], components: [row] })
-    };
-    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
-    if (!prefixRegex.test(message.content)) return;
-    const [matchedPrefix] = message.content.match(prefixRegex);
-    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
-    const commandName = args.shift().toLowerCase();
-
-    const command = client.commands.get(commandName) ||
-      client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
-
-    if (!command) return;
-
-    if (!message.guild.members.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return;
-
-    const embed = new MessageEmbed().setColor('RED');
-
-    if (!message.guild.members.cache.get(client.user.id).permissionsIn(message.channel).has(Permissions.FLAGS.SEND_MESSAGES)) {
-        embed.setDescription(`I don't have **Send_Messages** permission in Channel: <#${message.channelId}>`) 
-        return message.author.send({ embeds: [embed] }).catch(() => { });
-      }
-
-    if (!message.guild.members.cache.get(client.user.id).permissionsIn(message.channel).has(Permissions.FLAGS.EMBED_LINKS)) {
-          return await message.reply({ content: `I don't have **Embed_Links** permission in <#${message.channelId}>` }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-      }
-
-    // args: true,
-    if (command.args && !args.length) {
-      let reply = `You didn't provide any arguments, ${message.author}!`;
-
-      // usage: '',
-      if (command.usage) {
-        reply += `\nUsage: \`${prefix}${command.name} ${command.usage}\``;
-      }
-
-      embed.setDescription(reply);
-      return message.channel.send({ embeds: [embed] });
+class MessageCreate extends Event {
+    constructor(client, file) {
+        super(client, file, {
+            name: 'messageCreate',
+        });
     }
-
-    if (command.userPrams && !message.member.permissions.has(command.userPrams)) {
-      embed.setDescription(
-        `You need to this \`${command.userPrams.join(', ')}\` permission use this command.`,
-      );
-      return message.channel.send({ embeds: [embed] });
-    }
-    if (command.botPrams && !message.guild.members.me.permissions.has(command.botPrams)) {
-      embed.setDescription(
-        `I need this \`${command.userPrams.join(', ')}\` permission use this command.`,
-      );
-      return message.channel.send({ embeds: [embed] });
-    }
-    if (
-      !channel.permissionsFor(message.guild.members.me)?.has(Permissions.FLAGS.EMBED_LINKS) &&
-      client.user.id !== userId
-    ) {
-      return channel.send({ content: `Error: I need \`EMBED_LINKS\` permission to work.` });
-    }
-    if (command.owner) {
-      if (client.owner) {
-        const devs = client.owner.find((x) => x === message.author.id);
-        if (!devs)
-          return message.channel.send({
-            embeds: [embed.setDescription(`Only <@${client.owner[0] ? client.owner[0] : "**Bot Owner**"}> can use this command!`)],
-          }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-      }
-    }
-
-    const player = client.manager.players.get(message.guild.id);
-    if (command.player && !player) {
-      embed.setDescription('There is no player for this guild.');
-      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    }
-    if (command.inVoiceChannel && !message.member.voice.channelId) {
-      embed.setDescription('You must be in a voice channel!');
-      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    }
-    if (command.sameVoiceChannel) {
-      if (message.guild.members.me.voice.channel) {
-        if (message.guild.members.me.voice.channelId !== message.member.voice.channelId) {
-          embed.setDescription(`You must be in the same channel as ${message.client.user}!`);
-          return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
+    async run(message) {
+        if (message.author.bot)
+            return;
+        const setup = await this.client.prisma.setup.findUnique({
+            where: {
+                guildId: message.guildId,
+            },
+        });
+        if (setup && setup.textId) {
+            if (setup.textId === message.channelId) {
+                return this.client.emit('setupSystem', message);
+            }
         }
-      }
-    }
-    if (command.dj) {
-      let data = await db3.findOne({ Guild: message.guild.id })
-      let perm = Permissions.FLAGS.MANAGE_GUILD;
-      if (data) {
-        if (data.Mode) {
-          let pass = false;
-          if (data.Roles.length > 0) {
-            message.member.roles.cache.forEach((x) => {
-              let role = data.Roles.find((r) => r === x.id);
-              if (role) pass = true;
+        let prefix = (await this.client.prisma.guild.findUnique({
+            where: {
+                guildId: message.guildId,
+            },
+        }));
+        if (!prefix) {
+            prefix = this.client.config.prefix;
+        }
+        else {
+            prefix = prefix.prefix;
+        }
+        const mention = new RegExp(`^<@!?${this.client.user.id}>( |)$`);
+        if (message.content.match(mention)) {
+            await message.reply({
+                content: `Hey, my prefix for this server is \`${prefix}\` Want more info? then do \`${prefix}help\`\nStay Safe, Stay Awesome!`,
             });
-          };
-          if (!pass && !message.member.permissions.has(perm)) return message.channel.send({ embeds: [embed.setDescription(`You don't have permission or dj role to use this command`)] })
-          .then(msg => { setTimeout(() => { msg.delete() }, 6000) }).catch(() => { });
-        };
-      };
+            return;
+        }
+        const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const prefixRegex = new RegExp(`^(<@!?${this.client.user.id}>|${escapeRegex(prefix)})\\s*`);
+        if (!prefixRegex.test(message.content))
+            return;
+        const [matchedPrefix] = message.content.match(prefixRegex);
+        const args = message.content.slice(matchedPrefix.length).trim().split(/ +/g);
+        const cmd = args.shift().toLowerCase();
+        const command = this.client.commands.get(cmd) ||
+            this.client.commands.get(this.client.aliases.get(cmd));
+        if (!command)
+            return;
+        const ctx = new Context(message, args);
+        ctx.setArgs(args);
+        let dm = message.author.dmChannel;
+        if (typeof dm === 'undefined')
+            dm = await message.author.createDM();
+        if (!message.inGuild() ||
+            !message.channel
+                .permissionsFor(message.guild.members.me)
+                .has(PermissionFlagsBits.ViewChannel))
+            return;
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.SendMessages))
+            return await message.author
+                .send({
+                content: `I don't have **\`SendMessage\`** permission in \`${message.guild.name}\`\nchannel: <#${message.channelId}>`,
+            })
+                .catch(() => { });
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.EmbedLinks))
+            return await message.reply({
+                content: 'I don\'t have **`EmbedLinks`** permission.',
+            });
+        if (command.permissions) {
+            if (command.permissions.client) {
+                if (!message.guild.members.me.permissions.has(command.permissions.client))
+                    return await message.reply({
+                        content: 'I don\'t have enough permissions to execute this command.',
+                    });
+            }
+            if (command.permissions.user) {
+                if (!message.member.permissions.has(command.permissions.user))
+                    return await message.reply({
+                        content: 'You don\'t have enough permissions to use this command.',
+                    });
+            }
+            if (command.permissions.dev) {
+                if (this.client.config.owners) {
+                    const findDev = this.client.config.owners.find(x => x === message.author.id);
+                    if (!findDev)
+                        return;
+                }
+            }
+        }
+        if (command.player) {
+            if (command.player.voice) {
+                if (!message.member.voice.channel)
+                    return await message.reply({
+                        content: `You must be connected to a voice channel to use this \`${command.name}\` command.`,
+                    });
+                if (!message.guild.members.me.permissions.has(PermissionFlagsBits.Speak))
+                    return await message.reply({
+                        content: `I don't have \`CONNECT\` permissions to execute this \`${command.name}\` command.`,
+                    });
+                if (!message.guild.members.me.permissions.has(PermissionFlagsBits.Speak))
+                    return await message.reply({
+                        content: `I don't have \`SPEAK\` permissions to execute this \`${command.name}\` command.`,
+                    });
+                if (message.member.voice.channel.type === ChannelType.GuildStageVoice &&
+                    !message.guild.members.me.permissions.has(PermissionFlagsBits.RequestToSpeak))
+                    return await message.reply({
+                        content: `I don't have \`REQUEST TO SPEAK\` permission to execute this \`${command.name}\` command.`,
+                    });
+                if (message.guild.members.me.voice.channel) {
+                    if (message.guild.members.me.voice.channelId !== message.member.voice.channelId)
+                        return await message.reply({
+                            content: `You are not connected to <#${message.guild.members.me.voice.channel.id}> to use this \`${command.name}\` command.`,
+                        });
+                }
+            }
+            if (command.player.active) {
+                if (!this.client.queue.get(message.guildId))
+                    return await message.reply({
+                        content: 'Nothing is playing right now.',
+                    });
+                if (!this.client.queue.get(message.guildId).queue)
+                    return await message.reply({
+                        content: 'Nothing is playing right now.',
+                    });
+                if (!this.client.queue.get(message.guildId).current)
+                    return await message.reply({
+                        content: 'Nothing is playing right now.',
+                    });
+            }
+            if (command.player.dj) {
+                const djRole = await this.client.prisma.dj.findUnique({
+                    where: {
+                        guildId: message.guildId,
+                    },
+                    include: { roles: true },
+                });
+                if (djRole && djRole.mode) {
+                    const findDJRole = message.member.roles.cache.find((x) => djRole.roles.map((y) => y.roleId).includes(x.id));
+                    if (!findDJRole) {
+                        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+                            return await message
+                                .reply({
+                                content: 'You need to have the DJ role to use this command.',
+                            })
+                                .then(msg => setTimeout(() => msg.delete(), 5000));
+                        }
+                    }
+                }
+            }
+        }
+        if (command.args) {
+            if (!args.length) {
+                const embed = this.client
+                    .embed()
+                    .setColor(this.client.color.red)
+                    .setTitle('Missing Arguments')
+                    .setDescription(`Please provide the required arguments for the \`${command.name}\` command.\n\nExamples:\n${command.description.examples
+                    ? command.description.examples.join('\n')
+                    : 'None'}`)
+                    .setFooter({ text: 'Syntax: [] = optional, <> = required' });
+                return await message.reply({ embeds: [embed] });
+            }
+        }
+        if (!this.client.cooldown.has(cmd)) {
+            this.client.cooldown.set(cmd, new Collection());
+        }
+        const now = Date.now();
+        const timestamps = this.client.cooldown.get(cmd);
+        const cooldownAmount = Math.floor(command.cooldown || 5) * 1000;
+        if (!timestamps.has(message.author.id)) {
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+        else {
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+            const timeLeft = (expirationTime - now) / 1000;
+            if (now < expirationTime && timeLeft > 0.9) {
+                return await message.reply({
+                    content: `Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${cmd}\` command.`,
+                });
+            }
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+        if (args.includes('@everyone') || args.includes('@here'))
+            return await message.reply({
+                content: 'You can\'t use this command with everyone or here.',
+            });
+        try {
+            return command.run(this.client, ctx, ctx.args);
+        }
+        catch (error) {
+            this.client.logger.error(error);
+            await message.reply({ content: `An error occurred: \`${error}\`` });
+            return;
+        }
     }
-    try {
-      command.execute(message, args, client, prefix);
-      await Wait(5000);
-      if (message && message.deletable){
-        message.delete().catch((e) => { console.error("User Messages Delete Error:", e) });
-      }
-    } catch (error) {
-      console.error(error);
-      embed.setDescription(
-        'There was an error executing that command.\nI have contacted the owner of the bot to fix it immediately.',
-      );
-      return message.channel.send({ embeds: [embed] }).then(msg => { setTimeout(() => { msg.delete() }, 5000) }).catch(() => { });
-    }
-  },
-};
+}
+
+module.exports = MessageCreate;
