@@ -1,3 +1,6 @@
+const { Spotify, AppleMusic } = require('shoukaku-sources');
+
+
 class Song {
     constructor(track, user) {
         if (!track)
@@ -8,6 +11,14 @@ class Song {
             this.info.requester = user;
         if (track.info.sourceName === 'youtube') {
             track.info.thumbnail = `https://img.youtube.com/vi/${track.info.identifier}/hqdefault.jpg`;
+        } else if (track.info.sourceName === 'spotify') {
+                new Spotify().getTrack(track.info.uri).then((res) => {
+                    this.info.thumbnail = res.album && res.album.images ? res.album.images[0] ? res.album.images[0].url : null : null;
+            });
+        } else if (track.info.sourceName === 'applemusic') {
+                new AppleMusic().getTrack(track.info.uri).then((res) => {
+                    this.info.thumbnail = res.data[0].attributes.artwork.url.replace("{w}x{h}", "512x512");
+            });
         }
     }
 }
