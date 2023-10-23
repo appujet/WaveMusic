@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-
 module.exports = {
     token: process.env.TOKEN,
     prefix: process.env.PREFIX,
@@ -13,7 +12,7 @@ module.exports = {
         yellow: 0xffff00,
         main: 0x2f3136,
     },
-    searchEngine: process.env.SEARCH_ENGINE || 'SearchEngine.YouTube',
+    searchEngine: process.env.SEARCH_ENGINE || "ytsearch", // ytsearch, scsearch or ytmsearch read more at https://github.com/lavalink-devs/Lavalink/blob/master/IMPLEMENTATION.md#track-searching
     maxPlaylistSize: parseInt(process.env.MAX_PLAYLIST_SIZE) || 100,
     botStatus: process.env.BOT_STATUS || 'online',
     botActivity: process.env.BOT_ACTIVITY || 'WaveMusic',
@@ -45,6 +44,8 @@ module.exports = {
         },
     ],
 };
+
+
 
 function parseBoolean(value) {
     if (typeof value === 'string') {
