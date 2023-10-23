@@ -142,13 +142,18 @@ Create a `.env` file in the root directory of your project with the following va
 
 ```bash
 TOKEN="." # Your bot token
-PREFIX="!" # Your prefix
-OWNER_IDS="859640640640640640, 859640640640640640" # Your ID
-CLIENT_ID="960072976412340254" # Your bot client ID
-GUILD_ID="859640640640640640" # Your server ID (if you want to use it for a single server)
-PRODUCTION="true" # "true" for production
-DATABASE_URL="mongodb+srv://Blacky:xxxxxxxxxxxx" # Your MongoDB URL
-LAVALINK_URL="lava.moebot.xyz:443" # Your lavalink url
+PREFIX= "!" # Your prefix
+OWNER_IDS= "" # Your id
+CLIENT_ID= "960072976412340254" # Your bot client id
+GUILD_ID= "859640640640640640" # Your server Id if you want to use the for single server
+PRODUCTION="true" # true for production 
+SEARCH_ENGINE= "ytsearch" # ytsearch, scsearch or ytmsearch
+MAX_PLAYLIST_SIZE= "100" # Max playlist size
+MAX_QUEUE_SIZE= "100" # Max queue size
+BOT_STATUS= "online" # Your bot status
+BOT_ACTIVITY= "Wavemusic" # Your bot activity
+DATABASE_URL="mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot" ## Your MongoDB URL (add database name at the end) example: mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot
+LAVALINK_URL="localhost:2333" # Your lavalink url
 LAVALINK_AUTH="youshallnotpass" # Your lavalink password
 LAVALINK_NAME="Blacky" # Your lavalink name
 LAVALINK_SECURE= "true" # true for secure lavalink
@@ -180,6 +185,13 @@ npx prisma generate
 ```bash
 npm run start or npm start
 ```
+
+### Errors: 
+
+![image](https://cdn.discordapp.com/attachments/1147388529085780078/1165972143146815518/image_1.png)
+
+- Fix this error to add database name in end of the `DATABASE_URL` like this `mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot`
+
 
 ###
 
