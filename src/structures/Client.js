@@ -64,7 +64,7 @@ class WaveClient extends Client {
                 if (
                     setup &&
                     interaction.channelId === setup.textId &&
-                    interaction.message.id === setup.messageId
+                    interaction.id === setup.messageId
                 ) {
                     this.emit('setupButtons', interaction);
                 }
