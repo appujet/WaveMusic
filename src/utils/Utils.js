@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction, ComponentType } = require('discord.js');
 
 
 module.exports = class Utils {
@@ -145,6 +145,7 @@ module.exports = class Utils {
         }
         const filter = (int) => int.user.id === author.id;
         const collector = msg.createMessageComponentCollector({
+            componentType: ComponentType.Button,
             filter,
             time: 60000,
         });
