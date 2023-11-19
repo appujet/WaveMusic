@@ -14,7 +14,7 @@ class Grab extends Command {
             cooldown: 3,
             args: false,
             player: {
-                voice: false,
+                voice: true,
                 dj: false,
                 active: true,
                 djPerm: null,

@@ -1,5 +1,6 @@
 const { Event } = require('../../structures/index.js');
 const { buttonReply } = require('../../utils/SetupSystem.js');
+const { getButtons } = require('../../utils/Buttons.js');
 
 
 class SetupButtons extends Event {
@@ -89,6 +90,7 @@ class SetupButtons extends Event {
                                 iconURL: interaction.member.displayAvatarURL({}),
                             }),
                         ],
+                      components: getButtons(player)
                     });
                     break;
                 }

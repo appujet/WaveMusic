@@ -146,8 +146,8 @@ class InteractionCreate extends Event {
                 timestamps.set(interaction.user.id, now);
                 setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
             }
-            if (interaction.options.data.some(option => option.value.toString().includes('@everyone')) ||
-                interaction.options.data.some(option => option.value.toString().includes('@here')))
+            if (interaction.options.data.some(option => option.value && option.value.toString().includes('@everyone')) ||
+                interaction.options.data.some(option => option.value && option.value.toString().includes('@here')))
                 return await interaction.reply({
                     content: 'You can\'t mention everyone or here.',
                     ephemeral: true,

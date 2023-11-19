@@ -15,9 +15,9 @@ class Pitch extends Command {
             cooldown: 3,
             args: true,
             player: {
-                voice: false,
+                voice: true,
                 dj: true,
-                active: false,
+                active: true,
                 djPerm: null,
             },
             permissions: {

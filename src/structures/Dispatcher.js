@@ -168,6 +168,8 @@ class Dispatcher {
         });
         if (!_247) {
             this.destroy();
+        } else {
+            this.client.shoukaku.emit('playerDestroy', this.player);
         }
     }
     setLoop(loop) {
