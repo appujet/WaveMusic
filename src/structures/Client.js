@@ -55,7 +55,7 @@ class WaveClient extends Client {
         loadPlugins(this);
         await this.login(token);
         this.on(Events.InteractionCreate, async (interaction) => {
-            if (!interaction.isButton()) {
+            if (interaction.isButton()) {
                 const setup = await this.prisma.setup.findUnique({
                     where: {
                         guildId: interaction.guildId,
@@ -64,7 +64,7 @@ class WaveClient extends Client {
                 if (
                     setup &&
                     interaction.channelId === setup.textId &&
-                    interaction.id === setup.messageId
+                    interaction.message.id === setup.messageId
                 ) {
                     this.emit('setupButtons', interaction);
                 }
@@ -99,7 +99,7 @@ class WaveClient extends Client {
                             ? command.nameLocalizations
                             : null,
                         description_localizations: command.descriptionLocalizations
-                            ? cmd.descriptionLocalizations
+                            ? command.descriptionLocalizations
                             : null,
                         default_member_permissions:
                             command.permissions.user.length > 0

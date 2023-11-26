@@ -14,9 +14,9 @@ class Tremolo extends Command {
             cooldown: 3,
             args: false,
             player: {
-                voice: false,
+                voice: true,
                 dj: true,
-                active: false,
+                active: true,
                 djPerm: null,
             },
             permissions: {

@@ -344,7 +344,7 @@ async function buttonReply(int, args, color) {
     }
     setTimeout(async () => {
         if (int && !int.ephemeral) {
-            await m.delete().catch(() => { });
+            await m?.delete().catch(() => { });
         }
     }, 2000);
 }
@@ -354,7 +354,7 @@ async function oops(channel, args) {
         const m = await channel.send({
             embeds: [embed1],
         });
-        setTimeout(async () => await m.delete().catch(() => { }), 12000);
+        setTimeout(async () => await m?.delete().catch(() => { }), 12000);
     }
     catch (e) {
         return console.error(e);
