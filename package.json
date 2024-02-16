@@ -33,7 +33,7 @@
     "shoukaku": "^3.4.0",
     "shoukaku-sources": "^1.0.2",
     "signale": "^1.4.0",
-    "undici": "^5.26.5"
+    "undici": "^5.28.3"
   },
   "signale": {
     "displayScope": true,
