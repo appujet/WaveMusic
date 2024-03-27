@@ -12,17 +12,15 @@ module.exports = {
         yellow: 0xffff00,
         main: 0x2f3136,
     },
-    searchEngine: process.env.SEARCH_ENGINE || "ytsearch", // ytsearch, scsearch or ytmsearch read more at https://github.com/lavalink-devs/Lavalink/blob/master/IMPLEMENTATION.md#track-searching
+    keepAlive: parseBoolean(process.env.KEEP_ALIVE) || false, // for https://replit.com keep alive bot 24/7
+    searchEngine: process.env.SEARCH_ENGINE || "ytsearch", // ytsearch = youtube, scsearch = soundcloud, spsearch = spotify,
     maxPlaylistSize: parseInt(process.env.MAX_PLAYLIST_SIZE) || 100,
-    botStatus: process.env.BOT_STATUS || 'online',
-    keepAlive: parseBoolean(process.env.KEEP_ALIVE) || false,
-    botActivity: process.env.BOT_ACTIVITY || 'WaveMusic',
-    botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '2'),
+    botStatus: process.env.BOT_STATUS || 'online', // online, idle, dnd, invisible
+    botActivity: process.env.BOT_ACTIVITY || 'WaveMusic', // set the bot activity
+    botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '2'), // 0 to 5 get more info - https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types
     maxQueueSize: parseInt(process.env.MAX_QUEUE_SIZE) || 100,
-    owners: process.env.OWNERS ? process.env.OWNERS.split(',') : undefined,
-    database: process.env.DATABASE_URL,
+    owners: JSON.parse(process.env.OWNER_IDS || '[]'),
     clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET || '',
     guildId: process.env.GUILD_ID,
     logChannelId: process.env.LOG_CHANNEL_ID || '',
     links: {
@@ -45,9 +43,6 @@ module.exports = {
         },
     ],
 };
-
-
-
 function parseBoolean(value) {
     if (typeof value === 'string') {
         value = value.trim().toLowerCase();
@@ -59,3 +54,13 @@ function parseBoolean(value) {
             return false;
     }
 }
+/**
+ * Project: WaveMusic
+ * Author: Blacky
+ * Company: Coders
+ * Copyright (c) 2023. All rights reserved.
+ * This code is the property of Coder and may not be reproduced or
+ * modified without permission. For more information, contact us at
+ * https://discord.gg/ns8CTk9J3e
+ */
+//# sourceMappingURL=config.js.map

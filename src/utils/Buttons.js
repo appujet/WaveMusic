@@ -1,10 +1,9 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-
-function getButtons(player) {
+function getButtons() {
     let pausebut = new ButtonBuilder()
         .setCustomId(`PAUSE_BUT`)
-        .setEmoji({ name: player?.paused ? '▶️' : '⏸️' })
+        .setEmoji({ name: '⏸️' })
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(false);
     let previousbut = new ButtonBuilder()

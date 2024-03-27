@@ -113,8 +113,8 @@
 Before starting with the installation, you need to have the following:
 
 - ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white) [v18.17.1 or higher](https://nodejs.org/en/download/)
-- ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white) [v4.4.0 or higher](https://www.mongodb.com/try/download/community)
-- ![Lavalink](https://img.shields.io/badge/Lavalink-7289DA?style=for-the-badge&logo=discord&logoColor=white) [v3.7.8 or higher](https://github.com/freyacodes/Lavalink)
+
+- ![Lavalink](https://img.shields.io/badge/Lavalink-7289DA?style=for-the-badge&logo=discord&logoColor=white) [v4.0.0 or higher](https://github.com/freyacodes/Lavalink)
 
 ## 🚀 Installation from source
 
@@ -152,7 +152,6 @@ MAX_PLAYLIST_SIZE= "100" # Max playlist size
 MAX_QUEUE_SIZE= "100" # Max queue size
 BOT_STATUS= "online" # Your bot status
 BOT_ACTIVITY= "Wavemusic" # Your bot activity
-DATABASE_URL="mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot" ## Your MongoDB URL (add database name at the end) example: mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot
 LAVALINK_URL="localhost:2333" # Your lavalink url
 LAVALINK_AUTH="youshallnotpass" # Your lavalink password
 LAVALINK_NAME="Blacky" # Your lavalink name
@@ -162,37 +161,31 @@ KEEP_ALIVE= "false" # true for keep alive for replit
 
 ```
 
-5. Generate the Prisma client:
 
-**If you using replit than read this:**
-
-go to **[prisma/schema.prisma](https://github.com/brblacky/WaveMusic/blob/main/prisma/schema.prisma)** and add engine type like this or remove `//` behind the `engineType`
-
-```bash
-generator client {
-  provider = "prisma-client-js"
-  engineType = "binary"
-}
-```
-
-and then run this command
-
-```bash
-npx prisma generate
-```
-
-6. Run the bot:
+5. Run the bot:
 
 ```bash
 npm run start or npm start
 ```
 
-### Errors: 
+## 📝 Configuration
 
-![image](https://cdn.discordapp.com/attachments/1147388529085780078/1165972143146815518/image_1.png)
-
-- Fix this error to add database name in end of the `DATABASE_URL` like this `mongodb+srv://xxyydd:ejejeje@cluster0.f93tcdq.mongodb.net/Bot`
-
+- **Prefix**: The prefix for the bot commands
+- **Owner ID**: The ID of the bot owner
+- **Client ID**: The ID of the bot client
+- **Guild ID**: The ID of the server where the bot will be used
+- **Production**: Set to `true` for production
+- **Search Engine**: The search engine to use for searching songs
+- **Max Playlist Size**: The maximum size of a playlist
+- **Max Queue Size**: The maximum size of the queue
+- **Bot Status**: The status of the bot
+- **Bot Activity**: The activity of the bot
+- **Lavalink URL**: The URL of the Lavalink server
+- **Lavalink Auth**: The password for the Lavalink server
+- **Lavalink Name**: The name of the Lavalink server
+- **Lavalink Secure**: Set to `true` for secure Lavalink
+- **Bot Activity Type**: The type of activity for the bot
+- **Keep Alive**: Set to `true` for keep alive for replit
 
 ###
 

@@ -10,7 +10,6 @@ const advicePlugin = {
             'Take care of yourself before you take care of others.',
             'Don\'t be too hard on yourself.',
         ];
-
         client.on('messageCreate', (message) => {
             if (message.content.startsWith('!advice')) {
                 const randomIndex = Math.floor(Math.random() * adviceList.length);

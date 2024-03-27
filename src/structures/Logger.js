@@ -4,7 +4,7 @@ const options = {
     disabled: false,
     interactive: false,
     logLevel: 'info',
-    scope: 'Wavemusic',
+    scope: 'WaveMusic',
 };
 
 class Logger extends Signale {

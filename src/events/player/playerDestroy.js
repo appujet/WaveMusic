@@ -1,4 +1,4 @@
-const { Event } = require('../../structures/index.js');
+const Event = require('../../structures/Event.js');
 const { updateSetup } = require('../../utils/SetupSystem.js');
 
 class PlayerDestroy extends Event {

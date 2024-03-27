@@ -3,3 +3,8 @@ node_modules
 .vscode
 .prettierrc.json
 config.js
+package-lock.json
+pnpm-lock.yaml
+WaveMusic.db
+WaveMusic.db-shm
+WaveMusic.db-wal

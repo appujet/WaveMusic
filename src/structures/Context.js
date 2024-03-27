@@ -33,7 +33,7 @@ class Context {
 
     async sendMessage(content) {
         if (this.isInteraction) {
-            this.msg = await this.interaction.reply(content);
+            this.msg = this.interaction.reply(content);
             return this.msg;
         } else {
             this.msg = await this.message.channel.send(content);
