@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/brblacky/WaveMusic">
-    <img src="https://media.discordapp.net/attachments/963097935820750878/963098304483328030/20220411_160253.png" alt="Pbot-plus" width="200" height="200">
+    <img src="https://media.discordapp.net/attachments/963097935820750878/963098304483328030/20220411_160253.png" alt="moebot" width="200" height="200">
   </a>
 
   <h3 align="center">WaveMusic</h3>
@@ -56,7 +56,7 @@
 - ![Vimeo](https://img.shields.io/badge/Vimeo-1AB7EA?style=plastic&logo=vimeo&logoColor=white)
 - ![http](https://img.shields.io/badge/http-FFA500?style=plastic&logo=http&logoColor=white)
 
-🔌 **Plugin Sources**: `(Require: LavaLink v3.6.x)`
+🔌 **Plugin Sources**: `(Require: LavaLink v4.0.x)`
 
 **Note: You need to install the plugins to use these sources**
 
@@ -160,7 +160,6 @@ BOT_ACTIVITY_TYPE=0 # Activity type is a number from 0 to 5 see more here https:
 KEEP_ALIVE= "false" # true for keep alive for replit
 
 ```
-
 
 5. Run the bot:
 
