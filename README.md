@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/brblacky/WaveMusic">
-    <img src="https://media.discordapp.net/attachments/963097935820750878/963098304483328030/20220411_160253.png" alt="moebot" width="200" height="200">
+    <img src="https://cdn.discordapp.com/avatars/977742811132743762/a_b38640208ccf2e95cdca9c00fe213d45.gif?size=512" alt="moebot" width="200" height="200">
   </a>
 
   <h3 align="center">WaveMusic</h3>
