@@ -1,5 +1,6 @@
 const Event = require("../../structures/Event.js");
 const { oops, setupStart } = require("../../utils/SetupSystem.js");
+const { TextChannel, PermissionsBitField } = require("discord.js");
 
 module.exports = class SetupSystem extends Event {
   constructor(client, file) {
