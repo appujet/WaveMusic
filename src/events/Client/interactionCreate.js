@@ -89,7 +89,7 @@ module.exports = class InteractionCreate extends Event {
             });
           if (
             !interaction.guild.members.me.permissions.has(
-              PermissionFlagsBits.Speak
+              PermissionFlagsBits.Connect
             )
           )
             return await interaction.reply({
